@@ -20,6 +20,7 @@ CREATE TABLE [User] (
     RoleId INT FOREIGN KEY REFERENCES Role(RoleId),
     Email NVARCHAR(50),
     PhoneNumber NVARCHAR(11),
+	Password NVARCHAR(11),
     Status INT
 );
 
@@ -30,7 +31,8 @@ CREATE TABLE Driver (
     PhoneNumber NVARCHAR(15),
     Status INT,
     Shift DATETIME2,
-    Email NVARCHAR(50)
+    Email NVARCHAR(50),
+	Password NVARCHAR(11)
 );
 
 -- Create Route table
@@ -105,3 +107,23 @@ CREATE TABLE PaymentDetail (
 
 -- Adding sample data for Roles (optional)
 INSERT INTO Role (RoleName) VALUES ('Admin'), ('Staff'), ('Member');
+
+-- Inserting sample accounts into User table
+
+-- Insert admin account
+INSERT INTO [User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
+VALUES ('SystemAdmin', '2024-01-01', 1, 'SystemAdmin@BusManagement.org', '1234567890', '@1', 1);
+
+-- Insert staff accounts
+INSERT INTO [User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
+VALUES 
+    ('Isabella David', '2024-01-01', 2, 'staff1@BusManagement.org', '2345678901', '@1', 1),
+    ('Michael Charlotte', '2024-01-01', 2, 'staff2@BusManagement.org', '3456789012', '@1', 1),
+    ('Steve Paris', '2024-01-01', 2, 'staff3@BusManagement.org', '4567890123', '@1', 1);
+
+-- Insert random member accounts
+INSERT INTO [User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
+VALUES 
+    ('NguyenLe', '2024-01-01', 3, 'nguyenbr23@gmail.com', '5678901234', '@1', 1),
+    ('Member User 2', '2024-01-01', 3, 'member2@gmail.com', '6789012345', '@1', 1),
+    ('Member User 3', '2024-01-01', 3, 'member3@gmail.com', '7890123456', '@1', 1);
