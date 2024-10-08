@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusManagementSystem", "BusManagementSystem\BusManagementSystem.csproj", "{AE92AC85-BB32-4805-A332-1994DBFD324A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusManagementSystem", "BusManagementSystem\BusManagementSystem.csproj", "{AE92AC85-BB32-4805-A332-1994DBFD324A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemRepository", "SystemRepository\SystemRepository.csproj", "{7CC073BC-CCC0-4629-9248-70F72FD0547A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemRepository", "SystemRepository\SystemRepository.csproj", "{7CC073BC-CCC0-4629-9248-70F72FD0547A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObject", "BusinessObject\BusinessObject.csproj", "{AD28AAB6-1A2F-488D-90F8-778EED6E9FBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessObject", "BusinessObject\BusinessObject.csproj", "{AD28AAB6-1A2F-488D-90F8-778EED6E9FBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemDAO", "SystemDAO\SystemDAO.csproj", "{D3E38B61-98DA-4DD6-B323-FD603C5B3E0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemDAO", "SystemDAO\SystemDAO.csproj", "{D3E38B61-98DA-4DD6-B323-FD603C5B3E0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemService", "SystemService\SystemService.csproj", "{760E859F-AD07-443D-8334-66128A3F6FA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemService", "SystemService\SystemService.csproj", "{760E859F-AD07-443D-8334-66128A3F6FA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
