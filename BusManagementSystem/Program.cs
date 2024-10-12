@@ -1,3 +1,5 @@
+using BusinessObject.Entity;
+using Microsoft.EntityFrameworkCore;
 using SystemRepository.Implementation;
 using SystemRepository.Interface;
 using SystemService.Implementation;
@@ -19,6 +21,9 @@ builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(24);
 });
+
+builder.Services.AddDbContext<BusManagementSystemContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddRazorPages();

@@ -24,7 +24,7 @@ namespace SystemDAO
             return instance;
         }
 
-        public List<Bus> GetAllBuse()
+        public List<Bus> GetAllBuses()
         {
             var list = new List<Bus>();
             try
