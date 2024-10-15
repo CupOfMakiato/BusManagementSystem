@@ -13,29 +13,35 @@ namespace BusManagementSystem.Pages.ViewUsers
 {
     public class CreateModel : PageModel
     {
-        private readonly UserService _userService;
+        private readonly SystemDAO.BusManagementSystemContext _context;
+
+        public CreateModel(SystemDAO.BusManagementSystemContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult OnGet()
+        {
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId");
+            return Page();
+        }
 
         [BindProperty]
-        public User User { get; set; }
+        public User User { get; set; } = default!;
 
-        public CreateModel(UserService userService)
-        {
-            _userService = userService;
-        }
-
-        public void OnGet()
-        {
-        }
-
-        public IActionResult OnPost()
+        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _userService.AddUser(User);
-            return RedirectToPage("Index");
+            _context.Users.Add(User);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("./Index");
         }
     }
 }
+

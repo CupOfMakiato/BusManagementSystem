@@ -16,5 +16,6 @@ namespace SystemRepository.Interface
         User? GetAccountByEmailAndPassword(string email, string password);
         List<User> GetAllAccount();
         User VerifyAccount(User user);
+      
     }
 }

@@ -13,18 +13,19 @@ namespace BusManagementSystem.Pages.ViewUsers
 {
     public class IndexModel : PageModel
     {
-        private readonly UserService _userService;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        public IndexModel(UserService userService)
+        public IndexModel(SystemDAO.BusManagementSystemContext context)
         {
-            _userService = userService;
+            _context = context;
         }
 
-        public List<User> Users { get; set; } 
+        public IList<User> User { get; set; } = default!;
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            Users = _userService.GetAllUsers().ToList();
+            User = await _context.Users
+                .Include(u => u.Role).ToListAsync();
         }
     }
 }

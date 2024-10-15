@@ -13,30 +13,52 @@ namespace BusManagementSystem.Pages.ViewUsers
 {
     public class DeleteModel : PageModel
     {
-        private readonly UserService _userService;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        [BindProperty]
-        public User User { get; set; }
-
-        public DeleteModel(UserService userService)
+        public DeleteModel(SystemDAO.BusManagementSystemContext context)
         {
-            _userService = userService;
+            _context = context;
         }
 
-        public IActionResult OnGet(int id)
+        [BindProperty]
+        public User User { get; set; } = default!;
+
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            User = _userService.GetUserById(id);
-            if (User == null)
+            if (id == null)
             {
                 return NotFound();
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                User = user;
             }
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
-            _userService.DeleteUser(User.UserId);
-            return RedirectToPage("Index");
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
+            {
+                User = user;
+                _context.Users.Remove(User);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("./Index");
         }
     }
 }

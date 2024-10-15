@@ -14,35 +14,64 @@ namespace BusManagementSystem.Pages.ViewUsers
 {
     public class EditModel : PageModel
     {
-        private readonly UserService _userService;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        [BindProperty]
-        public User User { get; set; }
-
-        public EditModel(UserService userService)
+        public EditModel(SystemDAO.BusManagementSystemContext context)
         {
-            _userService = userService;
+            _context = context;
         }
 
-        public IActionResult OnGet(int id)
+        [BindProperty]
+        public User User { get; set; } = default!;
+
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            User = _userService.GetUserById(id);
-            if (User == null)
+            if (id == null)
             {
                 return NotFound();
             }
+
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            User = user;
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId");
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _userService.UpdateUser(User);
-            return RedirectToPage("Index");
+            _context.Attach(User).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(User.UserId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToPage("./Index");
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }
