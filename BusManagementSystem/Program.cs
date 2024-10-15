@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BusinessObject.Entity;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 using SystemDAO;
 using SystemRepository.Implementation;
@@ -8,13 +9,26 @@ using SystemService.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// register services
+builder.Services.AddSingleton<IUserService, UserService>();
 
 
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<UserDAO>();
+
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(24);
+});
+
+builder.Services.AddDbContext<BusManagementSystemContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<UserDAO>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-
 
 var app = builder.Build();
 
@@ -34,5 +48,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.UseSession();
 
 app.Run();

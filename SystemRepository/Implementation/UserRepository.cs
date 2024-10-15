@@ -11,21 +11,40 @@ namespace SystemRepository.Implementation
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UserDAO _userDAO;
-
-        public UserRepository(UserDAO userDAO)
+        public void AddAccount(User user)
         {
-            _userDAO = userDAO;
+            UserDAO.getInstance().AddAccount(user);
         }
 
-        public IEnumerable<User> GetAllUsers() => _userDAO.GetAllUsers();
+        public void DeleteAccount(User user)
+        {
+            UserDAO.getInstance().DeleteAccount(user);
+        }
 
-        public User GetUserById(int id) => _userDAO.GetUserById(id);
+        public User? GetAccountByEmailAndPassword(string email, string password)
+        {
+            return UserDAO.getInstance().GetAccountByEmailAndPassword(email, password);
+        }
 
-        public void AddUser(User user) => _userDAO.AddUser(user);
+        public User GetAccountById(short userId)
+        {
+            return UserDAO.getInstance().GetAccountById(userId);
+        }
 
-        public void UpdateUser(User user) => _userDAO.UpdateUser(user);
+        public List<User> GetAllAccount()
+        {
+            return UserDAO.getInstance().GetAllUser();
+        }
 
-        public void DeleteUser(int id) => _userDAO.DeleteUser(id);
+        public void UpdateAccount(User user)
+        {
+            UserDAO.getInstance().UpdateAccount(user);
+        }
+
+        public User VerifyAccount(User user)
+        {
+            return UserDAO.getInstance().VerifyAccount(user);
+        }
     }
+    
 }

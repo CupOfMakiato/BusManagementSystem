@@ -5,27 +5,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SystemRepository.Implementation;
+using SystemRepository.Interface;
 using SystemService.Interface;
 
 namespace SystemService.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly UserRepository _userRepository;
-
-        public UserService(UserRepository userRepository)
+        private readonly IUserRepository _userRepository;
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public IEnumerable<User> GetAllUsers() => _userRepository.GetAllUsers();
+        public void AddAccount(User user)
+        {
+            _userRepository.AddAccount(user);
+        }
 
-        public User GetUserById(int id) => _userRepository.GetUserById(id);
+        public void DeleteAccount(User user)
+        {
+            _userRepository.DeleteAccount(user);
+        }
 
-        public void AddUser(User user) => _userRepository.AddUser(user);
+        public User? GetAccountByEmailAndPassword(string email, string password)
+        {
+            return _userRepository.GetAccountByEmailAndPassword(email, password);
+        }
 
-        public void UpdateUser(User user) => _userRepository.UpdateUser(user);
+        public User GetAccountById(short userId)
+        {
+            return _userRepository.GetAccountById(userId);
+        }
 
-        public void DeleteUser(int id) => _userRepository.DeleteUser(id);
+        public List<User> GetAllAccount()
+        {
+            return _userRepository.GetAllAccount();
+        }
+
+        public void UpdateAccount(User user)
+        {
+            _userRepository.UpdateAccount(user);
+        }
+
+        public User VerifyAccount(User user)
+        {
+            return _userRepository.VerifyAccount(user);
+        }
     }
 }

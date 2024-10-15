@@ -10,39 +10,101 @@ namespace SystemDAO
 {
     public class UserDAO
     {
-        private readonly BusManagementSystemContext _systemContext;
-        public UserDAO(BusManagementSystemContext systemContext)
+        private static UserDAO instance = null;
+        public UserDAO()
         {
-            _systemContext = systemContext;
-        }
-        public IEnumerable<User> GetAllUsers()
-        {
-            return _systemContext.Users.ToList();
-        }
-        public User GetUserById(int id)
-        {
-            return _systemContext.Users.Find(id);
-        }
 
-        public void AddUser(User user)
-        {
-            _systemContext.Users.Add(user);
-            _systemContext.SaveChanges();
         }
-
-        public void UpdateUser(User user)
+        public static UserDAO getInstance()
         {
-            _systemContext.Users.Update(user);
-            _systemContext.SaveChanges();
-        }
-
-        public void DeleteUser(int id)
-        {
-            var user = GetUserById(id);
-            if (user != null)
+            if (instance == null)
             {
-                _systemContext.Users.Remove(user);
-                _systemContext.SaveChanges();
+                instance = new UserDAO();
+            }
+            return instance;
+        }
+        public User VerifyAccount(User acc)
+        {
+            User mb;
+            try
+            {
+                var db = new BusManagementSystemContext();
+                mb = db.Users.FirstOrDefault(m => m.Email == acc.Email && m.Password == acc.Password);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return mb;
+        }
+        public List<User> GetAllUser()
+        {
+            var list = new List<User>();
+            try
+            {
+                using var context = new BusManagementSystemContext();
+                list = context.Users.ToList();
+            }
+            catch (Exception ex)
+            {
+                return list;
+            }
+            return list;
+        }
+
+        public User GetAccountById(short userId)
+        {
+            using var db = new BusManagementSystemContext();
+            return db.Users.FirstOrDefault(x => x.UserId.Equals(userId));
+        }
+
+        public User? GetAccountByEmailAndPassword(string email, string password)
+        {
+            using var db = new BusManagementSystemContext();
+            return db.Users.FirstOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password));
+        }
+
+        public void UpdateAccount(User u)
+        {
+            try
+            {
+                using var db = new BusManagementSystemContext();
+                db.Entry<User>(u).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void DeleteAccount(User u)
+        {
+            try
+            {
+                using var db = new BusManagementSystemContext();
+                var p1 = db.Users.SingleOrDefault(x => x.UserId == u.UserId);
+                db.Users.Remove(p1);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void AddAccount(User u)
+        {
+            try
+            {
+                using var db = new BusManagementSystemContext();
+                db.Users.Add(u);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

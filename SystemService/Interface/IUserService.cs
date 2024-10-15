@@ -9,10 +9,12 @@ namespace SystemService.Interface
 {
     public interface IUserService
     {
-        IEnumerable<User> GetAllUsers();
-        User GetUserById(int id);
-        void AddUser(User user);
-        void UpdateUser(User user);
-        void DeleteUser(int id);
+        void AddAccount(User user);
+        void UpdateAccount(User user);
+        void DeleteAccount(User user);
+        User GetAccountById(short userId);
+        User? GetAccountByEmailAndPassword(string email, string password);
+        List<User> GetAllAccount();
+        User VerifyAccount(User user);
     }
 }
