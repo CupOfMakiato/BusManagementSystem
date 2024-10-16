@@ -9,11 +9,11 @@ namespace SystemRepository.Interface
 {
     public interface IBusRepository
     {
-        List<Bus> GetAllBuses();
-        Bus GetBusById(int busId);
-        void AddBus(Bus bus);
-        void UpdateBus(Bus bus);
-        void DeleteBus(Bus bus);
+        Task<List<Bus>> GetAllBuses();
+        Task<Bus> GetBusById(int busId);
+        Task AddBus(Bus bus);
+        Task UpdateBus(Bus bus);
+        Task DeleteBus(Bus bus);
 
     }
 }

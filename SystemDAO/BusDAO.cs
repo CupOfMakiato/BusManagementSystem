@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SystemDAO
@@ -11,10 +10,11 @@ namespace SystemDAO
     public class BusDAO
     {
         private static BusDAO instance = null;
+
         public BusDAO()
         {
-
         }
+
         public static BusDAO GetInstance()
         {
             if (instance == null)
@@ -24,13 +24,16 @@ namespace SystemDAO
             return instance;
         }
 
-        public List<Bus> GetAllBuses()
+        public async Task<List<Bus>> GetAllBusesAsync()
         {
             var list = new List<Bus>();
             try
             {
                 using var context = new BusManagementSystemContext();
-                list = context.Buses.Include(b => b.Driver).Include(b => b.AssignedRoute).ToList();
+                list = await context.Buses
+                    .Include(b => b.Driver)
+                    .Include(b => b.AssignedRoute)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -39,22 +42,15 @@ namespace SystemDAO
             return list;
         }
 
-        public Bus GetBusById(int busId)
-        {
-            using var context = new BusManagementSystemContext();
-            return context.Buses
-                .Include(b => b.Driver)
-                .Include(b => b.AssignedRoute)
-                .FirstOrDefault(b => b.BusId == busId);
-        }
-
-        public void AddBus(Bus bus)
+        public async Task<Bus> GetBusByIdAsync(int busId)
         {
             try
             {
                 using var context = new BusManagementSystemContext();
-                context.Buses.Add(bus);
-                context.SaveChanges();
+                return await context.Buses
+                    .Include(b => b.Driver)
+                    .Include(b => b.AssignedRoute)
+                    .FirstOrDefaultAsync(b => b.BusId == busId);
             }
             catch (Exception ex)
             {
@@ -62,13 +58,27 @@ namespace SystemDAO
             }
         }
 
-        public void UpdateBus(Bus bus)
+        public async Task AddBusAsync(Bus bus)
+        {
+            try
+            {
+                using var context = new BusManagementSystemContext();
+                await context.Buses.AddAsync(bus);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task UpdateBusAsync(Bus bus)
         {
             try
             {
                 using var context = new BusManagementSystemContext();
                 context.Entry(bus).State = EntityState.Modified;
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -76,16 +86,16 @@ namespace SystemDAO
             }
         }
 
-        public void DeleteBus(Bus bus)
+        public async Task DeleteBusAsync(Bus bus)
         {
             try
             {
                 using var context = new BusManagementSystemContext();
-                var existingBus = context.Buses.SingleOrDefault(b => b.BusId == bus.BusId);
+                var existingBus = await context.Buses.SingleOrDefaultAsync(b => b.BusId == bus.BusId);
                 if (existingBus != null)
                 {
                     context.Buses.Remove(existingBus);
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)

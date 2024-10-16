@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject.Entity;
 
@@ -7,13 +8,17 @@ public partial class User
 {
     public int UserId { get; set; }
 
-    public string? Name { get; set; }
+    [Required]
+    [StringLength(100)]
+    public string Name { get; set; }
 
+    [DataType(DataType.Date)]
     public DateTime? DateOfBirth { get; set; }
 
     public int? RoleId { get; set; }
 
-    public string? Email { get; set; }
+    [EmailAddress]
+    public string Email { get; set; }
 
     public string? PhoneNumber { get; set; }   
 

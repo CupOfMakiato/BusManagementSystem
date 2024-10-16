@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SystemRepository.Implementation;
 using SystemRepository.Interface;
 using SystemService.Interface;
 
 namespace SystemService.Implementation
 {
-    public class UserService :IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         public UserService(IUserRepository userRepository)
@@ -41,6 +42,8 @@ namespace SystemService.Implementation
         {
             return _userRepository.GetAllAccount();
         }
+
+      
 
         public void UpdateAccount(User user)
         {
