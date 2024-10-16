@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace BusinessObject.Entity;
+namespace SystemDAO;
 
 public partial class BusManagementSystemContext : DbContext
 {
@@ -36,6 +37,7 @@ public partial class BusManagementSystemContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+
     protected string GetConnectionString()
     {
         IConfiguration configuration = new ConfigurationBuilder()
@@ -48,6 +50,7 @@ public partial class BusManagementSystemContext : DbContext
     {
         optionsBuilder.UseSqlServer(GetConnectionString());
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>

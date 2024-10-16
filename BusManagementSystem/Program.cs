@@ -1,5 +1,7 @@
-using BusinessObject.Entity;
+﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using SystemDAO;
 using SystemRepository.Implementation;
 using SystemRepository.Interface;
 using SystemService.Implementation;
@@ -14,6 +16,7 @@ builder.Services.AddSingleton<IBusService, BusService>();
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IBusRepository, BusRepository>();
+builder.Services.AddSingleton<UserDAO>();
 
 
 

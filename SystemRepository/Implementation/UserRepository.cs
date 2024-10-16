@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace SystemRepository.Implementation
 {
     public class UserRepository : IUserRepository
     {
+        
         public void AddAccount(User user)
         {
             UserDAO.getInstance().AddAccount(user);
@@ -36,6 +38,8 @@ namespace SystemRepository.Implementation
             return UserDAO.getInstance().GetAllUser();
         }
 
+       
+
         public void UpdateAccount(User user)
         {
             UserDAO.getInstance().UpdateAccount(user);
@@ -45,5 +49,8 @@ namespace SystemRepository.Implementation
         {
             return UserDAO.getInstance().VerifyAccount(user);
         }
+
+       
     }
+    
 }
