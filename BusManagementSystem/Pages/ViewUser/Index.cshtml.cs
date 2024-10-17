@@ -1,29 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using SystemService.Interface;
 using BusinessObject.Entity;
 
 namespace BusManagementSystem.Pages.ViewUser
 {
     public class IndexModel : PageModel
     {
-        private readonly BusinessObject.Entity.BusManagementSystemContext _context;
+        private readonly IUserService _userService;
 
-        public IndexModel(BusinessObject.Entity.BusManagementSystemContext context)
+        public IndexModel(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
-        public IList<User> User { get;set; } = default!;
+        public IList<User> User { get; set; } = new List<User>();
 
-        public async Task OnGetAsync()
+        public IActionResult OnGet()
         {
-            User = await _context.Users
-                .Include(u => u.Role).ToListAsync();
+            // Session check
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
+            // Fetch all user accounts
+            User = _userService.GetAllAccount() ?? new List<User>();
+
+            return Page();
+        }
+
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                try
+                {
+                    var account = JsonSerializer.Deserialize<User>(loginAccount);
+                    if (account != null && account.RoleId == 1) // Admin role check
+                        return true;
+                }
+                catch (JsonException)
+                {
+                    // Handle potential deserialization issues
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }

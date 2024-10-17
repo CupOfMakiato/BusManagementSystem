@@ -17,29 +17,29 @@ namespace SystemService.Implementation
             _busRepository = busRepository;
         }
 
-        public async Task AddBus(Bus bus)
+        public void AddBus(Bus bus)
         {
-            await _busRepository.AddBus(bus);
+            _busRepository.AddBus(bus);
         }
 
-        public async Task DeleteBus(Bus bus)
+        public void DeleteBus(Bus bus)
         {
-            await _busRepository.DeleteBus(bus);
+            _busRepository.DeleteBus(bus);
         }
 
-        public async Task<List<Bus>> GetAllBuses()
+        public List<Bus> GetAllBuses()
         {
-            return await _busRepository.GetAllBuses();
+            return _busRepository.GetAllBuses();
         }
 
-        public async Task<Bus> GetBusById(int busId)
+        public Bus GetBusById(int busId)
         {
-            return await _busRepository.GetBusById(busId);
+            return _busRepository.GetBusById(busId);
         }
 
-        public async Task UpdateBus(Bus bus)
+        public void UpdateBus(Bus bus)
         {
-            await _busRepository.UpdateBus(bus);
+            _busRepository.UpdateBus(bus);
         }
     }
 }

@@ -1,4 +1,3 @@
-﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using SystemDAO;
@@ -9,15 +8,21 @@ using SystemService.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<BusManagementSystemContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // register services
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IBusService, BusService>();
+builder.Services.AddSingleton<IRoleService, RoleService>();
 
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IBusRepository, BusRepository>();
-builder.Services.AddSingleton<UserDAO>();
+builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
 
+
+//builder.Services.AddSingleton<UserDAO>();
 
 
 builder.Services.AddSession(options =>
@@ -25,8 +30,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromHours(24);
 });
 
-builder.Services.AddDbContext<BusManagementSystemContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -46,10 +50,22 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Use session middleware before authorization
+app.UseSession();
+
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
 
-app.UseSession();
+    // Map Razor pages
+    endpoints.MapRazorPages();
+
+    // Redirect root URL to Login page
+    endpoints.MapGet("/", async context =>
+    {
+        context.Response.Redirect("/Member/Index");
+    });
+});
 
 app.Run();

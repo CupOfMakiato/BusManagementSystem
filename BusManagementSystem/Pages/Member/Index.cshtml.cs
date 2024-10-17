@@ -1,18 +1,16 @@
 using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using SystemService.Interface;
 
-namespace BusManagementSystem.Pages.ViewBus
+namespace BusManagementSystem.Pages.Member
 {
     public class IndexModel : PageModel
     {
         private readonly IBusService _busService;
 
         public IndexModel(IBusService busService)
-        { 
+        {
             _busService = busService;
         }
 
@@ -21,8 +19,6 @@ namespace BusManagementSystem.Pages.ViewBus
 
         public IActionResult OnGet(string? searchQuery)
         {
-            if (!CheckSession())
-                return RedirectToPage("/Login");
 
             // Store the search query in the model for the Razor Page
             SearchQuery = searchQuery;
@@ -43,18 +39,6 @@ namespace BusManagementSystem.Pages.ViewBus
             // Assign filtered list to the model property
             Bus = buses;
             return Page();
-        }
-
-        public bool CheckSession()
-        {
-            var loginAccount = HttpContext.Session.GetString("LoginSession");
-            if (loginAccount != null)
-            {
-                var account = JsonSerializer.Deserialize<User>(loginAccount);
-                if (account != null && account.RoleId == 2)
-                    return true;
-            }
-            return false;
         }
     }
 }
