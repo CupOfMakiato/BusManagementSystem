@@ -8,9 +8,9 @@ namespace BusManagementSystem.Pages.ViewBus
 {
     public class CreateModel : PageModel
     {
-        private readonly BusinessObject.Entity.BusManagementSystemContext _context;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        public CreateModel(BusinessObject.Entity.BusManagementSystemContext context)
+        public CreateModel(SystemDAO.BusManagementSystemContext context)
         {
             _context = context;
         }

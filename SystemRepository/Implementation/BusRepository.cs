@@ -11,29 +11,29 @@ namespace SystemRepository.Implementation
 {
     public class BusRepository : IBusRepository
     {
-        public async Task AddBus(Bus bus)
+        public void AddBus(Bus bus)
         {
-            await BusDAO.GetInstance().AddBusAsync(bus);
+             BusDAO.GetInstance().AddBus(bus);
         }
 
-        public async Task DeleteBus(Bus bus)
+        public void DeleteBus(Bus bus)
         {
-            await BusDAO.GetInstance().DeleteBusAsync(bus);
+            BusDAO.GetInstance().DeleteBus(bus);
         }
 
-        public async Task<List<Bus>> GetAllBuses()
+        public List<Bus> GetAllBuses()
         {
-            return await BusDAO.GetInstance().GetAllBusesAsync();
+            return BusDAO.GetInstance().GetAllBuses();
         }
 
-        public async Task<Bus> GetBusById(int busId)
+        public Bus GetBusById(int busId)
         {
-            return await BusDAO.GetInstance().GetBusByIdAsync(busId);
+            return  BusDAO.GetInstance().GetBusById(busId);
         }
 
-        public async Task UpdateBus(Bus bus)
+        public void UpdateBus(Bus bus)
         {
-            await BusDAO.GetInstance().UpdateBusAsync(bus);
+             BusDAO.GetInstance().UpdateBus(bus);
         }
     }
 }

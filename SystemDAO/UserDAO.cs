@@ -45,7 +45,8 @@ namespace SystemDAO
             try
             {
                 using var context = new BusManagementSystemContext();
-                list = context.Users.ToList();
+                list = context.Users
+                    .Include(a => a.Role).ToList();
             }
             catch (Exception ex)
             {

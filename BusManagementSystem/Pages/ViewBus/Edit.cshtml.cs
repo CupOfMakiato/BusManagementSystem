@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewBus
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.Entity.BusManagementSystemContext _context;
+        private readonly SystemDAO.BusManagementSystemContext _busService;
 
-        public EditModel(BusinessObject.Entity.BusManagementSystemContext context)
+        public EditModel(SystemDAO.BusManagementSystemContext busService)
         {
-            _context = context;
+            _busService = busService;
         }
 
         [BindProperty]
@@ -25,15 +26,15 @@ namespace BusManagementSystem.Pages.ViewBus
                 return NotFound();
             }
 
-            var bus = await _context.Buses.FirstOrDefaultAsync(m => m.BusId == id);
+            var bus = await _busService.Buses.FirstOrDefaultAsync(b => b.BusId == id); ;
             if (bus == null)
             {
                 return NotFound();
             }
             Bus = bus;
-            ViewData["AssignedRouteId"] = new SelectList(_context.Routes, "RouteId", "RouteName");
+            ViewData["AssignedRouteId"] = new SelectList(_busService.Routes, "RouteId", "RouteName");
 
-            ViewData["DriverId"] = new SelectList(_context.Drivers.Where(d => d.Status == 1), "DriverId", "Name");
+            ViewData["DriverId"] = new SelectList(_busService.Drivers.Where(d => d.Status == 1), "DriverId", "Name");
 
             return Page();
         }
@@ -54,7 +55,7 @@ namespace BusManagementSystem.Pages.ViewBus
             }
 
             // Check if the BusNumber already exists in the database
-            bool busNumberExists = await _context.Buses.AnyAsync(b => b.BusNumber == Bus.BusNumber);
+            bool busNumberExists = await _busService.Buses.AnyAsync(b => b.BusNumber == Bus.BusNumber);
 
             if (busNumberExists)
             {
@@ -85,11 +86,11 @@ namespace BusManagementSystem.Pages.ViewBus
             // Set the ModifiedAt property to the current date and time
             Bus.ModifiedAt = DateTime.UtcNow; // Use UTC to avoid timezone issues
 
-            _context.Attach(Bus).State = EntityState.Modified;
+            _busService.Attach(Bus).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _busService.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -108,7 +109,7 @@ namespace BusManagementSystem.Pages.ViewBus
 
         private bool BusExists(int id)
         {
-            return _context.Buses.Any(e => e.BusId == id);
+            return _busService.Buses.Any(e => e.BusId == id);
         }
     }
 }

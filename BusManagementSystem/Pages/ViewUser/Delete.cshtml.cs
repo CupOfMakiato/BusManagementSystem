@@ -11,9 +11,9 @@ namespace BusManagementSystem.Pages.ViewUser
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObject.Entity.BusManagementSystemContext _context;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        public DeleteModel(BusinessObject.Entity.BusManagementSystemContext context)
+        public DeleteModel(SystemDAO.BusManagementSystemContext context)
         {
             _context = context;
         }

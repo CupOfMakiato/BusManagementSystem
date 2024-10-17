@@ -11,9 +11,9 @@ namespace BusManagementSystem.Pages.ViewUser
 {
     public class DetailsModel : PageModel
     {
-        private readonly BusinessObject.Entity.BusManagementSystemContext _context;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        public DetailsModel(BusinessObject.Entity.BusManagementSystemContext context)
+        public DetailsModel(SystemDAO.BusManagementSystemContext context)
         {
             _context = context;
         }
