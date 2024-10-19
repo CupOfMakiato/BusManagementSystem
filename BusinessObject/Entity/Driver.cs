@@ -16,6 +16,11 @@ public partial class Driver
     public DateTime? Shift { get; set; }
 
     public string? Email { get; set; }
+    
+    public string? Password { get; set; }
 
     public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
+
+    //public int? RoleId { get; set; }
+    //public virtual Role? Role { get; set; }
 }

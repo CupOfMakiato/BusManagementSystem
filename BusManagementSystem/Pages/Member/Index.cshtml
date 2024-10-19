@@ -1,0 +1,47 @@
+﻿@page
+@model BusManagementSystem.Pages.Member.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+}
+<h2>Bus List</h2>
+
+<form method="get">
+    <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search buses..." />
+    <button type="submit">Search</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Bus Number</th>
+            <th>Driver</th>
+            <th>Route</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Modified At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Bus != null && Model.Bus.Any())
+        {
+            foreach (var bus in Model.Bus)
+            {
+                <tr>
+                    <td>@bus.BusNumber</td>
+                    <td>@bus.Driver?.Name</td>
+                    <td>@bus.AssignedRoute?.RouteName</td>
+                    <td>@(bus.Status == 1 ? "Active" : bus.Status == 2 ? "Inactive" : "Maintenance")</td>
+                    <td>@bus.CreatedAt?.ToString("yyyy-MM-dd")</td>
+                    <td>@bus.ModifiedAt?.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">No buses found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

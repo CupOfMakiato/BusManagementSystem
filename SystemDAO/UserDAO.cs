@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,8 @@ namespace SystemDAO
             try
             {
                 using var context = new BusManagementSystemContext();
-                list = context.Users.ToList();
+                list = context.Users
+                    .Include(a => a.Role).ToList();
             }
             catch (Exception ex)
             {

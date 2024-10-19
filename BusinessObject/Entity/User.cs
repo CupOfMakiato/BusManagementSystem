@@ -22,6 +22,7 @@ public partial class User
 
     [Phone]
     public string? PhoneNumber { get; set; }
+
     public string? Password { get; set; }
 
     public int? Status { get; set; }
