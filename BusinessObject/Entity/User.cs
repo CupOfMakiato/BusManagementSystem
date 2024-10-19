@@ -10,7 +10,7 @@ public partial class User
 
     [Required]
     [StringLength(100)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [DataType(DataType.Date)]
     public DateTime? DateOfBirth { get; set; }
@@ -20,7 +20,8 @@ public partial class User
     [EmailAddress]
     public string Email { get; set; }
 
-    public string? PhoneNumber { get; set; }   
+    [Phone]
+    public string? PhoneNumber { get; set; }
 
     public string? Password { get; set; }
 
