@@ -48,7 +48,9 @@ namespace BusManagementSystem.Pages
                         case 1: // Admin role
                             return RedirectToPage("/ViewUser/Index");
                         case 2: // Staff role
-                            return RedirectToPage("/ViewBus/Index");
+                            return RedirectToPage("/ViewRoute/Index");
+                        case 3: // Member role
+                            return RedirectToPage("/Member/Index");
                     }
                 }
                 else

@@ -1,5 +1,5 @@
 ﻿@page
-@model BusManagementSystem.Pages.Member.IndexModel
+@model BusManagementSystem.Pages.Guest.IndexModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Index";
@@ -29,20 +29,20 @@
         {
             foreach (var route in Model.Route)
             {
-                        <tr>
-                            <td>@route.RouteName</td>
-                            <td>@route.StartLocation</td>
-                            <td>@route.EndLocation</td>
-                            <td>@route.Distance?.ToString("F2")</td>
-                            <td>@route.Duration?.ToString()</td>
-                        </tr>
+                <tr>
+                    <td>@route.RouteName</td>
+                    <td>@route.StartLocation</td>
+                    <td>@route.EndLocation</td>
+                    <td>@route.Distance?.ToString("F2")</td>
+                    <td>@route.Duration?.ToString()</td>
+                </tr>
             }
         }
         else
         {
-                <tr>
-                    <td colspan="5">No routes found.</td>
-                </tr>
+            <tr>
+                <td colspan="5">No routes found.</td>
+            </tr>
         }
     </tbody>
 </table>
