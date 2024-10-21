@@ -1,10 +1,11 @@
 using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
 using SystemService.Interface;
+using System.Linq;
+using System.Collections.Generic;
 
-namespace BusManagementSystem.Pages.Member
+namespace BusManagementSystem.Pages.Guest
 {
     public class IndexModel : PageModel
     {
@@ -20,9 +21,6 @@ namespace BusManagementSystem.Pages.Member
 
         public IActionResult OnGet(string? searchQuery)
         {
-            // Session check
-            if (!CheckSession())
-                return RedirectToPage("/Login");
             // Store the search query in the model for the Razor Page
             SearchQuery = searchQuery;
 
@@ -43,25 +41,5 @@ namespace BusManagementSystem.Pages.Member
             Route = routes;
             return Page();
         }
-        public bool CheckSession()
-        {
-            var loginAccount = HttpContext.Session.GetString("LoginSession");
-            if (loginAccount != null)
-            {
-                try
-                {
-                    var account = JsonSerializer.Deserialize<User>(loginAccount);
-                    if (account != null && account.RoleId == 3) // Member role check
-                        return true;
-                }
-                catch (JsonException)
-                {
-                    // Handle potential deserialization issues
-                    return false;
-                }
-            }
-            return false;
-        }
     }
 }
-

@@ -15,11 +15,14 @@ builder.Services.AddDbContext<BusManagementSystemContext>(options =>
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IBusService, BusService>();
 builder.Services.AddSingleton<IRoleService, RoleService>();
+builder.Services.AddSingleton<IRouteService, RouteService>();
+
 
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IBusRepository, BusRepository>();
 builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
+builder.Services.AddSingleton<IRouteRepository, RouteRepository>();
 
 
 //builder.Services.AddSingleton<UserDAO>();
@@ -64,7 +67,7 @@ app.UseEndpoints(endpoints =>
     // Redirect root URL to Login page
     endpoints.MapGet("/", async context =>
     {
-        context.Response.Redirect("/Member/Index");
+        context.Response.Redirect("/Guest/Index");
     });
 });
 
