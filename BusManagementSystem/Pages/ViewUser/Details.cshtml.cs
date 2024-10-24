@@ -1,42 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using BusinessObject.Entity;
+﻿    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.EntityFrameworkCore;
+    using BusinessObject.Entity;
 
-namespace BusManagementSystem.Pages.ViewUser
-{
-    public class DetailsModel : PageModel
+    namespace BusManagementSystem.Pages.ViewUser
     {
-        private readonly SystemDAO.BusManagementSystemContext _context;
-
-        public DetailsModel(SystemDAO.BusManagementSystemContext context)
+        public class DetailsModel : PageModel
         {
-            _context = context;
-        }
+            private readonly SystemDAO.BusManagementSystemContext _context;
 
-        public User User { get; set; } = default!;
-
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
+            public DetailsModel(SystemDAO.BusManagementSystemContext context)
             {
-                return NotFound();
+                _context = context;
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
+            public User User { get; set; } = default!;
+
+            public async Task<IActionResult> OnGetAsync(int? id)
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    User = user;
+                }
+                return Page();
             }
-            else
-            {
-                User = user;
-            }
-            return Page();
         }
     }
-}

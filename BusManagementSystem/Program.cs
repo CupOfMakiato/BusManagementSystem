@@ -16,13 +16,16 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IBusService, BusService>();
 builder.Services.AddSingleton<IRoleService, RoleService>();
 builder.Services.AddSingleton<IRouteService, RouteService>();
+builder.Services.AddSingleton<IDriverService, DriverService>();
 
 
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IBusRepository, BusRepository>();
 builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
+builder.Services.AddSingleton<IDriverRepository, DriverRepository>();
 builder.Services.AddSingleton<IRouteRepository, RouteRepository>();
+
 
 
 //builder.Services.AddSingleton<UserDAO>();
