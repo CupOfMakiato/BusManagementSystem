@@ -108,15 +108,6 @@ CREATE TABLE PaymentDetail (
 -- Adding sample data for Roles (optional)
 INSERT INTO Role (RoleName) VALUES ('Admin'), ('Staff'), ('Member');
 
--- Add RoleId to Driver table
-ALTER TABLE Driver
-ADD RoleId INT FOREIGN KEY REFERENCES Role(RoleId);
-
--- Insert the Driver role into the Role table
-INSERT INTO Role (RoleName) VALUES ('Driver');
-
-
-
 -- Inserting sample accounts into User table
 
 -- Insert admin account
@@ -136,7 +127,3 @@ VALUES
     ('NguyenLe', '2024-01-01', 3, 'nguyenbr23@gmail.com', '5678901234', '@1', 1),
     ('Member User 2', '2024-01-01', 3, 'member2@gmail.com', '6789012345', '@1', 1),
     ('Member User 3', '2024-01-01', 3, 'member3@gmail.com', '7890123456', '@1', 1);
-
--- Insert a new driver
-INSERT INTO Driver (Name, PhoneNumber, Status, Shift, Email, Password, RoleId)
-VALUES ('John Doe', '1234567890', 1, '2024-10-22 08:00:00', 'johndoe@BusManagement.org', '@1', 4);
