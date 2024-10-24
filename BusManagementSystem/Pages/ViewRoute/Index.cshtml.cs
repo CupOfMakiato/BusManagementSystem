@@ -38,7 +38,7 @@ namespace BusManagementSystem.Pages.ViewRoute
                 try
                 {
                     var account = JsonSerializer.Deserialize<User>(loginAccount);
-                    if (account != null && account.RoleId == 1) // Admin role check
+                    if (account != null && account.RoleId == 2) // Staff role check
                         return true;
                 }
                 catch (JsonException)
