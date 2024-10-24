@@ -21,6 +21,6 @@ public partial class Driver
 
     public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
 
-    //public int? RoleId { get; set; }
-    //public virtual Role? Role { get; set; }
+    public int? RoleId { get; set; }
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }
