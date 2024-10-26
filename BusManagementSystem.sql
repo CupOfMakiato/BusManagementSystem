@@ -1,86 +1,8 @@
-USE [master]
+-- Create the BusManagementSystem database
+CREATE DATABASE BusManagementSystem;
 GO
-/****** Object:  Database [BusManagementSystem1]    Script Date: 26/10/2024 10:03:49 PM ******/
-CREATE DATABASE [BusManagementSystem1]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'BusManagementSystem1', FILENAME = N'/var/opt/mssql/data/BusManagementSystem1.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'BusManagementSystem1_log', FILENAME = N'/var/opt/mssql/data/BusManagementSystem1_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT
-GO
-ALTER DATABASE [BusManagementSystem1] SET COMPATIBILITY_LEVEL = 150
-GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [BusManagementSystem1].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-ALTER DATABASE [BusManagementSystem1] SET ANSI_NULL_DEFAULT OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET ANSI_NULLS OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET ANSI_PADDING OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET ANSI_WARNINGS OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET ARITHABORT OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET AUTO_CLOSE OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET AUTO_SHRINK OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET AUTO_UPDATE_STATISTICS ON 
-GO
-ALTER DATABASE [BusManagementSystem1] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET CURSOR_DEFAULT  GLOBAL 
-GO
-ALTER DATABASE [BusManagementSystem1] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET NUMERIC_ROUNDABORT OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET QUOTED_IDENTIFIER OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET RECURSIVE_TRIGGERS OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET  ENABLE_BROKER 
-GO
-ALTER DATABASE [BusManagementSystem1] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET TRUSTWORTHY OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET PARAMETERIZATION SIMPLE 
-GO
-ALTER DATABASE [BusManagementSystem1] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET HONOR_BROKER_PRIORITY OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET RECOVERY FULL 
-GO
-ALTER DATABASE [BusManagementSystem1] SET  MULTI_USER 
-GO
-ALTER DATABASE [BusManagementSystem1] SET PAGE_VERIFY CHECKSUM  
-GO
-ALTER DATABASE [BusManagementSystem1] SET DB_CHAINING OFF 
-GO
-ALTER DATABASE [BusManagementSystem1] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-ALTER DATABASE [BusManagementSystem1] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-ALTER DATABASE [BusManagementSystem1] SET DELAYED_DURABILITY = DISABLED 
-GO
-ALTER DATABASE [BusManagementSystem1] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-EXEC sys.sp_db_vardecimal_storage_format N'BusManagementSystem1', N'ON'
-GO
-ALTER DATABASE [BusManagementSystem1] SET QUERY_STORE = OFF
-GO
-USE [BusManagementSystem1]
+
+USE [BusManagementSystem]
 GO
 /****** Object:  Table [dbo].[Booking]    Script Date: 26/10/2024 10:03:49 PM ******/
 SET ANSI_NULLS ON
@@ -151,7 +73,6 @@ CREATE TABLE [dbo].[Driver](
 	[Status] [int] NULL,
 	[Shift] [datetime2](7) NULL,
 	[Email] [nvarchar](50) NULL,
-	[Password] [nvarchar](11) NULL,
 	[RoleId] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -414,5 +335,55 @@ REFERENCES [dbo].[Role] ([RoleId])
 GO
 USE [master]
 GO
-ALTER DATABASE [BusManagementSystem1] SET  READ_WRITE 
+ALTER DATABASE [BusManagementSystem] SET  READ_WRITE 
 GO
+
+-- Adding sample data for Roles (optional)
+INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Admin'), ('Staff'), ('Member');
+
+-- Insert the Driver role into the Role table
+INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Driver');
+
+
+
+
+-- Inserting sample accounts into User table
+
+-- Insert admin account
+INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
+VALUES ('SystemAdmin', '2024-01-01', 1, 'SystemAdmin@BusManagement.org', '1234567890', '@1', 1);
+
+-- Insert staff accounts
+INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
+VALUES 
+    ('Isabella David', '2024-01-01', 2, 'staff1@BusManagement.org', '2345678901', '@1', 1),
+    ('Michael Charlotte', '2024-01-01', 2, 'staff2@BusManagement.org', '3456789012', '@1', 1),
+    ('Steve Paris', '2024-01-01', 2, 'staff3@BusManagement.org', '4567890123', '@1', 1);
+
+-- Insert random member accounts
+INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
+VALUES 
+    ('NguyenLe', '2024-01-01', 3, 'nguyenbr23@gmail.com', '5678901234', '@1', 1),
+    ('Member User 2', '2024-01-01', 3, 'member2@gmail.com', '6789012345', '@1', 1),
+    ('Member User 3', '2024-01-01', 3, 'member3@gmail.com', '7890123456', '@1', 1);
+
+	
+-- Insert a new driver
+INSERT INTO [BusManagementSystem].[dbo].[Driver] (Name, PhoneNumber, Status, Shift, Email, RoleId)
+VALUES ('John Doe', '1234567890', 1, '2024-10-22 08:00:00', 'johndoe@BusManagement.org', 4);
+
+-- Insert Route data
+INSERT INTO [BusManagementSystem].[dbo].[Route] ([RouteName], [StartLocation], [EndLocation], [Distance], [Duration]) 
+VALUES
+('10', 'District 1', 'District 7', 10.5, '00:25:00'),
+('55', 'Tan Binh District', 'Phu Nhuan District', 8.3, '00:20:00'),
+('52', 'District 2', 'Thu Duc City', 15.2, '00:35:00'),
+('01', 'Binh Thanh District', 'District 9', 12.0, '00:30:00'),
+('30', 'District 3', 'Go Vap District', 7.8, '00:18:00'),
+('09', 'District 5', 'District 10', 6.4, '00:15:00'),
+('13', 'District 4', 'District 8', 9.1, '00:22:00'),
+('D4', 'Tan Phu District', 'Binh Tan District', 13.7, '00:32:00'),
+('67-1', 'District 1', 'District 3', 5.6, '00:12:00'),
+('70-1', 'District 11', 'District 6', 8.9, '00:20:00');
+
+
