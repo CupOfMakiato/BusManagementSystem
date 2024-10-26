@@ -5,6 +5,8 @@ using SystemRepository.Implementation;
 using SystemRepository.Interface;
 using SystemService.Implementation;
 using SystemService.Interface;
+using SystemRepository;
+using SystemService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,9 @@ builder.Services.AddSingleton<IBusRepository, BusRepository>();
 builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
 builder.Services.AddSingleton<IDriverRepository, DriverRepository>();
 builder.Services.AddSingleton<IRouteRepository, RouteRepository>();
+
+builder.Services.AddSingleton<ITicketService, TicketService>();
+builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
 
 
 
