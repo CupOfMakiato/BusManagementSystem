@@ -1,47 +1,166 @@
 ﻿@page
 @model BusManagementSystem.Pages.ViewBus.IndexModel
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "Index";
+    Layout = "_StaffLayout";
+    ViewData["Title"] = "Bus Management";
 }
-<h2>Bus Management</h2>
 
-<form method="get">
-    <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search buses..." />
-    <button type="submit">Search</button>
-</form>
+<!-- Custom Styles -->
+<style>
+    .status-badge {
+        padding: 0.5em 1em;
+        border-radius: 0.25rem;
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Bus Number</th>
-            <th>Driver</th>
-            <th>Route</th>
-            <th>Status</th>
-            <th>Created At</th>
-            <th>Modified At</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Bus != null && Model.Bus.Any())
-        {
-            foreach (var bus in Model.Bus)
-            {
+
+    .table thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .btn-primary, .btn-warning, .btn-danger, .btn-success {
+        margin-bottom: 0.5em;
+    }
+
+    .btn-primary:hover, .btn-warning:hover, .btn-danger:hover, .btn-success:hover {
+        opacity: 0.85;
+    }
+
+    .modal-header {
+        background-color: #343a40;
+        color: white;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <h2>Menu</h2>
+        <div class="list-group">
+            <a href="/ViewRoute/Index" class="list-group-item list-group-item-action">Route Management</a>
+            <a href="/ViewBus/Index" class="list-group-item list-group-item-action active">Bus Management</a>
+            <a href="/ViewDrivers/Index" class="list-group-item list-group-item-action">Driver Management</a>
+        </div>
+    </div>
+
+    <div class="col-md-10">
+        <h2 class="mb-4">Bus Management</h2>
+
+        <div class="d-flex mb-2">
+            <a asp-page="Create" class="btn btn-primary fw-bold btn-sm">
+                <i class="fas fa-plus"></i> Create New Bus
+            </a>
+        </div>
+
+        <form method="get" class="mb-3">
+            <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search buses..." class="form-control" />
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </form>
+
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@bus.BusNumber</td>
-                    <td>@bus.Driver?.Name</td>
-                    <td>@bus.AssignedRoute?.RouteName</td>
-                    <td>@(bus.Status == 1 ? "Active" : bus.Status == 2 ? "Inactive" : "Maintenance")</td>
-                    <td>@bus.CreatedAt?.ToString("yyyy-MM-dd")</td>
-                    <td>@bus.ModifiedAt?.ToString("yyyy-MM-dd")</td>
+                    <th>Bus Number</th>
+                    <th>Driver</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @if (Model.Bus != null && Model.Bus.Any())
+                {
+                    foreach (var bus in Model.Bus)
+                    {
+                        <tr>
+                            <td>@bus.BusNumber</td>
+                            <td>@bus.Driver?.Name</td>
+                            <td>@bus.AssignedRoute?.RouteName</td>
+                            <td>
+                                <span class="status-badge @(bus.Status == 1 ? "status-active" : bus.Status == 2 ? "status-inactive" : "status-maintenance")">
+                                    @(bus.Status == 1 ? "Active" : bus.Status == 2 ? "Inactive" : "Maintenance")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-warning fw-bold updateButton" data-id="@bus.BusId">
+                                        <i class="fas fa-edit"></i> Update
+                                    </a>
+                                    <a class="btn btn-danger fw-bold deleteButton" data-id="@bus.BusId">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                    <a class="btn btn-success fw-bold detailsButton" data-id="@bus.BusId">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No buses found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Modal for Details -->
+        <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel">Bus Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Content loaded via AJAX -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    $('body').on('click', '.updateButton', function () {
+                        var id = $(this).data('id');
+                        window.location.href = '/ViewBus/Edit?id=' + id;
+                    });
+
+                    $('body').on('click', '.deleteButton', function () {
+                        var id = $(this).data('id');
+                        window.location.href = '/ViewBus/Delete?id=' + id;
+                    });
+
+                    $('body').on('click', '.detailsButton', function () {
+                        var id = $(this).data('id');
+                        $('#formModalLabel').text('Bus Details');
+                        openDetailsModal(id);
+                    });
+                });
+
+                function openDetailsModal(id) {
+                    $.ajax({
+                        url: '/ViewBus/Details?id=' + id,
+                        method: 'GET',
+                        success: function (data) {
+                            $('.modal-body').html(data);
+                            $('#formModal').modal('show');
+                        }
+                    });
+                }
+
+                function closeModal() {
+                    $('#formModal').modal('hide');
+                    window.location.href = '/ViewBus/Index';
+                }
+            </script>
         }
-        else
-        {
-            <tr>
-                <td colspan="6">No buses found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    </div>
+</div>

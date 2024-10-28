@@ -96,7 +96,8 @@
                 }
                 <button type="submit" asp-page-handler="Login" class="btn btn-primary btn-login">Login</button>
                 <a href="/Register" class="btn btn-secondary btn-login">Register</a>
-                <a href="/Guest/Index" class="btn btn-secondary">Cancel</a>
+                <a href="javascript:void(0);" onclick="history.length > 1 ? history.back() : window.location='/Guest/Index';" class="btn btn-secondary">Cancel</a>
+
             </form>
 
         </div>

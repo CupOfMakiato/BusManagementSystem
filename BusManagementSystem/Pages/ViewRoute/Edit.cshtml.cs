@@ -88,7 +88,7 @@ namespace BusManagementSystem.Pages.ViewRoute
             if (loginAccount != null)
             {
                 var account = System.Text.Json.JsonSerializer.Deserialize<User>(loginAccount);
-                return account?.RoleId == 1; // Assuming only admin (RoleId 1) can edit routes
+                return account?.RoleId == 2;
             }
             return false;
         }
