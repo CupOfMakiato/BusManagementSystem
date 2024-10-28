@@ -73,10 +73,6 @@ namespace BusManagementSystem.Pages.ViewDrivers
                 existingDriver.Status = Driver.Status;
                 existingDriver.Shift = Driver.Shift;
                 existingDriver.Email = Driver.Email;
-                if (!string.IsNullOrEmpty(Driver.Password))
-                {
-                    existingDriver.Password = Driver.Password;
-                }
                 existingDriver.RoleId = Driver.RoleId;
 
                 _driverService.UpdateDriver(existingDriver);

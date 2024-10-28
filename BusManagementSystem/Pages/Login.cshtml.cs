@@ -51,6 +51,8 @@ namespace BusManagementSystem.Pages
                             return RedirectToPage("/ViewRoute/Index");
                         case 3: // Member role
                             return RedirectToPage("/Member/Index");
+                        //case 4: // Driver role
+                        //    return RedirectToPage("/ViewDrivers/Index");
                     }
                 }
                 else
