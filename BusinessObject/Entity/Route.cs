@@ -21,5 +21,5 @@ public partial class Route
 
     public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
 
-    public virtual ICollection<RouteTicket> RouteTickets { get; set; } = new List<RouteTicket>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
