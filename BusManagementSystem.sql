@@ -1,10 +1,12 @@
--- Create the BusManagementSystem database
-CREATE DATABASE BusManagementSystem;
+USE master
+GO
+
+CREATE DATABASE [BusManagementSystem]
 GO
 
 USE [BusManagementSystem]
 GO
-/****** Object:  Table [dbo].[Booking]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Booking]    Script Date: 10/30/2024 9:59:04 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,20 +14,20 @@ GO
 CREATE TABLE [dbo].[Booking](
 	[BookingId] [int] IDENTITY(1,1) NOT NULL,
 	[UserId] [int] NULL,
-	[BusId] [int] NULL,
 	[BookingDate] [datetime2](7) NULL,
 	[Status] [int] NULL,
 	[CreatedAt] [datetime2](7) NULL,
 	[ModifiedAt] [datetime2](7) NULL,
 	[CreatedBy] [int] NULL,
 	[ModifiedBy] [int] NULL,
+	[TicketId] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[BookingId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Bus]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Bus]    Script Date: 10/30/2024 9:59:04 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -44,7 +46,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[BusStop]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[BusStop]    Script Date: 10/30/2024 9:59:04 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -61,7 +63,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Driver]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Driver]    Script Date: 10/30/2024 9:59:04 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -80,7 +82,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[FreeTicket]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[FreeTicket]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -111,7 +113,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[FreeTicketVerification]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[FreeTicketVerification]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -128,7 +130,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Payment]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Payment]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,7 +147,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PaymentDetail]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[PaymentDetail]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -161,23 +163,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RegistrationType]    Script Date: 26/10/2024 10:03:49 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[RegistrationType](
-	[RegistrationTypeId] [int] IDENTITY(1,1) NOT NULL,
-	[TypeName] [nvarchar](50) NULL,
-	[Description] [nvarchar](255) NULL,
-	[Status] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[RegistrationTypeId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Role]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Role]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -191,7 +177,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Route]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Route]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -209,44 +195,27 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RouteTicket]    Script Date: 26/10/2024 10:03:49 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[RouteTicket](
-	[RouteTicketId] [int] IDENTITY(1,1) NOT NULL,
-	[RouteId] [int] NOT NULL,
-	[TicketId] [int] NOT NULL,
-	[CreatedAt] [datetime] NULL,
-	[ModifiedAt] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[RouteTicketId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Ticket]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[Ticket]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Ticket](
 	[TicketId] [int] IDENTITY(1,1) NOT NULL,
-	[BookingId] [int] NULL,
 	[UserId] [int] NULL,
 	[Price] [decimal](10, 2) NULL,
-	[DateTime] [datetime2](7) NULL,
+	[StartDate] [datetime2](7) NULL,
+	[EndDate] [datetime2](7) NULL,
 	[Status] [int] NULL,
-	[RegistrationTypeId] [int] NULL,
 	[IsFreeTicket] [bit] NULL,
+	[RouteId] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[TicketId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 26/10/2024 10:03:49 PM ******/
+/****** Object:  Table [dbo].[User]    Script Date: 10/30/2024 9:59:05 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -276,17 +245,15 @@ ALTER TABLE [dbo].[FreeTicketVerification] ADD  DEFAULT (getdate()) FOR [Verific
 GO
 ALTER TABLE [dbo].[Payment] ADD  DEFAULT (getdate()) FOR [PaymentDate]
 GO
-ALTER TABLE [dbo].[RouteTicket] ADD  DEFAULT (getdate()) FOR [CreatedAt]
-GO
-ALTER TABLE [dbo].[RouteTicket] ADD  DEFAULT (getdate()) FOR [ModifiedAt]
-GO
 ALTER TABLE [dbo].[Ticket] ADD  DEFAULT ((0)) FOR [IsFreeTicket]
-GO
-ALTER TABLE [dbo].[Booking]  WITH CHECK ADD FOREIGN KEY([BusId])
-REFERENCES [dbo].[Bus] ([BusId])
 GO
 ALTER TABLE [dbo].[Booking]  WITH CHECK ADD FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([UserId])
+GO
+ALTER TABLE [dbo].[Booking]  WITH CHECK ADD  CONSTRAINT [FK_Booking_TicketId] FOREIGN KEY([TicketId])
+REFERENCES [dbo].[Ticket] ([TicketId])
+GO
+ALTER TABLE [dbo].[Booking] CHECK CONSTRAINT [FK_Booking_TicketId]
 GO
 ALTER TABLE [dbo].[Bus]  WITH CHECK ADD FOREIGN KEY([AssignedRouteId])
 REFERENCES [dbo].[Route] ([RouteId])
@@ -315,36 +282,25 @@ GO
 ALTER TABLE [dbo].[PaymentDetail]  WITH CHECK ADD FOREIGN KEY([PaymentId])
 REFERENCES [dbo].[Payment] ([PaymentId])
 GO
-ALTER TABLE [dbo].[RouteTicket]  WITH CHECK ADD FOREIGN KEY([RouteId])
-REFERENCES [dbo].[Route] ([RouteId])
-GO
-ALTER TABLE [dbo].[RouteTicket]  WITH CHECK ADD FOREIGN KEY([TicketId])
-REFERENCES [dbo].[Ticket] ([TicketId])
-GO
-ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD FOREIGN KEY([BookingId])
-REFERENCES [dbo].[Booking] ([BookingId])
-GO
-ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD FOREIGN KEY([RegistrationTypeId])
-REFERENCES [dbo].[RegistrationType] ([RegistrationTypeId])
-GO
 ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([UserId])
+GO
+ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_RouteId] FOREIGN KEY([RouteId])
+REFERENCES [dbo].[Route] ([RouteId])
+GO
+ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_RouteId]
 GO
 ALTER TABLE [dbo].[User]  WITH CHECK ADD FOREIGN KEY([RoleId])
 REFERENCES [dbo].[Role] ([RoleId])
 GO
+
 USE [master]
 GO
 ALTER DATABASE [BusManagementSystem] SET  READ_WRITE 
 GO
 
 -- Adding sample data for Roles (optional)
-INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Admin'), ('Staff'), ('Member');
-
--- Insert the Driver role into the Role table
-INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Driver');
-
-
+INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Admin'), ('Staff'), ('Member'), ('Driver');
 
 
 -- Inserting sample accounts into User table
