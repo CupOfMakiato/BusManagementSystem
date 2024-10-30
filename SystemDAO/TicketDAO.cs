@@ -14,7 +14,6 @@ namespace SystemDAO
             {
                 using var context = new BusManagementSystemContext();
                 return context.Tickets
-                    .Include(t => t.Booking)
                     .Include(t => t.User)
                     .ToList();
             }
@@ -30,7 +29,6 @@ namespace SystemDAO
             {
                 using var context = new BusManagementSystemContext();
                 return context.Tickets
-                    .Include(t => t.Booking)
                     .Include(t => t.User)
                     .FirstOrDefault(t => t.TicketId == ticketId);
             }

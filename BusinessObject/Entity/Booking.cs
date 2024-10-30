@@ -9,8 +9,6 @@ public partial class Booking
 
     public int? UserId { get; set; }
 
-    public int? BusId { get; set; }
-
     public DateTime? BookingDate { get; set; }
 
     public int? Status { get; set; }
@@ -23,11 +21,11 @@ public partial class Booking
 
     public int? ModifiedBy { get; set; }
 
-    public virtual Bus? Bus { get; set; }
+    public int? TicketId { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public virtual Ticket? Ticket { get; set; }
 
     public virtual User? User { get; set; }
 }
