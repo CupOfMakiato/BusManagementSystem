@@ -92,7 +92,7 @@ namespace BusManagementSystem.Pages.ViewDrivers
             if (loginAccount != null)
             {
                 var account = System.Text.Json.JsonSerializer.Deserialize<User>(loginAccount);
-                return account?.RoleId == 1;
+                return account?.RoleId == 2;
             }
             return false;
         }

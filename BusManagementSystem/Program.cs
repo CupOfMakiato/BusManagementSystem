@@ -10,8 +10,6 @@ using SystemService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<BusManagementSystemContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // register services
 builder.Services.AddSingleton<IUserService, UserService>();
