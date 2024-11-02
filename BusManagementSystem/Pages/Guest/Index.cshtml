@@ -23,7 +23,20 @@
         <div class="ticket-options" style="display: flex; gap: 20px;">
             <div class="ticket-option" style="text-align: center;">
                 <img src="~/images/monthly bus ticket.png" alt="Monthly Ticket" style="width: 100px;">
-                <button onclick="location.href='/Guest/RegisterTicket'" style="display: block; margin-top: 10px;">Register Monthly Ticket</button>
+                <button onclick="redirectToRegisterTicket()" style="display: block; margin-top: 10px;">Register Monthly Ticket</button>
+                <script>
+                    function redirectToRegisterTicket() {
+                        // Check if user is logged in by evaluating the session variable (or another method provided by your backend)
+                        const isLoggedIn = '@(HttpContext.Session.GetInt32("UserId") != null)';
+
+                        if (isLoggedIn === 'True') {
+                            location.href = '/Member/RegisterTicket';
+                        } else {
+                            alert("You need to log in to register a monthly ticket.");
+                            location.href = '/Login';
+                        }
+                    }
+                </script>
             </div>
             <div class="ticket-option" style="text-align: center;">
                 <img src="~/images/monthly free bus ticket.png" alt="Free Ticket" style="width: 100px;">
