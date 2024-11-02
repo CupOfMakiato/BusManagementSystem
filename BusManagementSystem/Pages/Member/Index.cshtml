@@ -1,47 +1,56 @@
 ﻿@page
 @model BusManagementSystem.Pages.Member.IndexModel
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "Index";
+    Layout = "_Layout"; // Assuming _Layout includes the login and authentication elements
+    ViewData["Title"] = "Bus Ticket Registration - Member";
 }
-<h2>Bus List</h2>
 
-<form method="get">
-    <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search buses..." />
-    <button type="submit">Search</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Bus Number</th>
-            <th>Driver</th>
-            <th>Route</th>
-            <th>Status</th>
-            <th>Created At</th>
-            <th>Modified At</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Bus != null && Model.Bus.Any())
-        {
-            foreach (var bus in Model.Bus)
-            {
-                <tr>
-                    <td>@bus.BusNumber</td>
-                    <td>@bus.Driver?.Name</td>
-                    <td>@bus.AssignedRoute?.RouteName</td>
-                    <td>@(bus.Status == 1 ? "Active" : bus.Status == 2 ? "Inactive" : "Maintenance")</td>
-                    <td>@bus.CreatedAt?.ToString("yyyy-MM-dd")</td>
-                    <td>@bus.ModifiedAt?.ToString("yyyy-MM-dd")</td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="6">No buses found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <img src="~/images/logo.png" alt="Logo" class="logo">
+            <h1>City Bus Management Center</h1>
+            <div class="contact-info">
+                <span>📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi</span>
+                <span>📞 Hotline: 19006836</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/Member">Home</a>
+        <a href="/Member/RegisterTicket">Register Monthly Ticket</a>
+        <a href="/Member/RegisterFreeTicket">Register Free Ticket</a>
+        <a href="/Member/FAQ">FAQ</a>
+    </nav>
+
+    <!-- Main Section -->
+    <main class="main-section">
+        <h2>WELCOME TO OUR SERVICE</h2>
+        <p>Welcome to our website for registering bus monthly tickets and free bus tickets. Our platform helps customers register quickly, conveniently, and saves time and travel costs.</p>
+
+        <div class="ticket-options">
+            <div class="ticket-option">
+                <img src="~/images/monthly_ticket.png" alt="Monthly Ticket">
+                <button onclick="location.href='/Member/RegisterTicket'">Register Monthly Ticket</button>
+            </div>
+            <div class="ticket-option">
+                <img src="~/images/free_ticket.png" alt="Free Ticket">
+                <button onclick="location.href='/Member/RegisterFreeTicket'">Register Free Ticket</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

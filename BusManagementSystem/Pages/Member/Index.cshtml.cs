@@ -1,43 +1,17 @@
-using BusinessObject.Entity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.Member
 {
     public class IndexModel : PageModel
     {
-        private readonly IBusService _busService;
+        // Optional: Add any homepage-related properties if needed, like welcome messages or dynamic content.
+        public string WelcomeMessage { get; set; } = "Welcome to the City Bus Management Center!";
+        public string ContactInfo { get; set; } = "📞 Hotline: 19006836 | 📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi";
 
-        public IndexModel(IBusService busService)
+        public IActionResult OnGet()
         {
-            _busService = busService;
-        }
-
-        public IList<Bus> Bus { get; set; } = default!;
-        public string? SearchQuery { get; set; }
-
-        public IActionResult OnGet(string? searchQuery)
-        {
-
-            // Store the search query in the model for the Razor Page
-            SearchQuery = searchQuery;
-
-            // Fetch all news bus
-            var buses = _busService.GetAllBuses();
-
-            // Filter based on search query if provided
-            if (!string.IsNullOrEmpty(searchQuery))
-            {
-                buses = buses.Where(b =>
-                    (b.BusNumber.HasValue && b.BusNumber.ToString().Contains(searchQuery)) ||
-                    (b.Driver != null && b.Driver.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
-                    (b.AssignedRoute != null && b.AssignedRoute.RouteName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
-                ).ToList();
-            }
-
-            // Assign filtered list to the model property
-            Bus = buses;
+            // This method only serves to load the homepage, so we don't need to fetch or filter any route data here.
             return Page();
         }
     }
