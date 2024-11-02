@@ -1,27 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using BusinessObject.Entity;
+using SystemDAO;
 using SystemService.Interface;
 
-namespace BusManagementSystem.Pages.ViewRoute
+namespace BusManagementSystem.Pages.ViewDrivers
 {
     public class EditModel : PageModel
     {
-        private readonly IRouteService _routeService;
+        private readonly IDriverService _driverService;
+        private readonly IRoleService _roleService;
 
-        public EditModel(IRouteService routeService)
+        public EditModel(IDriverService driverService, IRoleService roleService)
         {
-            _routeService = routeService;
+            _driverService = driverService;
+            _roleService = roleService;
         }
 
         [BindProperty]
-        public BusinessObject.Entity.Route Route { get; set; } = default!;
-
+        public Driver Driver { get; set; } = default!;
         public string? Message { get; set; }
 
-        public IActionResult OnGet(short? id)
+        public IActionResult OnGet(int? id)
         {
             if (!CheckSession())
                 return RedirectToPage("/Login");
@@ -32,14 +38,14 @@ namespace BusManagementSystem.Pages.ViewRoute
                 return Page();
             }
 
-            var route = _routeService.GetAllRoutes().FirstOrDefault(m => m.RouteId == id);
-            if (route == null)
+            Driver = _driverService.GetAllDrivers().FirstOrDefault(m => m.DriverId == id);
+            if (Driver == null)
             {
                 Message = "Not Found";
                 return Page();
             }
 
-            Route = route;
+            ViewData["RoleId"] = new SelectList(_roleService.GetAllRoles(), "RoleId", "RoleName", Driver.RoleId);
             return Page();
         }
 
@@ -55,25 +61,23 @@ namespace BusManagementSystem.Pages.ViewRoute
 
             try
             {
-                var route = _routeService.GetAllRoutes().FirstOrDefault(r => r.RouteId == Route.RouteId);
-                if (route == null)
+                var existingDriver = _driverService.GetAllDrivers().FirstOrDefault(a => a.DriverId == Driver.DriverId);
+                if (existingDriver == null)
                 {
                     Message = "Not Found";
                     return Page();
                 }
 
-                // Update all the necessary fields from the form
-                route.RouteName = Route.RouteName;
-                route.StartLocation = Route.StartLocation;
-                route.EndLocation = Route.EndLocation;
-                route.Distance = Route.Distance;
-                route.Duration = Route.Duration;
+                existingDriver.Name = Driver.Name;
+                existingDriver.PhoneNumber = Driver.PhoneNumber;
+                existingDriver.Status = Driver.Status;
+                existingDriver.Shift = Driver.Shift;
+                existingDriver.Email = Driver.Email;
+                existingDriver.RoleId = Driver.RoleId;
 
-                // Save changes
-                _routeService.UpdateRoute(route);
-
+                _driverService.UpdateDriver(existingDriver);
                 Message = "Update successful!";
-                return RedirectToPage("/ViewRoute/Index");
+                return RedirectToPage("/ViewDrivers/Index");
             }
             catch (Exception ex)
             {

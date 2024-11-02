@@ -21,7 +21,5 @@ public partial class Bus
 
     public virtual Route? AssignedRoute { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
     public virtual Driver? Driver { get; set; }
 }

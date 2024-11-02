@@ -82,7 +82,7 @@ namespace BusManagementSystem.Pages.ViewRoute
             if (loginAccount != null)
             {
                 var account = JsonSerializer.Deserialize<User>(loginAccount);
-                if (account != null && account.RoleId == 1) // Assuming RoleId == 1 is Admin
+                if (account != null && account.RoleId == 2) // Assuming RoleId == 1 is Admin
                     return true;
             }
             return false;

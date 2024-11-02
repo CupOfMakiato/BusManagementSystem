@@ -23,4 +23,6 @@ namespace SystemRepository
 
         public void DeleteTicket(int ticketId) => _ticketDAO.DeleteTicket(ticketId);
     }
+
 }
+

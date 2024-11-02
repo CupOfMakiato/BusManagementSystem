@@ -10,6 +10,7 @@ using SystemService;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Register BusManagementSystemContext with a connection string
 builder.Services.AddDbContext<BusManagementSystemContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -21,14 +22,40 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRouteService, RouteService>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 
+
+// register services
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IBusService, BusService>();
+builder.Services.AddSingleton<IRoleService, RoleService>();
+builder.Services.AddSingleton<IRouteService, RouteService>();
+builder.Services.AddSingleton<IDriverService, DriverService>();
+
+
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBusRepository, BusRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddScoped<IRouteRepository, RouteRepository>();
 
+
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+=======
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IBusRepository, BusRepository>();
+builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
+builder.Services.AddSingleton<IDriverRepository, DriverRepository>();
+builder.Services.AddSingleton<IRouteRepository, RouteRepository>();
+
+builder.Services.AddSingleton<ITicketService, TicketService>();
+builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
+
+
+
+//builder.Services.AddSingleton<UserDAO>();
+
+
 
 // Add session services
 builder.Services.AddSession(options =>

@@ -52,9 +52,7 @@ namespace BusManagementSystem.Pages
                             return RedirectToPage("/ViewRoute/Index");
                         case 3: // Member role
                             return RedirectToPage("/Member/Index");
-                            // Uncomment if needed for Driver role
-                            // case 4:
-                            //     return RedirectToPage("/ViewDrivers/Index");
+
                     }
                 }
                 else
