@@ -15,4 +15,6 @@ namespace SystemRepository.Interface
         void UpdateDriver(Driver driver);
         void DeleteDriver(int driverId);
     }
+
 }
+

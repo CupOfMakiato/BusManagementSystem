@@ -1,0 +1,118 @@
+﻿@page
+@model BusManagementSystem.Pages.Member.RegisterTicketModel
+@{
+    ViewData["Title"] = "Register Monthly Ticket";
+}
+
+<div class="register-ticket-wrapper">
+    <div class="register-ticket-container">
+        <h2>Register Monthly Ticket</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="section">
+                <h3>User Information</h3>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" class="form-control" value="@Model.User.Name" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number:</label>
+                    <input type="text" class="form-control" value="@Model.User.PhoneNumber" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" class="form-control" value="@Model.User.Email" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth:</label>
+                    <input type="text" class="form-control" value="@Model.User.DateOfBirth?.ToString("yyyy-MM-dd")" readonly />
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Ticket Details</h3>
+
+                <div class="form-group">
+                    <label>Ảnh làm thẻ 3x4:</label>
+                    <input type="file" name="Photo3x4" accept="image/*" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Ticket Type:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="TicketType" value="Một tuyến" onchange="updatePrice()" required />
+                            Một tuyến - 100,000 VND
+                        </label>
+                        <label>
+                            <input type="radio" name="TicketType" value="Liên Tuyến" onchange="updatePrice()" />
+                            Liên Tuyến - 200,000 VND
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="routeSelection" style="display: none;">
+                    <label for="SelectedRouteId">Select Route:</label>
+                    <select id="SelectedRouteId" name="SelectedRouteId" class="form-control">
+                        <option value="">-- Select a Route --</option>
+                        @foreach (var route in Model.Routes)
+                        {
+                            <option value="@route.RouteId">@route.RouteName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="priority" name="IsPriority" onchange="updatePrice()" />
+                        Ưu tiên - Apply 50% discount
+                    </label>
+                </div>
+
+                <div class="form-group" id="priorityType" style="display: none;">
+                    <label>Priority Type:</label>
+                    <select id="PriorityType" name="PriorityType" class="form-control">
+                        <option value="">-- Select Priority Type --</option>
+                        <option value="Học Sinh, Sinh Viên">Học Sinh, Sinh Viên</option>
+                        <option value="Công Nhân khu CN">Công Nhân khu CN</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="studentWorkerIDUploads" style="display: none;">
+                    <label>Thẻ Sinh viên/Thẻ Công nhân:</label>
+                    <div class="form-group">
+                        <label>Mặt Trước:</label>
+                        <input type="file" name="IDCardFront" accept="image/*" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Mặt Sau:</label>
+                        <input type="file" name="IDCardBack" accept="image/*" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Ticket Validity</h3>
+                <div class="form-group">
+                    <label>Start Date:</label>
+                    <input type="text" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>End Date:</label>
+                    <input type="text" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Price:</label>
+                    <input type="text" id="Price" name="Price" class="form-control" value="@Model.CalculatedPrice.ToString("N0") + " VND" readonly />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+        </form>
+    </div>
+</div>

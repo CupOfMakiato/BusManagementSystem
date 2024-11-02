@@ -38,7 +38,8 @@ namespace BusManagementSystem.Pages
                 var user = _userService.GetAccountByEmailAndPassword(Input.Email, Input.Password);
                 if (user != null)
                 {
-                    // Store user data in session
+                    // Store user ID and Name in session for easy access
+                    HttpContext.Session.SetInt32("UserId", user.UserId);
                     HttpContext.Session.SetString("UserName", user.Name);
                     HttpContext.Session.SetString("LoginSession", JsonSerializer.Serialize(user));
 
@@ -51,8 +52,7 @@ namespace BusManagementSystem.Pages
                             return RedirectToPage("/ViewRoute/Index");
                         case 3: // Member role
                             return RedirectToPage("/Member/Index");
-                        //case 4: // Driver role
-                        //    return RedirectToPage("/ViewDrivers/Index");
+
                     }
                 }
                 else
