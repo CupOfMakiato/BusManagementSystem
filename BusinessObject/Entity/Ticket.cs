@@ -14,15 +14,15 @@ namespace BusinessObject.Entity
         public bool? IsFreeTicket { get; set; }
         public int? RouteId { get; set; }
 
-        // New properties for priority type and uploaded files
-        public string? PriorityType { get; set; } // e.g., "Học Sinh, Sinh Viên", "Công Nhân khu CN"
-        public string? Photo3x4 { get; set; } // File path or URL for 3x4 photo
-        public string? IDCardFront { get; set; } // File path or URL for ID card front
-        public string? IDCardBack { get; set; } // File path or URL for ID card back
+        public string? PriorityType { get; set; }
+        public string? Photo3x4 { get; set; }
+        public string? IDCardFront { get; set; }
+        public string? IDCardBack { get; set; }
 
-        public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public virtual Booking? Booking { get; set; }
         public virtual ICollection<FreeTicket> FreeTickets { get; set; } = new List<FreeTicket>();
         public virtual Route? Route { get; set; }
         public virtual User? User { get; set; }
     }
+
 }
