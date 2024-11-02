@@ -20,14 +20,9 @@ public partial class Booking
 
     public virtual Bus? Bus { get; set; }
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-=======
     public int? TicketId { get; set; }
-
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Ticket? Ticket { get; set; }
 
     public virtual User? User { get; set; }
-
-    public virtual Ticket? Ticket { get; set; }
 }

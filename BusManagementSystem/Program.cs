@@ -41,7 +41,6 @@ builder.Services.AddScoped<IRouteRepository, RouteRepository>();
 
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
-=======
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IBusRepository, BusRepository>();
 builder.Services.AddSingleton<IRoleRepository, RoleRepository>();

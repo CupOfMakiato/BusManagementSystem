@@ -61,10 +61,10 @@ public partial class BusManagementSystemContext : DbContext
             entity.Property(e => e.BookingDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
 
-            entity.HasOne(d => d.Ticket).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.TicketId)
+            entity.HasOne(d => d.Ticket)
+                .WithOne(p => p.Booking) // Set up one-to-one relationship
+                .HasForeignKey<Booking>(d => d.TicketId) // Specify the foreign key in Booking
                 .HasConstraintName("FK_Booking_TicketId");
-
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserId)
 
@@ -72,12 +72,9 @@ public partial class BusManagementSystemContext : DbContext
 
             // Configure one-to-one relationship with Ticket
             entity.HasOne(d => d.Ticket)
-                .WithOne(t => t.Booking)
-                .HasForeignKey<Ticket>(t => t.TicketId)
-                .OnDelete(DeleteBehavior.ClientCascade)
-                .HasConstraintName("FK__Booking__TicketId");
-
-                .HasConstraintName("FK__Booking__UserId__6477ECF3");
+              .WithOne(p => p.Booking) // One-to-one relationship
+              .HasForeignKey<Booking>(d => d.TicketId)
+              .HasConstraintName("FK_Booking_TicketId");
 
         });
 
