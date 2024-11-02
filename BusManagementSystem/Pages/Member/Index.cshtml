@@ -1,8 +1,7 @@
 ﻿@page
 @model BusManagementSystem.Pages.Member.IndexModel
 @{
-
-    Layout = "_Layout"; // Assuming _Layout includes the login and authentication elements
+    Layout = "_Layout"; // This layout now includes the header and navigation bar
     ViewData["Title"] = "Bus Ticket Registration - Member";
 }
 
@@ -16,72 +15,46 @@
 </head>
 <body>
 
-    <!-- Header Section -->
-    <header class="header">
-        <div class="header-content">
-            <img src="~/images/logo.png" alt="Logo" class="logo">
-            <h1>City Bus Management Center</h1>
-            <div class="contact-info">
-                <span>📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi</span>
-                <span>📞 Hotline: 19006836</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <a href="/Member">Home</a>
-        <a href="/Member/RegisterTicket">Register Monthly Ticket</a>
-        <a href="/Member/RegisterFreeTicket">Register Free Ticket</a>
-        <a href="/Member/FAQ">FAQ</a>
-    </nav>
-
     <!-- Main Section -->
-    <main class="main-section">
+    <main class="main-section" style="padding: 20px;">
         <h2>WELCOME TO OUR SERVICE</h2>
         <p>Welcome to our website for registering bus monthly tickets and free bus tickets. Our platform helps customers register quickly, conveniently, and saves time and travel costs.</p>
 
-        <div class="ticket-options">
-            <div class="ticket-option">
-                <img src="~/images/monthly_ticket.png" alt="Monthly Ticket">
-                <button onclick="location.href='/Member/RegisterTicket'">Register Monthly Ticket</button>
+        <div class="ticket-options" style="display: flex; gap: 20px;">
+            <div class="ticket-option" style="text-align: center;">
+                <img src="~/images/monthly bus ticket.png" alt="Monthly Ticket" style="width: 100px;">
+                <button onclick="location.href='/Member/RegisterTicket'" style="display: block; margin-top: 10px;">Register Monthly Ticket</button>
             </div>
-            <div class="ticket-option">
-                <img src="~/images/free_ticket.png" alt="Free Ticket">
-                <button onclick="location.href='/Member/RegisterFreeTicket'">Register Free Ticket</button>
+            <div class="ticket-option" style="text-align: center;">
+                <img src="~/images/monthly free bus ticket.png" alt="Free Ticket" style="width: 100px;">
+                <button onclick="location.href='/Member/RegisterFreeTicket'" style="display: block; margin-top: 10px;">Register Free Ticket</button>
             </div>
         </div>
     </main>
 
-</body>
-</html>
+    <!-- Route List Section -->
+    <section class="route-list" style="padding: 20px;">
+        <h2>Route List</h2>
+        <form method="get" style="margin-bottom: 20px;">
+            <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search routes..." style="padding: 5px; width: 200px;" />
+            <button type="submit" style="padding: 5px;">Search</button>
+        </form>
 
-
-<h1>
-    Welcome to BusFinder!
-</h1>
-<h2>Route List</h2>
-
-<form method="get">
-    <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search routes..." />
-    <button type="submit">Search</button>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Route Name</th>
-            <th>Start Location</th>
-            <th>End Location</th>
-            <th>Distance</th>
-            <th>Duration</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Route != null && Model.Route.Any())
-        {
-            foreach (var route in Model.Route)
-            {
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Route Name</th>
+                    <th>Start Location</th>
+                    <th>End Location</th>
+                    <th>Distance</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Route != null && Model.Route.Any())
+                {
+                    foreach (var route in Model.Route)
+                    {
                         <tr>
                             <td>@route.RouteName</td>
                             <td>@route.StartLocation</td>
@@ -89,14 +62,17 @@
                             <td>@route.Distance?.ToString("F2")</td>
                             <td>@route.Duration?.ToString()</td>
                         </tr>
-            }
-        }
-        else
-        {
-                <tr>
-                    <td colspan="5">No routes found.</td>
-                </tr>
-        }
-    </tbody>
-</table>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No routes found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
 
+</body>
+</html>

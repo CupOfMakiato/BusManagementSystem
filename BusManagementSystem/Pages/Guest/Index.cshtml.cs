@@ -1,14 +1,17 @@
-using BusinessObject.Entity;
+﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 using SystemService.Interface;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace BusManagementSystem.Pages.Guest
 {
     public class IndexModel : PageModel
     {
+        // Optional: Add any homepage-related properties if needed, like welcome messages or dynamic content.
+        public string WelcomeMessage { get; set; } = "Welcome to the City Bus Management Center!";
+        public string ContactInfo { get; set; } = "📞 Hotline: 19006836 | 📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi";
+
         private readonly IRouteService _routeService;
 
         public IndexModel(IRouteService routeService)
@@ -21,6 +24,10 @@ namespace BusManagementSystem.Pages.Guest
 
         public IActionResult OnGet(string? searchQuery)
         {
+            // Session check - Optional for guest
+            if (!CheckGuestSession())
+                return RedirectToPage("/Login");
+
             // Store the search query in the model for the Razor Page
             SearchQuery = searchQuery;
 
@@ -39,7 +46,29 @@ namespace BusManagementSystem.Pages.Guest
 
             // Assign filtered list to the model property
             Route = routes;
+
             return Page();
+        }
+
+        public bool CheckGuestSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                try
+                {
+                    var account = JsonSerializer.Deserialize<User>(loginAccount);
+                    // No specific role check for guests
+                    if (account != null)
+                        return true;
+                }
+                catch (JsonException)
+                {
+                    // Handle potential deserialization issues
+                    return false;
+                }
+            }
+            return true; // Allow access even if session is not present for guest
         }
     }
 }

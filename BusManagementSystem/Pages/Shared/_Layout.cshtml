@@ -6,58 +6,62 @@
     <title>@ViewData["Title"] - BusManagementSystem</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BusManagementSystem.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">BusManagementSystem</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Guest/Index">Home</a>
-                        </li>
-                    </ul>
-                    <div class="ml-auto">
-                        @{
-                            var isLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserName"));
-                        }
-                        @if (isLoggedIn)
-                        {
-                            <span class="nav-link text-dark">Welcome, @Context.Session.GetString("UserName")</span>
-                            <a class="nav-link text-danger" asp-area="" asp-page="/Logout">Logout</a>
-                        }
-                        else
-                        {
-                            <a class="nav-link text-white bg-dark bg-opacity-75" asp-area="" asp-page="/Login">Login</a>
-                        }
+
+    <!-- Dark Green Header Section with Login Button and Contact Info -->
+    <header class="header" style="background-color: #004d00; color: white; padding: 15px 20px;">
+        <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
+
+            <!-- Left Side: Logo and Title with Address and Hotline -->
+            <div style="display: flex; align-items: center; flex: 1;">
+                <img src="~/images/logo-xe-bus-46 (1).png" alt="Bus Logo" style="margin-right: 15px; width: 50px; height: 50px;">
+                <div>
+                    <h1 style="margin: 0; font-size: 24px;">City Bus Management Center</h1>
+                    <div class="contact-info" style="font-size: 14px; color: #d4d4d4; margin-top: 4px;">
+                        <span style="margin-right: 20px;">📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi</span>
+                        <span>📞 Hotline: 19006836</span>
                     </div>
                 </div>
             </div>
-        </nav>
+
+            <!-- Right Side: Login/Logout Button -->
+            <div style="margin-left: auto;">
+                @* Show Login button if not logged in, else show Welcome message and Logout *@
+                @{
+                    var isLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserName"));
+                    if (isLoggedIn)
+                    {
+                        <span style="margin-right: 15px;">Welcome, @Context.Session.GetString("UserName")</span>
+                        <a href="/Logout" style="padding: 8px 16px; background-color: #ff5722; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Logout</a>
+                    }
+                    else
+                    {
+                        <a href="/Login" style="padding: 8px 16px; background-color: #ff5722; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Login</a>
+                    }
+                }
+            </div>
+        </div>
     </header>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" style="background-color: #00b300; padding: 10px;">
+        <a href="/Guest" style="color: white; margin-right: 15px;">Home</a>
+        <a href="/Guest/RegisterTicket" style="color: white; margin-right: 15px;">Register Monthly Ticket</a>
+        <a href="/Guest/RegisterFreeTicket" style="color: white; margin-right: 15px;">Register Free Ticket</a>
+        <a href="/Guest/FAQ" style="color: white;">FAQ</a>
+    </nav>
+
+    <!-- Main Content -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    @* <footer class="border-top footer text-muted">
-    <div class="container">
-    &copy; 2024 - BusManagementSystem - <a asp-area="" asp-page="/Privacy">Privacy</a>
-    </div>
-    </footer> *@
-
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
