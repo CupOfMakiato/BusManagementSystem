@@ -1,23 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BusinessObject.Entity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-=======
 using System.Text.Json;
 using SystemService.Interface;
-
 
 namespace BusManagementSystem.Pages.Member
 {
     public class IndexModel : PageModel
     {
-
         // Optional: Add any homepage-related properties if needed, like welcome messages or dynamic content.
         public string WelcomeMessage { get; set; } = "Welcome to the City Bus Management Center!";
         public string ContactInfo { get; set; } = "📞 Hotline: 19006836 | 📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi";
-
-        public IActionResult OnGet()
-        {
-            // This method only serves to load the homepage, so we don't need to fetch or filter any route data here.
 
         private readonly IRouteService _routeService;
 
@@ -34,6 +27,7 @@ namespace BusManagementSystem.Pages.Member
             // Session check
             if (!CheckSession())
                 return RedirectToPage("/Login");
+
             // Store the search query in the model for the Razor Page
             SearchQuery = searchQuery;
 
@@ -55,6 +49,7 @@ namespace BusManagementSystem.Pages.Member
 
             return Page();
         }
+
         public bool CheckSession()
         {
             var loginAccount = HttpContext.Session.GetString("LoginSession");
@@ -76,4 +71,3 @@ namespace BusManagementSystem.Pages.Member
         }
     }
 }
-
