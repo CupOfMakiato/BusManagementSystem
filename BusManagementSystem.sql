@@ -6,294 +6,201 @@ GO
 
 USE [BusManagementSystem]
 GO
-/****** Object:  Table [dbo].[Booking]    Script Date: 10/30/2024 9:59:04 PM ******/
+
+-- Create tables
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Booking](
-	[BookingId] [int] IDENTITY(1,1) NOT NULL,
-	[UserId] [int] NULL,
-	[BookingDate] [datetime2](7) NULL,
-	[Status] [int] NULL,
-	[CreatedAt] [datetime2](7) NULL,
-	[ModifiedAt] [datetime2](7) NULL,
-	[CreatedBy] [int] NULL,
-	[ModifiedBy] [int] NULL,
-	[TicketId] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[BookingId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Bus]    Script Date: 10/30/2024 9:59:04 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Bus](
-	[BusId] [int] IDENTITY(1,1) NOT NULL,
-	[BusNumber] [int] NULL,
-	[DriverId] [int] NULL,
-	[Status] [int] NULL,
-	[AssignedRouteId] [int] NULL,
-	[CreatedAt] [datetime2](7) NULL,
-	[ModifiedAt] [datetime2](7) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[BusId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[BusStop]    Script Date: 10/30/2024 9:59:04 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[BusStop](
-	[StopId] [int] IDENTITY(1,1) NOT NULL,
-	[StopName] [nvarchar](100) NULL,
-	[Location] [nvarchar](100) NULL,
-	[RouteId] [int] NULL,
-	[StopOrder] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[StopId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Driver]    Script Date: 10/30/2024 9:59:04 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Driver](
-	[DriverId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](50) NULL,
-	[PhoneNumber] [nvarchar](15) NULL,
-	[Status] [int] NULL,
-	[Shift] [datetime2](7) NULL,
-	[Email] [nvarchar](50) NULL,
-	[RoleId] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[DriverId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[FreeTicket]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[FreeTicket](
-	[FreeTicketID] [int] IDENTITY(1,1) NOT NULL,
-	[TicketID] [int] NOT NULL,
-	[RecipientName] [varchar](100) NOT NULL,
-	[Gender] [varchar](10) NOT NULL,
-	[DateOfBirth] [date] NOT NULL,
-	[IDNumber] [varchar](20) NOT NULL,
-	[IDFrontImage] [varchar](255) NULL,
-	[IDBackImage] [varchar](255) NULL,
-	[District] [varchar](100) NOT NULL,
-	[Ward] [varchar](100) NOT NULL,
-	[RecipientType] [varchar](50) NOT NULL,
-	[Phone] [varchar](15) NOT NULL,
-	[Email] [varchar](100) NULL,
-	[Portrait3x4Image] [varchar](255) NULL,
-	[ProofFrontImage] [varchar](255) NOT NULL,
-	[ProofBackImage] [varchar](255) NOT NULL,
-	[TicketDeliveryAddress] [varchar](255) NOT NULL,
-	[IssueDate] [date] NOT NULL,
-	[ValidUntil] [date] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[FreeTicketID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[FreeTicketVerification]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[FreeTicketVerification](
-	[VerificationId] [int] IDENTITY(1,1) NOT NULL,
-	[UserId] [int] NULL,
-	[VerificationImage] [nvarchar](255) NULL,
-	[VerificationDate] [datetime2](7) NULL,
-	[Status] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[VerificationId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Payment]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Payment](
-	[PaymentId] [int] IDENTITY(1,1) NOT NULL,
-	[BookingId] [int] NULL,
-	[UserId] [int] NULL,
-	[Amount] [decimal](10, 2) NULL,
-	[PaymentDate] [datetime2](7) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[PaymentId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[PaymentDetail]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[PaymentDetail](
-	[PaymentDetailId] [int] IDENTITY(1,1) NOT NULL,
-	[PaymentId] [int] NULL,
-	[Description] [nvarchar](255) NULL,
-	[Status] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[PaymentDetailId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Role]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Role](
-	[RoleId] [int] IDENTITY(1,1) NOT NULL,
-	[RoleName] [nvarchar](50) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[RoleId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Route]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Route](
-	[RouteId] [int] IDENTITY(1,1) NOT NULL,
-	[RouteName] [nvarchar](100) NULL,
-	[StartLocation] [nvarchar](100) NULL,
-	[EndLocation] [nvarchar](100) NULL,
-	[Distance] [decimal](10, 2) NULL,
-	[Duration] [time](7) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[RouteId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Ticket]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Ticket](
-	[TicketId] [int] IDENTITY(1,1) NOT NULL,
-	[UserId] [int] NULL,
-	[Price] [decimal](10, 2) NULL,
-	[StartDate] [datetime2](7) NULL,
-	[EndDate] [datetime2](7) NULL,
-	[Status] [int] NULL,
-	[IsFreeTicket] [bit] NULL,
-	[RouteId] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[TicketId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[User]    Script Date: 10/30/2024 9:59:05 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[User](
-	[UserId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](50) NULL,
-	[DateOfBirth] [datetime2](7) NULL,
-	[RoleId] [int] NULL,
-	[Email] [nvarchar](50) NULL,
-	[PhoneNumber] [nvarchar](11) NULL,
-	[Password] [nvarchar](11) NULL,
-	[Status] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[UserId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[Booking] ADD  DEFAULT (getdate()) FOR [BookingDate]
-GO
-ALTER TABLE [dbo].[Booking] ADD  DEFAULT (getdate()) FOR [CreatedAt]
-GO
-ALTER TABLE [dbo].[Bus] ADD  DEFAULT (getdate()) FOR [CreatedAt]
-GO
-ALTER TABLE [dbo].[FreeTicketVerification] ADD  DEFAULT (getdate()) FOR [VerificationDate]
-GO
-ALTER TABLE [dbo].[Payment] ADD  DEFAULT (getdate()) FOR [PaymentDate]
-GO
-ALTER TABLE [dbo].[Ticket] ADD  DEFAULT ((0)) FOR [IsFreeTicket]
-GO
-ALTER TABLE [dbo].[Booking]  WITH CHECK ADD FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([UserId])
-GO
-ALTER TABLE [dbo].[Booking]  WITH CHECK ADD  CONSTRAINT [FK_Booking_TicketId] FOREIGN KEY([TicketId])
-REFERENCES [dbo].[Ticket] ([TicketId])
-GO
-ALTER TABLE [dbo].[Booking] CHECK CONSTRAINT [FK_Booking_TicketId]
-GO
-ALTER TABLE [dbo].[Bus]  WITH CHECK ADD FOREIGN KEY([AssignedRouteId])
-REFERENCES [dbo].[Route] ([RouteId])
-GO
-ALTER TABLE [dbo].[Bus]  WITH CHECK ADD FOREIGN KEY([DriverId])
-REFERENCES [dbo].[Driver] ([DriverId])
-GO
-ALTER TABLE [dbo].[BusStop]  WITH CHECK ADD FOREIGN KEY([RouteId])
-REFERENCES [dbo].[Route] ([RouteId])
-GO
-ALTER TABLE [dbo].[Driver]  WITH CHECK ADD FOREIGN KEY([RoleId])
-REFERENCES [dbo].[Role] ([RoleId])
-GO
-ALTER TABLE [dbo].[FreeTicket]  WITH CHECK ADD FOREIGN KEY([TicketID])
-REFERENCES [dbo].[Ticket] ([TicketId])
-GO
-ALTER TABLE [dbo].[FreeTicketVerification]  WITH CHECK ADD FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([UserId])
-GO
-ALTER TABLE [dbo].[Payment]  WITH CHECK ADD FOREIGN KEY([BookingId])
-REFERENCES [dbo].[Booking] ([BookingId])
-GO
-ALTER TABLE [dbo].[Payment]  WITH CHECK ADD FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([UserId])
-GO
-ALTER TABLE [dbo].[PaymentDetail]  WITH CHECK ADD FOREIGN KEY([PaymentId])
-REFERENCES [dbo].[Payment] ([PaymentId])
-GO
-ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([UserId])
-GO
-ALTER TABLE [dbo].[Ticket]  WITH CHECK ADD  CONSTRAINT [FK_Ticket_RouteId] FOREIGN KEY([RouteId])
-REFERENCES [dbo].[Route] ([RouteId])
-GO
-ALTER TABLE [dbo].[Ticket] CHECK CONSTRAINT [FK_Ticket_RouteId]
-GO
-ALTER TABLE [dbo].[User]  WITH CHECK ADD FOREIGN KEY([RoleId])
-REFERENCES [dbo].[Role] ([RoleId])
 GO
 
+-- Table: Role
+CREATE TABLE [dbo].[Role](
+    RoleId INT IDENTITY(1,1) NOT NULL,
+    RoleName NVARCHAR(50) NULL,
+    PRIMARY KEY CLUSTERED (RoleId ASC)
+) ON [PRIMARY]
+GO
+
+-- Table: Route
+CREATE TABLE [dbo].[Route](
+    RouteId INT IDENTITY(1,1) NOT NULL,
+    RouteName NVARCHAR(100) NULL,
+    StartLocation NVARCHAR(100) NULL,
+    EndLocation NVARCHAR(100) NULL,
+    Distance DECIMAL(10, 2) NULL,
+    Duration TIME(7) NULL,
+    PRIMARY KEY CLUSTERED (RouteId ASC)
+) ON [PRIMARY]
+GO
+
+-- Table: User
+CREATE TABLE [dbo].[User](
+    UserId INT IDENTITY(1,1) NOT NULL,
+    Name NVARCHAR(50) NULL,
+    DateOfBirth DATETIME2(7) NULL,
+    RoleId INT NULL,
+    Email NVARCHAR(50) NULL,
+    PhoneNumber NVARCHAR(11) NULL,
+    Password NVARCHAR(11) NULL,
+    Status INT NULL,
+    PRIMARY KEY CLUSTERED (UserId ASC),
+    FOREIGN KEY (RoleId) REFERENCES [dbo].[Role] (RoleId)
+) ON [PRIMARY]
+GO
+
+-- Table: Ticket
+CREATE TABLE Ticket (
+    TicketId INT IDENTITY(1,1) NOT NULL,       
+    UserId INT,                         
+    Price DECIMAL(10, 2) NULL,              
+    StartDate DATETIME2(7) NULL,                 
+    EndDate DATETIME2(7) NULL,                   
+    Status INT NULL,                         
+    IsFreeTicket BIT,                   
+    RouteId INT NULL,                        
+    PriorityType NVARCHAR(50),          
+    Photo3x4 VARBINARY(MAX),                      
+    IDCardFront VARBINARY(MAX),                   
+    IDCardBack VARBINARY(MAX),
+    PRIMARY KEY CLUSTERED (TicketId ASC),
+    FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId),
+    FOREIGN KEY (RouteId) REFERENCES [dbo].[Route] (RouteId)
+) ON [PRIMARY]
+GO
+
+-- Table: Booking
+CREATE TABLE Booking (
+    BookingId INT IDENTITY(1,1) NOT NULL,     
+    UserId INT,                          
+    BusId INT,                          
+    BookingDate DATETIME2,               
+    Status INT,                        
+    CreatedAt DATETIME2,                 
+    ModifiedAt DATETIME2,                
+    CreatedBy INT,                      
+    ModifiedBy INT,                    
+    TicketId INT,                
+    PRIMARY KEY CLUSTERED (BookingId ASC),
+    FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId),
+    FOREIGN KEY (TicketId) REFERENCES Ticket (TicketId) ON DELETE SET NULL
+) ON [PRIMARY]
+GO
+
+-- Table: Bus
+CREATE TABLE [dbo].[Bus](
+    BusId INT IDENTITY(1,1) NOT NULL,
+    BusNumber INT NULL,
+    DriverId INT NULL,
+    Status INT NULL,
+    AssignedRouteId INT NULL,
+    CreatedAt DATETIME2(7) NULL,
+    ModifiedAt DATETIME2(7) NULL,
+    PRIMARY KEY CLUSTERED (BusId ASC),
+    FOREIGN KEY (AssignedRouteId) REFERENCES [dbo].[Route] (RouteId)
+) ON [PRIMARY]
+GO
+
+-- Table: BusStop
+CREATE TABLE [dbo].[BusStop](
+    StopId INT IDENTITY(1,1) NOT NULL,
+    StopName NVARCHAR(100) NULL,
+    Location NVARCHAR(100) NULL,
+    RouteId INT NULL,
+    StopOrder INT NULL,
+    PRIMARY KEY CLUSTERED (StopId ASC),
+    FOREIGN KEY (RouteId) REFERENCES [dbo].[Route] (RouteId)
+) ON [PRIMARY]
+GO
+
+-- Table: Driver
+CREATE TABLE [dbo].[Driver](
+    DriverId INT IDENTITY(1,1) NOT NULL,
+    Name NVARCHAR(50) NULL,
+    PhoneNumber NVARCHAR(15) NULL,
+    Status INT NULL,
+    Shift DATETIME2(7) NULL,
+    Email NVARCHAR(50) NULL,
+    RoleId INT NULL,
+    PRIMARY KEY CLUSTERED (DriverId ASC),
+    FOREIGN KEY (RoleId) REFERENCES [dbo].[Role] (RoleId)
+) ON [PRIMARY]
+GO
+
+-- Table: FreeTicket
+CREATE TABLE [dbo].[FreeTicket](
+    FreeTicketID INT IDENTITY(1,1) NOT NULL,
+    TicketID INT NOT NULL,
+    RecipientName VARCHAR(100) NOT NULL,
+    Gender VARCHAR(10) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    IDNumber VARCHAR(20) NOT NULL,
+    IDFrontImage VARCHAR(255) NULL,
+    IDBackImage VARCHAR(255) NULL,
+    District VARCHAR(100) NOT NULL,
+    Ward VARCHAR(100) NOT NULL,
+    RecipientType VARCHAR(50) NOT NULL,
+    Phone VARCHAR(15) NOT NULL,
+    Email VARCHAR(100) NULL,
+    Portrait3x4Image VARCHAR(255) NULL,
+    ProofFrontImage VARCHAR(255) NOT NULL,
+    ProofBackImage VARCHAR(255) NOT NULL,
+    TicketDeliveryAddress VARCHAR(255) NOT NULL,
+    IssueDate DATE NOT NULL,
+    ValidUntil DATE NULL,
+    PRIMARY KEY CLUSTERED (FreeTicketID ASC),
+    FOREIGN KEY (TicketID) REFERENCES [dbo].[Ticket] (TicketId)
+) ON [PRIMARY]
+GO
+
+-- Table: FreeTicketVerification
+CREATE TABLE [dbo].[FreeTicketVerification](
+    VerificationId INT IDENTITY(1,1) NOT NULL,
+    UserId INT NULL,
+    VerificationImage NVARCHAR(255) NULL,
+    VerificationDate DATETIME2(7) NULL,
+    Status INT NULL,
+    PRIMARY KEY CLUSTERED (VerificationId ASC),
+    FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId)
+) ON [PRIMARY]
+GO
+
+-- Table: Payment
+CREATE TABLE [dbo].[Payment](
+    PaymentId INT IDENTITY(1,1) NOT NULL,
+    BookingId INT NULL,
+    UserId INT NULL,
+    Amount DECIMAL(10, 2) NULL,
+    PaymentDate DATETIME2(7) NULL,
+    PRIMARY KEY CLUSTERED (PaymentId ASC),
+    FOREIGN KEY (BookingId) REFERENCES [dbo].[Booking] (BookingId),
+    FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId)
+) ON [PRIMARY]
+GO
+
+-- Table: PaymentDetail
+CREATE TABLE [dbo].[PaymentDetail](
+    PaymentDetailId INT IDENTITY(1,1) NOT NULL,
+    PaymentId INT NULL,
+    Description NVARCHAR(255) NULL,
+    Status INT NULL,
+    PRIMARY KEY CLUSTERED (PaymentDetailId ASC),
+    FOREIGN KEY (PaymentId) REFERENCES [dbo].[Payment] (PaymentId)
+) ON [PRIMARY]
+GO
+
+-- Default values
+ALTER TABLE [dbo].[Booking] ADD DEFAULT (GETDATE()) FOR [BookingDate]
+GO
+ALTER TABLE [dbo].[Booking] ADD DEFAULT (GETDATE()) FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[Bus] ADD DEFAULT (GETDATE()) FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[FreeTicketVerification] ADD DEFAULT (GETDATE()) FOR [VerificationDate]
+GO
+ALTER TABLE [dbo].[Payment] ADD DEFAULT (GETDATE()) FOR [PaymentDate]
+GO
+ALTER TABLE [dbo].[Ticket] ADD DEFAULT ((0)) FOR [IsFreeTicket]
+GO
 USE [master]
 GO
 ALTER DATABASE [BusManagementSystem] SET  READ_WRITE 

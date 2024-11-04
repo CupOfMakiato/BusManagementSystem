@@ -1,48 +1,91 @@
 ﻿@page
 @model BusManagementSystem.Pages.Guest.IndexModel
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "Index";
+    Layout = "_Layout"; // This layout now includes the header and navigation bar
+    ViewData["Title"] = "Bus Ticket Registration - Guest";
 }
-<h1>
-    Welcome to BusFinder!
-</h1>
-<h2>Route List</h2>
 
-<form method="get">
-    <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search routes..." />
-    <button type="submit">Search</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Route Name</th>
-            <th>Start Location</th>
-            <th>End Location</th>
-            <th>Distance</th>
-            <th>Duration</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Route != null && Model.Route.Any())
-        {
-            foreach (var route in Model.Route)
-            {
+    <!-- Main Section -->
+    <main class="main-section" style="padding: 20px;">
+        <h2>WELCOME TO OUR SERVICE</h2>
+        <p>Welcome to our website for registering bus monthly tickets and free bus tickets. Our platform helps customers register quickly, conveniently, and saves time and travel costs.</p>
+
+        <div class="ticket-options" style="display: flex; gap: 20px;">
+            <div class="ticket-option" style="text-align: center;">
+                <img src="~/images/monthly bus ticket.png" alt="Monthly Ticket" style="width: 100px;">
+                <button onclick="redirectToRegisterTicket()" style="display: block; margin-top: 10px;">Register Monthly Ticket</button>
+                <script>
+                    function redirectToRegisterTicket() {
+                        // Check if user is logged in by evaluating the session variable (or another method provided by your backend)
+                        const isLoggedIn = '@(HttpContext.Session.GetInt32("UserId") != null)';
+
+                        if (isLoggedIn === 'True') {
+                            location.href = '/Member/RegisterTicket';
+                        } else {
+                            alert("You need to log in to register a monthly ticket.");
+                            location.href = '/Login';
+                        }
+                    }
+                </script>
+            </div>
+            <div class="ticket-option" style="text-align: center;">
+                <img src="~/images/monthly free bus ticket.png" alt="Free Ticket" style="width: 100px;">
+                <button onclick="location.href='/Guest/RegisterFreeTicket'" style="display: block; margin-top: 10px;">Register Free Ticket</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Route List Section -->
+    <section class="route-list" style="padding: 20px;">
+        <h2>Route List</h2>
+        <form method="get" style="margin-bottom: 20px;">
+            <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search routes..." style="padding: 5px; width: 200px;" />
+            <button type="submit" style="padding: 5px;">Search</button>
+        </form>
+
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
                 <tr>
-                    <td>@route.RouteName</td>
-                    <td>@route.StartLocation</td>
-                    <td>@route.EndLocation</td>
-                    <td>@route.Distance?.ToString("F2")</td>
-                    <td>@route.Duration?.ToString()</td>
+                    <th>Route Name</th>
+                    <th>Start Location</th>
+                    <th>End Location</th>
+                    <th>Distance</th>
+                    <th>Duration</th>
                 </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="5">No routes found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                @if (Model.Route != null && Model.Route.Any())
+                {
+                    foreach (var route in Model.Route)
+                    {
+                        <tr>
+                            <td>@route.RouteName</td>
+                            <td>@route.StartLocation</td>
+                            <td>@route.EndLocation</td>
+                            <td>@route.Distance?.ToString("F2")</td>
+                            <td>@route.Duration?.ToString()</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No routes found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>

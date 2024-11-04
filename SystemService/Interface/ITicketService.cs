@@ -11,4 +11,5 @@ namespace SystemService
         void UpdateTicket(Ticket ticket);
         void DeleteTicket(int ticketId);
     }
+
 }
