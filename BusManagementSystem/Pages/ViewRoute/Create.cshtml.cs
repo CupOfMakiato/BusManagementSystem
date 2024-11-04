@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using BusinessObject.Entity;
-using System.ComponentModel.DataAnnotations;
-using SystemService.Interface;
 using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewRoute
 {

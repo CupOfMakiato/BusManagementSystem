@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BusinessObject.Entity;
+﻿namespace BusinessObject.Entity;
 
 public partial class Route
 {
@@ -22,7 +19,4 @@ public partial class Route
     public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
-
 }
-
-

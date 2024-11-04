@@ -1,10 +1,4 @@
 ﻿using BusinessObject.Entity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SystemDAO;
 using SystemRepository.Interface;
 
@@ -12,45 +6,16 @@ namespace SystemRepository.Implementation
 {
     public class UserRepository : IUserRepository
     {
-        
-        public void AddAccount(User user)
-        {
-            UserDAO.getInstance().AddAccount(user);
-        }
+        public void AddUser(User user) => UserDAO.Instance.AddUser(user);
 
-        public void DeleteAccount(User user)
-        {
-            UserDAO.getInstance().DeleteAccount(user);
-        }
+        public User CheckLogin(string username, string password) => UserDAO.Instance.Checklogin(username, password);
 
-        public User? GetAccountByEmailAndPassword(string email, string password)
-        {
-            return UserDAO.getInstance().GetAccountByEmailAndPassword(email, password);
-        }
+        public void DeleteUser(User user) => UserDAO.Instance.DeleteUser(user);
 
-        public User GetAccountById(short userId)
-        {
-            return UserDAO.getInstance().GetAccountById(userId);
-        }
+        public List<User> GetAllUsers() => UserDAO.Instance.GetAllUser();
 
-        public List<User> GetAllAccount()
-        {
-            return UserDAO.getInstance().GetAllUser();
-        }
+        public User GetUserById(int userId) => UserDAO.Instance.GetUserById(userId);
 
-       
-
-        public void UpdateAccount(User user)
-        {
-            UserDAO.getInstance().UpdateAccount(user);
-        }
-
-        public User VerifyAccount(User user)
-        {
-            return UserDAO.getInstance().VerifyAccount(user);
-        }
-
-       
+        public void UpdateUser(User user) => UserDAO.Instance.UpdateUser(user);
     }
-    
 }

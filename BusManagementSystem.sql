@@ -50,19 +50,20 @@ GO
 
 -- Table: Ticket
 CREATE TABLE Ticket (
-    TicketId INT IDENTITY(1,1) NOT NULL,       
-    UserId INT,                         
-    Price DECIMAL(10, 2) NULL,              
-    StartDate DATETIME2(7) NULL,                 
-    EndDate DATETIME2(7) NULL,                   
-    Status INT NULL,                         
-    IsFreeTicket BIT,                   
-    RouteId INT NULL,                        
-    PriorityType NVARCHAR(50),          
-    Photo3x4 VARBINARY(MAX),                      
-    IDCardFront VARBINARY(MAX),                   
+    TicketId INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT,
+    Price DECIMAL(10, 2),
+    StartDate DATETIME2(7),
+    EndDate DATETIME2(7),
+    Status INT,
+    IsFreeTicket BIT DEFAULT 0,
+    RouteId INT,
+    TicketType NVARCHAR(50),
+    PriorityType NVARCHAR(50),
+    IsPriority BIT,
+    Photo3x4 VARBINARY(MAX),
+    IDCardFront VARBINARY(MAX),
     IDCardBack VARBINARY(MAX),
-    PRIMARY KEY CLUSTERED (TicketId ASC),
     FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId),
     FOREIGN KEY (RouteId) REFERENCES [dbo].[Route] (RouteId)
 ) ON [PRIMARY]
@@ -70,19 +71,19 @@ GO
 
 -- Table: Booking
 CREATE TABLE Booking (
-    BookingId INT IDENTITY(1,1) NOT NULL,     
-    UserId INT,                          
-    BusId INT,                          
-    BookingDate DATETIME2,               
-    Status INT,                        
-    CreatedAt DATETIME2,                 
-    ModifiedAt DATETIME2,                
-    CreatedBy INT,                      
-    ModifiedBy INT,                    
-    TicketId INT,                
+    BookingId INT IDENTITY(1,1) NOT NULL,
+    UserId INT,
+    BusId INT,
+    BookingDate DATETIME2 DEFAULT GETDATE(),
+    Status INT,
+    CreatedAt DATETIME2 DEFAULT GETDATE(),
+    ModifiedAt DATETIME2,
+    CreatedBy INT,
+    ModifiedBy INT,
+    TicketId INT,
     PRIMARY KEY CLUSTERED (BookingId ASC),
     FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId),
-    FOREIGN KEY (TicketId) REFERENCES Ticket (TicketId) ON DELETE SET NULL
+    FOREIGN KEY (TicketId) REFERENCES Ticket (TicketId)
 ) ON [PRIMARY]
 GO
 
@@ -93,8 +94,8 @@ CREATE TABLE [dbo].[Bus](
     DriverId INT NULL,
     Status INT NULL,
     AssignedRouteId INT NULL,
-    CreatedAt DATETIME2(7) NULL,
-    ModifiedAt DATETIME2(7) NULL,
+    CreatedAt DATETIME2(7) DEFAULT GETDATE(),
+    ModifiedAt DATETIME2(7),
     PRIMARY KEY CLUSTERED (BusId ASC),
     FOREIGN KEY (AssignedRouteId) REFERENCES [dbo].[Route] (RouteId)
 ) ON [PRIMARY]
@@ -128,50 +129,49 @@ GO
 
 -- Table: FreeTicket
 CREATE TABLE [dbo].[FreeTicket](
-    FreeTicketID INT IDENTITY(1,1) NOT NULL,
-    TicketID INT NOT NULL,
+    FreeTicketId INT IDENTITY(1,1) PRIMARY KEY,
+    TicketId INT NOT NULL,
     RecipientName VARCHAR(100) NOT NULL,
     Gender VARCHAR(10) NOT NULL,
     DateOfBirth DATE NOT NULL,
     IDNumber VARCHAR(20) NOT NULL,
-    IDFrontImage VARCHAR(255) NULL,
-    IDBackImage VARCHAR(255) NULL,
+    IDFrontImage VARCHAR(255),
+    IDBackImage VARCHAR(255),
     District VARCHAR(100) NOT NULL,
     Ward VARCHAR(100) NOT NULL,
     RecipientType VARCHAR(50) NOT NULL,
     Phone VARCHAR(15) NOT NULL,
-    Email VARCHAR(100) NULL,
-    Portrait3x4Image VARCHAR(255) NULL,
+    Email VARCHAR(100),
+    Portrait3x4Image VARCHAR(255),
     ProofFrontImage VARCHAR(255) NOT NULL,
     ProofBackImage VARCHAR(255) NOT NULL,
     TicketDeliveryAddress VARCHAR(255) NOT NULL,
     IssueDate DATE NOT NULL,
-    ValidUntil DATE NULL,
-    PRIMARY KEY CLUSTERED (FreeTicketID ASC),
-    FOREIGN KEY (TicketID) REFERENCES [dbo].[Ticket] (TicketId)
+    ValidUntil DATE,
+    FOREIGN KEY (TicketId) REFERENCES Ticket (TicketId)
 ) ON [PRIMARY]
 GO
 
 -- Table: FreeTicketVerification
 CREATE TABLE [dbo].[FreeTicketVerification](
-    VerificationId INT IDENTITY(1,1) NOT NULL,
-    UserId INT NULL,
-    VerificationImage NVARCHAR(255) NULL,
-    VerificationDate DATETIME2(7) NULL,
-    Status INT NULL,
-    PRIMARY KEY CLUSTERED (VerificationId ASC),
-    FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId)
+    VerificationId INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT,
+    FreeTicketId INT,
+    VerificationImage NVARCHAR(255),
+    VerificationDate DATETIME2(7) DEFAULT GETDATE(),
+    Status INT,
+    FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId),
+    FOREIGN KEY (FreeTicketId) REFERENCES [dbo].[FreeTicket] (FreeTicketId)
 ) ON [PRIMARY]
 GO
 
 -- Table: Payment
 CREATE TABLE [dbo].[Payment](
-    PaymentId INT IDENTITY(1,1) NOT NULL,
-    BookingId INT NULL,
-    UserId INT NULL,
-    Amount DECIMAL(10, 2) NULL,
-    PaymentDate DATETIME2(7) NULL,
-    PRIMARY KEY CLUSTERED (PaymentId ASC),
+    PaymentId INT IDENTITY(1,1) PRIMARY KEY,
+    BookingId INT,
+    UserId INT,
+    Amount DECIMAL(10, 2),
+    PaymentDate DATETIME2(7) DEFAULT GETDATE(),
     FOREIGN KEY (BookingId) REFERENCES [dbo].[Booking] (BookingId),
     FOREIGN KEY (UserId) REFERENCES [dbo].[User] (UserId)
 ) ON [PRIMARY]
@@ -179,39 +179,18 @@ GO
 
 -- Table: PaymentDetail
 CREATE TABLE [dbo].[PaymentDetail](
-    PaymentDetailId INT IDENTITY(1,1) NOT NULL,
-    PaymentId INT NULL,
-    Description NVARCHAR(255) NULL,
-    Status INT NULL,
-    PRIMARY KEY CLUSTERED (PaymentDetailId ASC),
+    PaymentDetailId INT IDENTITY(1,1) PRIMARY KEY,
+    PaymentId INT,
+    Description NVARCHAR(255),
+    Status INT,
     FOREIGN KEY (PaymentId) REFERENCES [dbo].[Payment] (PaymentId)
 ) ON [PRIMARY]
-GO
-
--- Default values
-ALTER TABLE [dbo].[Booking] ADD DEFAULT (GETDATE()) FOR [BookingDate]
-GO
-ALTER TABLE [dbo].[Booking] ADD DEFAULT (GETDATE()) FOR [CreatedAt]
-GO
-ALTER TABLE [dbo].[Bus] ADD DEFAULT (GETDATE()) FOR [CreatedAt]
-GO
-ALTER TABLE [dbo].[FreeTicketVerification] ADD DEFAULT (GETDATE()) FOR [VerificationDate]
-GO
-ALTER TABLE [dbo].[Payment] ADD DEFAULT (GETDATE()) FOR [PaymentDate]
-GO
-ALTER TABLE [dbo].[Ticket] ADD DEFAULT ((0)) FOR [IsFreeTicket]
-GO
-USE [master]
-GO
-ALTER DATABASE [BusManagementSystem] SET  READ_WRITE 
 GO
 
 -- Adding sample data for Roles (optional)
 INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Admin'), ('Staff'), ('Member'), ('Driver');
 
-
 -- Inserting sample accounts into User table
-
 -- Insert admin account
 INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
 VALUES ('SystemAdmin', '2024-01-01', 1, 'SystemAdmin@BusManagement.org', '1234567890', '@1', 1);
@@ -230,7 +209,6 @@ VALUES
     ('Member User 2', '2024-01-01', 3, 'member2@gmail.com', '6789012345', '@1', 1),
     ('Member User 3', '2024-01-01', 3, 'member3@gmail.com', '7890123456', '@1', 1);
 
-	
 -- Insert a new driver
 INSERT INTO [BusManagementSystem].[dbo].[Driver] (Name, PhoneNumber, Status, Shift, Email, RoleId)
 VALUES ('John Doe', '1234567890', 1, '2024-10-22 08:00:00', 'johndoe@BusManagement.org', 4);
@@ -248,5 +226,3 @@ VALUES
 ('D4', 'Tan Phu District', 'Binh Tan District', 13.7, '00:32:00'),
 ('67-1', 'District 1', 'District 3', 5.6, '00:12:00'),
 ('70-1', 'District 11', 'District 6', 8.9, '00:20:00');
-
-

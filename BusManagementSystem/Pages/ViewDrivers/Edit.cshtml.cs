@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BusinessObject.Entity;
-using SystemDAO;
 using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewDrivers
@@ -25,6 +19,7 @@ namespace BusManagementSystem.Pages.ViewDrivers
 
         [BindProperty]
         public Driver Driver { get; set; } = default!;
+
         public string? Message { get; set; }
 
         public IActionResult OnGet(int? id)

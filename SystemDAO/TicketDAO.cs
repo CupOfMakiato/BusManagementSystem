@@ -1,13 +1,28 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SystemDAO
 {
     public class TicketDAO
     {
+        private static TicketDAO instance = null;
+
+        public TicketDAO()
+        {
+        }
+
+        public static TicketDAO Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new TicketDAO();
+                }
+                return instance;
+            }
+        }
+
         public List<Ticket> GetAllTickets()
         {
             try
@@ -88,6 +103,4 @@ namespace SystemDAO
             }
         }
     }
-
 }
-

@@ -1,7 +1,6 @@
 ﻿using BusinessObject.Entity;
 using SystemDAO;
 using SystemRepository.Interface;
-using System.Collections.Generic;
 
 namespace SystemRepository.Implementation
 {

@@ -1,8 +1,8 @@
+using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SystemDAO;
-using BusinessObject.Entity;
 using System.Text.Json;
+using SystemDAO;
 
 namespace BusManagementSystem.Pages.Member
 {
@@ -22,37 +22,52 @@ namespace BusManagementSystem.Pages.Member
 
         public IActionResult OnGet()
         {
+            // Retrieve ticket data from session
             var tempTicketJson = HttpContext.Session.GetString("TempTicket");
             if (string.IsNullOrEmpty(tempTicketJson))
+            {
+                // Redirect to RegisterTicket if TempTicket data is missing
+                return RedirectToPage("/Member/RegisterTicket");
+            }
+
+            // Deserialize Ticket object from JSON
+            var tempTicket = JsonSerializer.Deserialize<Ticket>(tempTicketJson);
+            if (tempTicket == null)
             {
                 return RedirectToPage("/Member/RegisterTicket");
             }
 
-            var tempTicket = JsonSerializer.Deserialize<Ticket>(tempTicketJson);
+            // Retrieve Route details from the database
             var route = _context.Routes.Find(tempTicket.RouteId);
-
+            RouteName = route?.RouteName ?? "Unknown Route";
             Price = tempTicket.Price ?? 0;
             StartDate = tempTicket.StartDate ?? DateTime.Now;
             EndDate = tempTicket.EndDate ?? DateTime.Now;
-            RouteName = route?.RouteName ?? "Unknown Route";
 
             return Page();
         }
 
         public IActionResult OnPost()
         {
-            var userId = 1; // Replace with logged-in user ID
+            // Retrieve User ID from session
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToPage("/Login"); // Redirect if user is not logged in
+            }
 
+            // Create a new booking with the retrieved User ID
             var booking = new Booking
             {
-                UserId = userId,
+                UserId = userId.Value,
                 BookingDate = DateTime.Now,
-                Status = 1 // Pending
+                Status = 1 // Pending status
             };
 
             _context.Bookings.Add(booking);
             _context.SaveChanges();
 
+            // Redirect to Payment page after booking is saved
             return RedirectToPage("/Member/Payment");
         }
     }

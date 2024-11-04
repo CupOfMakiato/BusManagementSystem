@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BusinessObject.Entity;
 using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewUser
@@ -24,7 +22,7 @@ namespace BusManagementSystem.Pages.ViewUser
 
         public string? Message { get; set; }
 
-        public IActionResult OnGet(short? id)
+        public IActionResult OnGet(int id)
         {
             if (!CheckSession())
                 return RedirectToPage("/Login");
@@ -35,7 +33,7 @@ namespace BusManagementSystem.Pages.ViewUser
                 return Page();
             }
 
-            var systemAccount = _userService.GetAllAccount().FirstOrDefault(m => m.UserId == id);
+            var systemAccount = _userService.GetUserById(id);
             if (systemAccount == null)
             {
                 Message = "Not Found";
@@ -62,7 +60,7 @@ namespace BusManagementSystem.Pages.ViewUser
 
             try
             {
-                var account = _userService.GetAllAccount().FirstOrDefault(a => a.UserId == User.UserId);
+                var account = _userService.GetUserById(User.UserId);
                 if (account == null)
                 {
                     Message = "Not Found";
@@ -83,7 +81,7 @@ namespace BusManagementSystem.Pages.ViewUser
                 account.Status = User.Status;  // Update Status here
 
                 // Save changes
-                _userService.UpdateAccount(account);
+                _userService.UpdateUser(account);
 
                 Message = "Update successful!";
                 return RedirectToPage("/ViewUser/Index");

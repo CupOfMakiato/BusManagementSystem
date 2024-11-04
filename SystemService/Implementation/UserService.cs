@@ -1,10 +1,4 @@
 ﻿using BusinessObject.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SystemRepository.Implementation;
 using SystemRepository.Interface;
 using SystemService.Interface;
 
@@ -13,46 +7,22 @@ namespace SystemService.Implementation
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public void AddAccount(User user)
-        {
-            _userRepository.AddAccount(user);
-        }
+        public void AddUser(User user) => _userRepository.AddUser(user);
 
-        public void DeleteAccount(User user)
-        {
-            _userRepository.DeleteAccount(user);
-        }
+        public void UpdateUser(User user) => _userRepository.UpdateUser(user);
 
-        public User? GetAccountByEmailAndPassword(string email, string password)
-        {
-            return _userRepository.GetAccountByEmailAndPassword(email, password);
-        }
+        public void DeleteUser(User user) => _userRepository.DeleteUser(user);
 
-        public User GetAccountById(short userId)
-        {
-            return _userRepository.GetAccountById(userId);
-        }
+        public List<User> GetAllUsers() => _userRepository.GetAllUsers();
 
-        public List<User> GetAllAccount()
-        {
-            return _userRepository.GetAllAccount();
-        }
+        public User CheckLogin(string username, string password) => _userRepository.CheckLogin(username, password);
 
-      
-
-        public void UpdateAccount(User user)
-        {
-            _userRepository.UpdateAccount(user);
-        }
-
-        public User VerifyAccount(User user)
-        {
-            return _userRepository.VerifyAccount(user);
-        }
+        public User GetUserById(int userId) => _userRepository.GetUserById(userId);
     }
 }

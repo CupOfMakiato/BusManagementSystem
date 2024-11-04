@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BusinessObject.Entity;
+﻿namespace BusinessObject.Entity;
 
 public partial class Bus
 {

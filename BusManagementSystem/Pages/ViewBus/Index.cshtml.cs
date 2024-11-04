@@ -1,7 +1,6 @@
 using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using SystemService.Interface;
 
@@ -12,7 +11,7 @@ namespace BusManagementSystem.Pages.ViewBus
         private readonly IBusService _busService;
 
         public IndexModel(IBusService busService)
-        { 
+        {
             _busService = busService;
         }
 

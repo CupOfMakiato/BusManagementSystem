@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BusinessObject.Entity;
+﻿namespace BusinessObject.Entity;
 
 public partial class Booking
 {
@@ -16,7 +13,6 @@ public partial class Booking
     public DateTime? ModifiedAt { get; set; }
     public int? CreatedBy { get; set; }
     public int? ModifiedBy { get; set; }
-
 
     public virtual Bus? Bus { get; set; }
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

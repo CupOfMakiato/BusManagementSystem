@@ -1,7 +1,6 @@
 ﻿using BusinessObject.Entity;
 using SystemRepository.Interface;
 using SystemService.Interface;
-using System.Collections.Generic;
 
 namespace SystemService.Implementation
 {

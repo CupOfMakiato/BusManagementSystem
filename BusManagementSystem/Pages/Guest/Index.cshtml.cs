@@ -10,6 +10,7 @@ namespace BusManagementSystem.Pages.Guest
     {
         // Optional: Add any homepage-related properties if needed, like welcome messages or dynamic content.
         public string WelcomeMessage { get; set; } = "Welcome to the City Bus Management Center!";
+
         public string ContactInfo { get; set; } = "📞 Hotline: 19006836 | 📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi";
 
         private readonly IRouteService _routeService;

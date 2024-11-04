@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BusinessObject.Entity;
 using System.ComponentModel.DataAnnotations;
-using SystemService.Interface;
 using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewUser
 {
@@ -30,6 +27,7 @@ namespace BusManagementSystem.Pages.ViewUser
         [BindProperty]
         [Required(ErrorMessage = "Please enter a Role")]
         public int RoleId { get; set; }
+
         public IActionResult OnGet()
         {
             if (!CheckSession())
@@ -56,12 +54,18 @@ namespace BusManagementSystem.Pages.ViewUser
             try
             {
                 // Check if email already exists (instead of UserId)
-                var existingAccount = _userService.GetAllAccount().FirstOrDefault(a => a.Email == User.Email);
+                var existingAccount = _userService.GetAllUsers();
                 if (existingAccount != null)
                 {
-                    Message = "An account with this email already exists";
-                    ModelState.AddModelError(string.Empty, Message);
-
+                    foreach (var user in existingAccount)
+                    {
+                        if (user.Email == User.Email)
+                        {
+                            Message = "An account with this email already exists";
+                            ModelState.AddModelError(string.Empty, Message);
+                            break;
+                        }
+                    }
                     // Re-populate roles in case of error
                     ViewData["RoleId"] = new SelectList(_roleService.GetAllRoles(), "RoleId", "RoleName");
                     return Page();
@@ -71,7 +75,7 @@ namespace BusManagementSystem.Pages.ViewUser
                 User.RoleId = RoleId;
 
                 // Add the new user account
-                _userService.AddAccount(User);
+                _userService.AddUser(User);
 
                 Message = "Account created successfully";
                 ModelState.AddModelError(string.Empty, Message);

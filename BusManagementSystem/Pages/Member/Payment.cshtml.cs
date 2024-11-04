@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BusManagementSystem.Pages.Guest
+namespace BusManagementSystem.Pages.Member
 {
-    public class TicketOnlineFreeModel : PageModel
+    public class PaymentModel : PageModel
     {
         public void OnGet()
         {

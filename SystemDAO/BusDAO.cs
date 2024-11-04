@@ -1,9 +1,5 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SystemDAO
 {
@@ -63,8 +59,8 @@ namespace SystemDAO
             try
             {
                 using var context = new BusManagementSystemContext();
-                 context.Buses.Add(bus);
-                 context.SaveChanges();
+                context.Buses.Add(bus);
+                context.SaveChanges();
             }
             catch (Exception ex)
             {

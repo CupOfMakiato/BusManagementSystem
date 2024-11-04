@@ -1,27 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BusinessObject.Entity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SystemDAO;
-using BusinessObject.Entity;
-using EntityRoute = BusinessObject.Entity.Route;
 using System.Text.Json;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
+using SystemService;
+using SystemService.Interface;
+using EntityRoute = BusinessObject.Entity.Route;
 
 namespace BusManagementSystem.Pages.Member
 {
     public class RegisterTicketModel : PageModel
     {
-        private readonly BusManagementSystemContext _context;
+        private readonly ITicketService _ticketService;
+        private readonly IUserService _userService;
 
-        public RegisterTicketModel(BusManagementSystemContext context)
+        public RegisterTicketModel(ITicketService ticketService, IUserService userService)
         {
-            _context = context;
+            _ticketService = ticketService;
+            _userService = userService;
         }
 
-        public User User { get; set; }
+        public User User { get; set; } = new User();
 
         [BindProperty]
         public string TicketType { get; set; }
@@ -45,113 +43,110 @@ namespace BusManagementSystem.Pages.Member
         public int? SelectedRouteId { get; set; }
 
         [BindProperty]
-        public IFormFile Photo3x4 { get; set; } // 3x4 ID photo
+        public IFormFile Photo3x4 { get; set; }
 
         [BindProperty]
-        public IFormFile? IDCardFront { get; set; } // Front of ID card
+        public IFormFile? IDCardFront { get; set; }
 
         [BindProperty]
-        public IFormFile? IDCardBack { get; set; } // Back of ID card
+        public IFormFile? IDCardBack { get; set; }
 
-        public List<EntityRoute> Routes { get; set; }
+        public List<EntityRoute> Routes { get; set; } = new List<EntityRoute>();
 
-        public async Task<IActionResult> OnGetAsync()
+        public IActionResult OnGetAsync()
         {
-            int? userId = HttpContext.Session.GetInt32("UserId");
+            var userId = (int)HttpContext.Session.GetInt32("UserId");
 
             if (userId == null)
             {
-                return RedirectToPage("/Login");
+                // Log the issue for debugging purposes
+                Console.WriteLine("UserId not found in session, redirecting to login.");
+                return RedirectToPage("/Login", new { returnUrl = "/Member/RegisterTicket" });
             }
 
-            User = _context.Users.FirstOrDefault(u => u.UserId == userId.Value);
+            User = _userService.GetUserById(userId);
 
             if (User == null)
             {
-                return RedirectToPage("/Login");
+                Console.WriteLine("User not found in database, redirecting to login.");
+                return RedirectToPage("/Login", new { returnUrl = "/Member/RegisterTicket" });
             }
 
-            Routes = _context.Routes.ToList();
+            Routes = _ticketService.GetAllRoutes();
 
-            // Set default dates
             StartDate = DateTime.Today;
             EndDate = StartDate.AddDays(30);
 
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync()
+
+        public IActionResult OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return Redirect("/Member/RegisterTicket");
             }
-
-            // Define paths for saving files (ensure the directory exists)
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-            Directory.CreateDirectory(uploadsFolder);
-
-            // Save Photo3x4 file
-            string? photo3x4Path = null;
-            if (Photo3x4 != null)
-            {
-                photo3x4Path = Path.Combine("uploads", Photo3x4.FileName);
-                var fullPath = Path.Combine(uploadsFolder, Photo3x4.FileName);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await Photo3x4.CopyToAsync(stream);
-                }
-            }
-
-            // Save IDCardFront and IDCardBack files if priority is selected
-            string? idCardFrontPath = null;
-            string? idCardBackPath = null;
-            if (IsPriority && (PriorityType == "Học Sinh, Sinh Viên" || PriorityType == "Công Nhân khu CN"))
-            {
-                if (IDCardFront != null)
-                {
-                    idCardFrontPath = Path.Combine("uploads", IDCardFront.FileName);
-                    var fullPath = Path.Combine(uploadsFolder, IDCardFront.FileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await IDCardFront.CopyToAsync(stream);
-                    }
-                }
-
-                if (IDCardBack != null)
-                {
-                    idCardBackPath = Path.Combine("uploads", IDCardBack.FileName);
-                    var fullPath = Path.Combine(uploadsFolder, IDCardBack.FileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await IDCardBack.CopyToAsync(stream);
-                    }
-                }
-            }
-
-            int? userId = HttpContext.Session.GetInt32("UserId");
+            var userId = (int)HttpContext.Session.GetInt32("UserId");
             if (userId == null)
             {
-                return RedirectToPage("/Login");
+                Console.WriteLine("UserId not found in session during post, redirecting to login.");
+                return RedirectToPage("/Login", new { returnUrl = "/Member/RegisterTicket" });
             }
 
-            // Create and populate the Ticket object
+            User = _userService.GetUserById(userId);
+
+            if (User == null)
+            {
+                Console.WriteLine("User not found in database during post, redirecting to login.");
+                return RedirectToPage("/Login", new { returnUrl = "/Member/RegisterTicket" });
+            }
+
             var ticket = new Ticket
             {
-                UserId = userId.Value,
-                Price = CalculatedPrice,
+                UserId = userId,
+                TicketType = TicketType,
+                IsPriority = IsPriority,
                 StartDate = StartDate,
                 EndDate = EndDate,
                 RouteId = SelectedRouteId,
                 Status = 1, // Pending
                 IsFreeTicket = false,
                 PriorityType = PriorityType,
-                Photo3x4 = photo3x4Path,           // Save the 3x4 photo path
-                IDCardFront = idCardFrontPath,      // Save the front ID card path
-                IDCardBack = idCardBackPath         // Save the back ID card path
             };
 
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
+            if (Photo3x4 != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    Photo3x4.CopyToAsync(ms);
+                    ticket.Photo3x4 = ms.ToArray();
+                }
+            }
+
+            if (IsPriority && (PriorityType == "Học Sinh, Sinh Viên" || PriorityType == "Công Nhân khu CN"))
+            {
+                if (IDCardFront != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        IDCardFront.CopyToAsync(ms);
+                        ticket.IDCardFront = ms.ToArray();
+                    }
+                }
+
+                if (IDCardBack != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        IDCardBack.CopyToAsync(ms);
+                        ticket.IDCardBack = ms.ToArray();
+                    }
+                }
+            }
+            _ticketService.CalculateTicketPrice(ticket);
+            _ticketService.AddTicket(ticket);
+
+            HttpContext.Session.SetString("TempTicket", JsonSerializer.Serialize(ticket));
 
             return RedirectToPage("/Member/Checkout");
         }

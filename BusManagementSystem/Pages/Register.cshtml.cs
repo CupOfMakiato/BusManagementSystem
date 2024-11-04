@@ -38,15 +38,20 @@ namespace BusManagementSystem.Pages
             }
 
             // Check if the email already exists
-            var existingUser = _userService.GetAllAccount().FirstOrDefault(u => u.Email.Equals(Input.Email, StringComparison.OrdinalIgnoreCase));
-            if (existingUser != null)
+            var existingUsers = _userService.GetAllUsers();
+            if (existingUsers != null)
             {
-                // Add a model state error for the email field
-                ModelState.AddModelError("Input.Email", "This email existed!");
-
+                foreach (var user in existingUsers)
+                {
+                    if (user.Email == Input.Email)
+                    {
+                        ModelState.AddModelError("Input.Email", "This email existed!");
+                        return Page();
+                    }
+                    break;
+                }
                 // Return the page with validation errors
                 Roles = _roleService.GetAllRoles();
-                return Page();
             }
 
             // Create a new user
@@ -61,7 +66,7 @@ namespace BusManagementSystem.Pages
                 Status = 1  // Active by default
             };
 
-            _userService.AddAccount(newUser);
+            _userService.AddUser(newUser);
 
             // Redirect to the login page or a success page
             return RedirectToPage("/Login");
@@ -94,6 +99,5 @@ namespace BusManagementSystem.Pages
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; } = string.Empty;
-
     }
 }

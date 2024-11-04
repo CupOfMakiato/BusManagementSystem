@@ -1,5 +1,4 @@
 ﻿using BusinessObject.Entity;
-using System.Collections.Generic;
 using SystemDAO;
 
 namespace SystemRepository
@@ -23,6 +22,4 @@ namespace SystemRepository
 
         public void DeleteTicket(int ticketId) => _ticketDAO.DeleteTicket(ticketId);
     }
-
 }
-

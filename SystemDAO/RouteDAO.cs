@@ -1,8 +1,5 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SystemDAO
 {
@@ -10,7 +7,8 @@ namespace SystemDAO
     {
         private static RouteDAO instance = null;
 
-        private RouteDAO() { }
+        private RouteDAO()
+        { }
 
         public static RouteDAO getInstance()
         {

@@ -1,10 +1,5 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SystemDAO
 {
@@ -12,7 +7,8 @@ namespace SystemDAO
     {
         private static DriverDAO instance = null;
 
-        private DriverDAO() { }
+        private DriverDAO()
+        { }
 
         public static DriverDAO GetInstance()
         {
@@ -69,4 +65,3 @@ namespace SystemDAO
         }
     }
 }
-

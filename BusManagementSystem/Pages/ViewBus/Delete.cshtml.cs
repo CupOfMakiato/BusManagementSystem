@@ -29,7 +29,6 @@ namespace BusManagementSystem.Pages.ViewBus
                 .Include(u => u.AssignedRoute)
                 .FirstOrDefaultAsync(m => m.BusId == id);
 
-
             if (bus == null)
             {
                 return NotFound();

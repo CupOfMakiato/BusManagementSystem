@@ -2,13 +2,11 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const errorMessage = document.querySelector(".alert-danger");
+document.addEventListener("DOMContentLoaded", function () {
+    const errorMessage = document.querySelector(".alert-danger");
     if (errorMessage) {
         setTimeout(function () {
             errorMessage.style.display = "none";
         }, 2000); // Hide after 2 seconds
-        }
-    });
-</script>
+    }
+});

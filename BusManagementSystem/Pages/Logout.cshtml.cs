@@ -7,10 +7,9 @@ namespace BusManagementSystem.Pages
     {
         public IActionResult OnGet()
         {
-            
             HttpContext.Session.Remove("UserEmail");
 
-            return RedirectToPage("/Login"); 
+            return RedirectToPage("/Login");
         }
     }
 }

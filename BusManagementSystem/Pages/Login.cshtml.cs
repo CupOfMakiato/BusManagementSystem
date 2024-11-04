@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SystemService.Interface;
-using BusManagementSystem.Models;
 using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages
 {
@@ -35,7 +34,7 @@ namespace BusManagementSystem.Pages
         {
             if (ModelState.IsValid)
             {
-                var user = _userService.GetAccountByEmailAndPassword(Input.Email, Input.Password);
+                var user = _userService.CheckLogin(Input.Email, Input.Password);
                 if (user != null)
                 {
                     // Store user ID and Name in session for easy access
@@ -48,11 +47,12 @@ namespace BusManagementSystem.Pages
                     {
                         case 1: // Admin role
                             return RedirectToPage("/ViewUser/Index");
+
                         case 2: // Staff role
                             return RedirectToPage("/ViewRoute/Index");
+
                         case 3: // Member role
                             return RedirectToPage("/Member/Index");
-
                     }
                 }
                 else

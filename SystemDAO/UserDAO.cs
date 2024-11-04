@@ -1,44 +1,28 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SystemDAO
 {
     public class UserDAO
     {
         private static UserDAO instance = null;
+
         public UserDAO()
         {
+        }
 
-        }
-        public static UserDAO getInstance()
+        public static UserDAO Instance
         {
-            if (instance == null)
+            get
             {
-                instance = new UserDAO();
+                if (instance == null)
+                {
+                    instance = new UserDAO();
+                }
+                return instance;
             }
-            return instance;
         }
-        public User VerifyAccount(User acc)
-        {
-            User mb;
-            try
-            {
-                var db = new BusManagementSystemContext();
-                mb = db.Users.FirstOrDefault(m => m.Email == acc.Email && m.Password == acc.Password);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
 
-            return mb;
-        }
         public List<User> GetAllUser()
         {
             var list = new List<User>();
@@ -55,19 +39,30 @@ namespace SystemDAO
             return list;
         }
 
-        public User GetAccountById(short userId)
+        public User GetUserById(int userId)
         {
             using var db = new BusManagementSystemContext();
             return db.Users.FirstOrDefault(x => x.UserId.Equals(userId));
         }
 
-        public User? GetAccountByEmailAndPassword(string email, string password)
+        public User Checklogin(string email, string password)
         {
-            using var db = new BusManagementSystemContext();
-            return db.Users.FirstOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password));
+            var u = new User();
+            try
+            {
+                using (var db = new BusManagementSystemContext())
+                {
+                    u = db.Users.FirstOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password));
+                    return u;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public void UpdateAccount(User u)
+        public void UpdateUser(User u)
         {
             try
             {
@@ -81,7 +76,7 @@ namespace SystemDAO
             }
         }
 
-        public void DeleteAccount(User u)
+        public void DeleteUser(User u)
         {
             try
             {
@@ -96,7 +91,7 @@ namespace SystemDAO
             }
         }
 
-        public void AddAccount(User u)
+        public void AddUser(User u)
         {
             try
             {
