@@ -11,13 +11,15 @@ using SystemService;
 var builder = WebApplication.CreateBuilder(args);
 
 
+
 // register services
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IBusService, BusService>();
 builder.Services.AddSingleton<IRoleService, RoleService>();
 builder.Services.AddSingleton<IRouteService, RouteService>();
 builder.Services.AddSingleton<IDriverService, DriverService>();
-
+builder.Services.AddSingleton<IFreeTicketService, FreeTicketService>();
+builder.Services.AddSingleton<IFreeTicketVerificationService, FreeTicketVerificationService>();
 
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
@@ -25,13 +27,13 @@ builder.Services.AddSingleton<IBusRepository, BusRepository>();
 builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
 builder.Services.AddSingleton<IDriverRepository, DriverRepository>();
 builder.Services.AddSingleton<IRouteRepository, RouteRepository>();
-
-builder.Services.AddSingleton<ITicketService, TicketService>();
-builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
-
+builder.Services.AddSingleton<IFreeTicketRepository, FreeTicketRepository>();
+builder.Services.AddSingleton<IFreeTicketVerificationRepository, FreeTicketVerificationRepository>();
 
 
-//builder.Services.AddSingleton<UserDAO>();
+
+
+//builder.Services.AddScoped<UserDAO>();
 
 
 builder.Services.AddSession(options =>
@@ -76,5 +78,6 @@ app.UseEndpoints(endpoints =>
         context.Response.Redirect("/Guest/Index");
     });
 });
+
 
 app.Run();
