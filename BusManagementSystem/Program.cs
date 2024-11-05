@@ -10,8 +10,8 @@ using SystemService.Interface;
 var builder = WebApplication.CreateBuilder(args);
 
 // Register BusManagementSystemContext with a connection string
-builder.Services.AddDbContext<BusManagementSystemContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<BusManagementSystemContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register services as Scoped (recommended for services working with DbContext)
 builder.Services.AddScoped<IUserService, UserService>();

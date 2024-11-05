@@ -11,6 +11,16 @@ namespace SystemRepository.Implementation
             BusDAO.GetInstance().AddBus(bus);
         }
 
+        public bool BusExists(int busId)
+        {
+            return BusDAO.GetInstance().BusExists(busId);
+        }
+
+        public bool CheckBusNumberExists(int busNumber, int busId = 0)
+        {
+            return BusDAO.GetInstance().CheckBusNumberExists(busNumber, busId);
+        }
+
         public void DeleteBus(Bus bus)
         {
             BusDAO.GetInstance().DeleteBus(bus);

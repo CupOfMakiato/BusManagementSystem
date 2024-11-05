@@ -2,113 +2,98 @@ using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewBus
 {
     public class EditModel : PageModel
     {
-        private readonly SystemDAO.BusManagementSystemContext _busService;
+        private readonly IBusService _busService;
+        private readonly IDriverService _driverService;
+        private readonly IRouteService _routeService;
 
-        public EditModel(SystemDAO.BusManagementSystemContext busService)
+        public EditModel(IBusService busService, IRouteService routeService, IDriverService driverService)
         {
             _busService = busService;
+            _routeService = routeService;
+            _driverService = driverService;
         }
 
         [BindProperty]
         public Bus Bus { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var bus = await _busService.Buses.FirstOrDefaultAsync(b => b.BusId == id); ;
-            if (bus == null)
-            {
+            // Fetch the bus by ID
+            Bus = _busService.GetBusById(id.Value);
+            if (Bus == null)
                 return NotFound();
-            }
-            Bus = bus;
-            ViewData["AssignedRouteId"] = new SelectList(_busService.Routes, "RouteId", "RouteName");
 
-            ViewData["DriverId"] = new SelectList(_busService.Drivers.Where(d => d.Status == 1), "DriverId", "Name");
+            // Load route and driver lists for dropdowns
+            ViewData["AssignedRouteId"] = new SelectList(_routeService.GetAllRoutes(), "RouteId", "RouteName");
+            ViewData["DriverId"] = new SelectList(_driverService.GetAllDrivers(), "DriverId", "Name");
 
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
+
             // Server-side validation for BusNumber
             if (Bus.BusNumber <= 0)
             {
                 ModelState.AddModelError("Bus.BusNumber", "Bus number must be greater than zero.");
-                return RedirectToPage("./Edit");
+                return Page();
             }
 
-            // Check if the BusNumber already exists in the database
-            bool busNumberExists = await _busService.Buses.AnyAsync(b => b.BusNumber == Bus.BusNumber);
-
+            // Check if the BusNumber already exists
+            bool busNumberExists = _busService.CheckBusNumberExists((int)Bus.BusNumber, Bus.BusId);
             if (busNumberExists)
             {
-                // Add a model error if the BusNumber already exists
                 ModelState.AddModelError("Bus.BusNumber", "The Bus Number must be unique.");
                 return Page();
             }
-            //if (!_context.Drivers.Any(d => d.DriverId == Bus.DriverId && d.Status == 1))
-            //{
-            //    ModelState.AddModelError("Bus.DriverId", "Selected driver is not available.");
-            //}
 
-            //if (!_context.Routes.Any(r => r.RouteId == Bus.AssignedRouteId))
-            //{
-            //    ModelState.AddModelError("Bus.AssignedRouteId", "Selected route is not available.");
-            //}
-
-            //if (Bus.Status < 0 || Bus.Status > 2)
-            //{
-            //    ModelState.AddModelError("Bus.Status", "Invalid status selected.");
-            //}
-
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            // Set the ModifiedAt property to the current date and time
-            Bus.ModifiedAt = DateTime.UtcNow; // Use UTC to avoid timezone issues
-
-            _busService.Attach(Bus).State = EntityState.Modified;
+            // Set modification date and update the bus
+            Bus.ModifiedAt = DateTime.UtcNow;
 
             try
             {
-                await _busService.SaveChangesAsync();
+                _busService.UpdateBus(Bus);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!BusExists(Bus.BusId))
-                {
+                if (!_busService.BusExists(Bus.BusId))
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return RedirectToPage("./Index");
         }
 
-        private bool BusExists(int id)
+        public bool CheckSession()
         {
-            return _busService.Buses.Any(e => e.BusId == id);
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<User>(loginAccount);
+                if (account != null && account.RoleId == 2)
+                    return true;
+            }
+            return false;
         }
     }
 }

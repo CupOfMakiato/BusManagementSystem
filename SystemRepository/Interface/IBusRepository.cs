@@ -13,5 +13,7 @@ namespace SystemRepository.Interface
         void UpdateBus(Bus bus);
 
         void DeleteBus(Bus bus);
+        bool BusExists(int busId);
+        bool CheckBusNumberExists(int busNumber, int busId = 0);
     }
 }

@@ -18,6 +18,16 @@ namespace SystemService.Implementation
             _busRepository.AddBus(bus);
         }
 
+        public bool BusExists(int busId)
+        {
+            return _busRepository.BusExists(busId);
+        }
+
+        public bool CheckBusNumberExists(int busNumber, int busId = 0)
+        {
+            return _busRepository.CheckBusNumberExists(busNumber, busId);
+        }
+
         public void DeleteBus(Bus bus)
         {
             _busRepository.DeleteBus(bus);
