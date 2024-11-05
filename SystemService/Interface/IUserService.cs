@@ -15,5 +15,8 @@ namespace SystemService.Interface
         List<User> GetAllUsers();
 
         User CheckLogin(string username, string password);
+        bool UserIdExists(int userId);
+        bool EmailExists(string email);
+        void SoftDeleteUser(User u);
     }
 }

@@ -51,9 +51,14 @@
             </a>
         </div>
 
-        <form method="get" class="mb-3">
-            <input type="text" name="searchQuery" value="@Model.SearchQuery" placeholder="Search buses..." class="form-control" />
-            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        <form method="get" class="mb-4 justify-content-center align-items-center">
+            <div class="input-group input-group-sm" style="max-width: 300px;">
+                <input type="text" class="form-control" name="searchQuery" value="@Model.SearchQuery" placeholder="Search for bus..." aria-label="Search bus">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="bi bi-search"></i>
+                    <span class="d-none d-sm-inline ms-1">Search</span>
+                </button>
+            </div>
         </form>
 
         <table class="table">

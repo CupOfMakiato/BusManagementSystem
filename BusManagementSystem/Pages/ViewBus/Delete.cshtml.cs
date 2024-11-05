@@ -1,61 +1,74 @@
 using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewBus
 {
     public class DeleteModel : PageModel
     {
-        private readonly SystemDAO.BusManagementSystemContext _context;
+        private readonly IBusService _busService;
 
-        public DeleteModel(SystemDAO.BusManagementSystemContext context)
+        public DeleteModel(IBusService busService)
         {
-            _context = context;
+            _busService = busService;
         }
 
         [BindProperty]
         public Bus Bus { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var bus = await _context.Buses
-                .Include(b => b.Driver)
-                .Include(u => u.AssignedRoute)
-                .FirstOrDefaultAsync(m => m.BusId == id);
-
-            if (bus == null)
-            {
+            // Fetch the bus by ID
+            Bus = _busService.GetBusById(id.Value);
+            if (Bus == null)
                 return NotFound();
-            }
-            else
-            {
-                Bus = bus;
-            }
+
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPost(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var bus = await _context.Buses.FindAsync(id);
-            if (bus != null)
+            // Find and delete the bus by ID
+            try
             {
-                Bus = bus;
-                _context.Buses.Remove(Bus);
-                await _context.SaveChangesAsync();
+                var busToDelete = _busService.GetBusById(id.Value);
+                if (busToDelete == null)
+                    return NotFound();
+
+                _busService.DeleteBus(busToDelete);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error while deleting the bus.");
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ViewBus/Index");
+        }
+
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<User>(loginAccount);
+                if (account != null && account.RoleId == 2)
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -2,57 +2,74 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewUser
 {
     public class DeleteModel : PageModel
     {
-        private readonly SystemDAO.BusManagementSystemContext _context;
+        private readonly IUserService _userService;
 
-        public DeleteModel(SystemDAO.BusManagementSystemContext context)
+        public DeleteModel(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         [BindProperty]
         public User User { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
-
-            if (user == null)
-            {
+            // Fetch the bus by ID
+            User = _userService.GetUserById(id.Value);
+            if (User == null)
                 return NotFound();
-            }
-            else
-            {
-                User = user;
-            }
+
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPost(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
+            // Find and delete the bus by ID
+            try
             {
-                User = user;
-                _context.Users.Remove(User);
-                await _context.SaveChangesAsync();
+                var user = _userService.GetUserById(id.Value);
+                if (user == null)
+                    return NotFound();
+
+                _userService.DeleteUser(user);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error while deleting user.");
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ViewUser/Index");
+        }
+
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<User>(loginAccount);
+                if (account != null && account.RoleId == 1)
+                    return true;
+            }
+            return false;
         }
     }
 }

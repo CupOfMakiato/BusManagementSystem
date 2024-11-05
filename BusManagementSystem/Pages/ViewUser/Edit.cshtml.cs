@@ -9,7 +9,7 @@ namespace BusManagementSystem.Pages.ViewUser
     public class EditModel : PageModel
     {
         private readonly IUserService _userService;
-        private readonly IRoleService _roleService;  // Assuming a service to fetch roles
+        private readonly IRoleService _roleService;
 
         public EditModel(IUserService userService, IRoleService roleService)
         {
@@ -27,21 +27,14 @@ namespace BusManagementSystem.Pages.ViewUser
             if (!CheckSession())
                 return RedirectToPage("/Login");
 
-            if (id == null)
-            {
-                Message = "Not Found";
-                return Page();
-            }
-
             var systemAccount = _userService.GetUserById(id);
             if (systemAccount == null)
             {
-                Message = "Not Found";
+                Message = "User not found";
                 return Page();
             }
 
-            // Load available roles and pass them to the page using ViewBag
-            var roles = _roleService.GetAllRoles(); // Fetch roles
+            var roles = _roleService.GetAllRoles();
             ViewData["RoleId"] = new SelectList(roles, "RoleId", "RoleName", systemAccount.RoleId);
 
             User = systemAccount;
@@ -54,36 +47,39 @@ namespace BusManagementSystem.Pages.ViewUser
                 return RedirectToPage("/Login");
 
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             try
             {
-                var account = _userService.GetUserById(User.UserId);
-                if (account == null)
+                var existingUser = _userService.GetUserById(User.UserId);
+                if (existingUser == null)
                 {
-                    Message = "Not Found";
+                    Message = "User not found";
                     return Page();
                 }
 
-                // Update all the necessary fields from the form, including Status
-                account.Name = User.Name;
-                account.DateOfBirth = User.DateOfBirth;
-                account.Email = User.Email;
-                account.PhoneNumber = User.PhoneNumber;
+                // Check if email is already in use by another user
+                if (_userService.EmailExists(User.Email) && existingUser.Email != User.Email)
+                {
+                    ModelState.AddModelError("User.Email", "Email is already in use.");
+                    return Page();
+                }
+
+                // Update user details
+                existingUser.Name = User.Name;
+                existingUser.DateOfBirth = User.DateOfBirth;
+                existingUser.Email = User.Email;
+                existingUser.PhoneNumber = User.PhoneNumber;
                 if (!string.IsNullOrEmpty(User.Password))
                 {
-                    // Only update password if a new one is entered
-                    account.Password = User.Password;
+                    existingUser.Password = User.Password;
                 }
-                account.RoleId = User.RoleId;  // Update Role
-                account.Status = User.Status;  // Update Status here
+                existingUser.RoleId = User.RoleId;
+                existingUser.Status = User.Status;
 
-                // Save changes
-                _userService.UpdateUser(account);
+                _userService.UpdateUser(existingUser);
 
-                Message = "Update successful!";
+                Message = "User updated successfully!";
                 return RedirectToPage("/ViewUser/Index");
             }
             catch (Exception ex)
