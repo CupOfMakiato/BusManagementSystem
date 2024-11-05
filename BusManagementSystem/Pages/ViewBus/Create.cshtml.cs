@@ -2,61 +2,86 @@ using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewBus
 {
     public class CreateModel : PageModel
     {
-        private readonly SystemDAO.BusManagementSystemContext _context;
+        private readonly IBusService _busService;
+        private readonly IRouteService _routeService;
+        private readonly IDriverService _driverService;
 
-        public CreateModel(SystemDAO.BusManagementSystemContext context)
+        public CreateModel(IBusService busService, IRouteService routeService, IDriverService driverService)
         {
-            _context = context;
-        }
-
-        public IActionResult OnGet()
-        {
-            ViewData["AssignedRouteId"] = new SelectList(_context.Routes, "RouteId", "RouteName"); // Assuming you want to select from Routes
-
-            ViewData["DriverId"] = new SelectList(_context.Drivers.Where(d => d.Status == 1), "DriverId", "Name");
-            return Page();
+            _busService = busService;
+            _routeService = routeService;
+            _driverService = driverService;
         }
 
         [BindProperty]
         public Bus Bus { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public IActionResult OnGet()
+        {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
+            // Populate dropdowns for route and driver selection
+            ViewData["AssignedRouteId"] = new SelectList(_routeService.GetAllRoutes(), "RouteId", "RouteName");
+            ViewData["DriverId"] = new SelectList(_driverService.GetAllDrivers().Where(d => d.Status == 1), "DriverId", "Name");
+
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!CheckSession())
+                return RedirectToPage("/Login");
+
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             if (Bus.BusNumber <= 0)
             {
                 ModelState.AddModelError("Bus.BusNumber", "Bus number must be greater than zero.");
-                return RedirectToPage("./Create");
+                return Page();
             }
 
-            // Check if the BusNumber already exists in the database
-            bool busNumberExists = await _context.Buses.AnyAsync(b => b.BusNumber == Bus.BusNumber);
-
+            // Check if the BusNumber is unique
+            bool busNumberExists = _busService.CheckBusNumberExists((int)Bus.BusNumber);
             if (busNumberExists)
             {
-                // Add a model error if the BusNumber already exists
                 ModelState.AddModelError("Bus.BusNumber", "The Bus Number must be unique.");
-                return RedirectToPage("./Create");
+                return Page();
             }
 
-            // Set the CreatedAt property to the current date and time
-            Bus.CreatedAt = DateTime.UtcNow; // Use UTC to avoid timezone issues
+            // Set creation date and save the new bus
+            Bus.CreatedAt = DateTime.UtcNow;
 
-            _context.Buses.Add(Bus);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _busService.AddBus(Bus);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occurred while creating the bus. Please try again.");
+                return Page();
+            }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ViewBus/Index");
+        }
+
+        private bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<User>(loginAccount);
+                return account != null && account.RoleId == 2;
+            }
+            return false;
         }
     }
 }

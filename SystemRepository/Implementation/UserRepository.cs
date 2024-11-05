@@ -6,16 +6,31 @@ namespace SystemRepository.Implementation
 {
     public class UserRepository : IUserRepository
     {
-        public void AddUser(User user) => UserDAO.Instance.AddUser(user);
+        public void AddUser(User user) => UserDAO.GetInstance().AddUser(user);
 
-        public User CheckLogin(string username, string password) => UserDAO.Instance.Checklogin(username, password);
+        public User CheckLogin(string username, string password) => UserDAO.GetInstance().Checklogin(username, password);
 
-        public void DeleteUser(User user) => UserDAO.Instance.DeleteUser(user);
+        public void DeleteUser(User user) => UserDAO.GetInstance().DeleteUser(user);
 
-        public List<User> GetAllUsers() => UserDAO.Instance.GetAllUser();
+        public bool EmailExists(string email)
+        {
+            return UserDAO.GetInstance().EmailExists(email);
+        }
 
-        public User GetUserById(int userId) => UserDAO.Instance.GetUserById(userId);
+        public List<User> GetAllUsers() => UserDAO.GetInstance().GetAllUser();
 
-        public void UpdateUser(User user) => UserDAO.Instance.UpdateUser(user);
+        public User GetUserById(int userId) => UserDAO.GetInstance().GetUserById(userId);
+
+        public void SoftDeleteUser(User u)
+        {
+            UserDAO.GetInstance().SoftDeleteUser(u);
+        }
+
+        public void UpdateUser(User user) => UserDAO.GetInstance().UpdateUser(user);
+
+        public bool UserIdExists(int userId)
+        {
+            return UserDAO.GetInstance().UserIdExists(userId);
+        }
     }
 }

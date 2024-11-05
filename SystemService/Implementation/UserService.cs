@@ -24,5 +24,20 @@ namespace SystemService.Implementation
         public User CheckLogin(string username, string password) => _userRepository.CheckLogin(username, password);
 
         public User GetUserById(int userId) => _userRepository.GetUserById(userId);
+
+        public bool UserIdExists(int userId)
+        {
+            return _userRepository.UserIdExists(userId);
+        }
+
+        public bool EmailExists(string email)
+        {
+            return _userRepository.EmailExists(email);
+        }
+
+        public void SoftDeleteUser(User u)
+        {
+            _userRepository.SoftDeleteUser(u);
+        }
     }
 }

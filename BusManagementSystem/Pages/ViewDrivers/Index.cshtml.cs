@@ -15,8 +15,8 @@ namespace BusManagementSystem.Pages.ViewDrivers
         }
 
         public IList<Driver> Drivers { get; set; } = new List<Driver>();
-
-        public IActionResult OnGet()
+        public string? SearchQuery { get; set; }
+        public IActionResult OnGet(string? searchQuery)
         {
             if (!CheckSession())
                 return RedirectToPage("/Login");

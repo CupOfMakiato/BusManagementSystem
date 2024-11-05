@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace SystemDAO
 {
@@ -11,16 +12,13 @@ namespace SystemDAO
         {
         }
 
-        public static UserDAO Instance
+        public static UserDAO GetInstance()
         {
-            get
+            if (instance == null)
             {
-                if (instance == null)
-                {
-                    instance = new UserDAO();
-                }
-                return instance;
+                instance = new UserDAO();
             }
+            return instance;
         }
 
         public List<User> GetAllUser()
@@ -103,6 +101,33 @@ namespace SystemDAO
             {
                 throw new Exception(ex.Message);
             }
+        }
+        public void SoftDeleteUser(User u)
+        {
+            try
+            {
+                using var db = new BusManagementSystemContext();
+                db.Entry<User>(u).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        // New Method to Check if a UserId Exists
+        public bool UserIdExists(int userId)
+        {
+            using var db = new BusManagementSystemContext();
+            return db.Users.Any(u => u.UserId == userId);
+        }
+
+        // New Method to Check if an Email Exists
+        public bool EmailExists(string email)
+        {
+            using var db = new BusManagementSystemContext();
+            return db.Users.Any(u => u.Email.ToLower() == email.ToLower());
         }
     }
 }
