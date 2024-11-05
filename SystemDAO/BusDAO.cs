@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace SystemDAO
 {
@@ -93,6 +94,32 @@ namespace SystemDAO
                     context.Buses.Remove(existingBus);
                     context.SaveChanges();
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool BusExists(int busId)
+        {
+            try
+            {
+                using var context = new BusManagementSystemContext();
+                return context.Buses.Any(b => b.BusId == busId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool CheckBusNumberExists(int busNumber, int busId = 0)
+        {
+            try
+            {
+                using var context = new BusManagementSystemContext();
+                return context.Buses.Any(b => b.BusNumber == busNumber && b.BusId != busId);
             }
             catch (Exception ex)
             {

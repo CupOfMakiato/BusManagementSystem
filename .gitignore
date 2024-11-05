@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /note.txt
+/BusManagementSystem/wwwroot/uploads/download.jpg
+/BusManagementSystem/wwwroot/uploads/Screenshot 2024-10-04 161532.png

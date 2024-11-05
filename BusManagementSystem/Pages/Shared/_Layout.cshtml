@@ -1,68 +1,143 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BusManagementSystem</title>
+    <title>@ViewData["Title"] - City Bus Management Center</title>
 
-    <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-    <!-- Local CSS -->
-    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+    <style>
+        :root {
+            --primary-color: #004d00;
+            --secondary-color: #00b300;
+            --accent-color: #ff5722;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .icon-circle {
+            background-color: var(--accent-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+        }
+
+            .icon-circle svg {
+                width: 35px;
+                height: 35px;
+            }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            align-content: center;
+        }
+
+            .navbar a {
+                color: white;
+                text-decoration: none;
+                transition: opacity 0.3s ease;
+            }
+
+                .navbar a:hover {
+                    opacity: 0.8;
+                }
+
+        .btn-login {
+            padding: 8px 16px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-login:hover {
+                background-color: #e64a19;
+                color: white;
+            }
+
+        @@media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .contact-info {
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <!-- Dark Green Header Section with Login Button and Contact Info -->
-    <header class="header" style="background-color: #004d00; color: white; padding: 15px 20px;">
-        <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; flex: 1;">
-                <img src="/images/logo-xe-bus-46 (1).png" alt="Bus Logo" style="margin-right: 15px; width: 50px; height: 50px;">
+    <header class="header">
+        <div class="header-content d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex align-items-center mb-3 mb-md-0">
+                <div class="icon-circle me-3">
+                    <svg fill="#ffffff" width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 0C5.4375 0 3 2.167969 3 8L3 41C3 42.359375 3.398438 43.339844 4 44.0625L4 47C4 48.652344 5.347656 50 7 50L11 50C12.652344 50 14 48.652344 14 47L14 46L36 46L36 47C36 48.652344 37.347656 50 39 50L43 50C44.652344 50 46 48.652344 46 47L46 44.0625C46.601563 43.339844 47 42.359375 47 41L47 9C47 4.644531 46.460938 0 40 0 Z M 15 4L36 4C36.554688 4 37 4.449219 37 5L37 7C37 7.550781 36.554688 8 36 8L15 8C14.449219 8 14 7.550781 14 7L14 5C14 4.449219 14.449219 4 15 4 Z M 11 11L39 11C41 11 42 12 42 14L42 26C42 28 40.046875 28.9375 39 28.9375L11 29C9 29 8 28 8 26L8 14C8 12 9 11 11 11 Z M 2 12C0.898438 12 0 12.898438 0 14L0 22C0 23.101563 0.898438 24 2 24 Z M 48 12L48 24C49.105469 24 50 23.101563 50 22L50 14C50 12.898438 49.105469 12 48 12 Z M 11.5 34C13.433594 34 15 35.566406 15 37.5C15 39.433594 13.433594 41 11.5 41C9.566406 41 8 39.433594 8 37.5C8 35.566406 9.566406 34 11.5 34 Z M 38.5 34C40.433594 34 42 35.566406 42 37.5C42 39.433594 40.433594 41 38.5 41C36.566406 41 35 39.433594 35 37.5C35 35.566406 36.566406 34 38.5 34Z"></path>
+                    </svg>
+                </div>
                 <div>
-                    <h1 style="margin: 0; font-size: 24px;">City Bus Management Center</h1>
-                    <div class="contact-info" style="font-size: 14px; color: #d4d4d4; margin-top: 4px;">
-                        <span style="margin-right: 20px;">📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi</span>
+                    <h1 class="h4 mb-0">City Bus Management Center</h1>
+                    <div class="contact-info small text-light opacity-75">
+                        <span class="me-3">📍 Address: 1 Kim Ma, Ba Dinh, Ha Noi</span>
                         <span>📞 Hotline: 19006836</span>
                     </div>
                 </div>
             </div>
-
-            <div style="margin-left: auto;">
-                @{
-                    var isLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserName"));
-                    if (isLoggedIn)
-                    {
-                        <span style="margin-right: 15px;">Welcome, @Context.Session.GetString("UserName")</span>
-                        <a href="/Logout" style="padding: 8px 16px; background-color: #ff5722; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Logout</a>
-                    }
-                    else
-                    {
-                        <a href="/Login" style="padding: 8px 16px; background-color: #ff5722; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Login</a>
-                    }
+            
+        </div>
+        <div>
+            @{
+                var isLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserName"));
+                if (isLoggedIn)
+                {
+                    <span class="me-3">Welcome, @Context.Session.GetString("UserName")</span>
+                    <a href="/Logout" class="btn-login">Logout</a>
                 }
-            </div>
+                else
+                {
+                    <a href="/Login" class="btn-login">Login</a>
+                }
+            }
         </div>
     </header>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar" style="background-color: #00b300; padding: 10px;">
-        <a href="/Guest" style="color: white; margin-right: 15px;">Home</a>
-        <a href="/Guest/RegisterTicket" style="color: white; margin-right: 15px;">Register Monthly Ticket</a>
-        <a href="/Guest/RegisterFreeTicket" style="color: white; margin-right: 15px;">Register Free Ticket</a>
-        <a href="/Guest/FAQ" style="color: white;">FAQ</a>
+    <nav class="navbar">
+        <a href="/Guest">Home</a>
+        <a href="/Member/RegisterTicket">Register Monthly Ticket</a>
+        <a href="/Guest/TicketOnlineFree">Register Free Ticket</a>
+        <a href="/Guest/FAQ">FAQ</a>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container mt-4">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <!-- Script references at the bottom for performance -->
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
-    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/site.js"></script>
-    @RenderSection("Scripts", required: false)
+    <footer class="border-top footer text-muted mt-4">
+        <div class="container text-center py-3">
+            &copy; @DateTime.Now.Year - City Bus Management Center - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
