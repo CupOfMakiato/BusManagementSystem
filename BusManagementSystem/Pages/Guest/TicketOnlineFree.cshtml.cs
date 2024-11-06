@@ -1,95 +1,62 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
-using SystemRepository.Implementation;
 using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.Guest
 {
     public class TicketOnlineFreeModel : PageModel
     {
-        private readonly FreeTicketRepository _freeTicketRepository;
+        private readonly IFreeTicketService _freeTicketService;
 
-        public TicketOnlineFreeModel()
+        public TicketOnlineFreeModel(IFreeTicketService freeTicketService)
         {
-            _freeTicketRepository = new FreeTicketRepository();
+            _freeTicketService = freeTicketService;
         }
 
         [BindProperty]
-        public FreeTicket FreeTicket { get; set; } = new FreeTicket();
+        public FreeTicket FreeTicket { get; set; }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            // Được gọi khi trang được tải lần đầu
+            return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        // Ensure the handler name matches "asp-page-handler" in the form
+        public IActionResult OnPostAddFreeTicket(IFormFile FreeTicketIdcardFront, IFormFile FreeTicketIdcardBack, IFormFile FreeTicketPortrait3x4Image, IFormFile FreeTicketProofFrontImage, IFormFile FreeTicketProofBackImage)
         {
             if (!ModelState.IsValid)
             {
-                return Page(); // Return the page if the data is invalid
+                return Page();
             }
 
-            // Handle file uploads
-            if (Request.Form.Files.Count > 0)
+            using (var memoryStream = new MemoryStream())
             {
-                // Assume you want to store images in the "uploads" folder
-                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-                foreach (var file in Request.Form.Files)
-                {
-                    if (file.Length > 0)
-                    {
-                        var filePath = Path.Combine(uploads, file.FileName);
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
+                // Load each file into memory
+                FreeTicketIdcardFront?.CopyTo(memoryStream);
+                FreeTicket.IdcardFront = memoryStream.ToArray();
+                memoryStream.SetLength(0);
 
-                        // Assign file paths to the appropriate properties
-                        if (file.FileName.Contains("CMTND")) // If filename contains "CMTND"
-                        {
-                            if (FreeTicket.IdfrontImage == null)
-                            {
-                                FreeTicket.IdfrontImage = file.FileName;
-                            }
-                            else
-                            {
-                                FreeTicket.IdbackImage = file.FileName;
-                            }
-                        }
-                        else if (file.FileName.Contains("portrait")) // If filename contains "portrait"
-                        {
-                            FreeTicket.Portrait3x4Image = file.FileName;
-                        }
-                        else if (file.FileName.Contains("proof")) // If filename contains "proof"
-                        {
-                            if (FreeTicket.ProofFrontImage == null)
-                            {
-                                FreeTicket.ProofFrontImage = file.FileName;
-                            }
-                            else
-                            {
-                                FreeTicket.ProofBackImage = file.FileName;
-                            }
-                        }
-                    }
-                }
+                FreeTicketIdcardBack?.CopyTo(memoryStream);
+                FreeTicket.IdcardBack = memoryStream.ToArray();
+                memoryStream.SetLength(0);
 
-                // Assign additional information to FreeTicket
-                FreeTicket.IssueDate = DateOnly.FromDateTime(DateTime.Now);
-                FreeTicket.ValidUntil = FreeTicket.ValidUntil == null ? null : FreeTicket.ValidUntil;
+                FreeTicketPortrait3x4Image?.CopyTo(memoryStream);
+                FreeTicket.Portrait3x4Image = memoryStream.ToArray();
+                memoryStream.SetLength(0);
 
-                // Add the free ticket to the database
-                _freeTicketRepository.AddFreeTicket(FreeTicket);
+                FreeTicketProofFrontImage?.CopyTo(memoryStream);
+                FreeTicket.ProofFrontImage = memoryStream.ToArray();
+                memoryStream.SetLength(0);
 
-                // Redirect to a success page
-                return RedirectToPage("./Success"); // Change "./Success" to your actual success page
+                FreeTicketProofBackImage?.CopyTo(memoryStream);
+                FreeTicket.ProofBackImage = memoryStream.ToArray();
             }
 
-            // If no files were uploaded, return the page with a validation message
-            ModelState.AddModelError(string.Empty, "Please upload the required files.");
-            return Page();
+            // Save FreeTicket data
+            _freeTicketService.AddFreeTicket(FreeTicket);
+
+            return RedirectToPage("SuccessPage");
         }
 
     }

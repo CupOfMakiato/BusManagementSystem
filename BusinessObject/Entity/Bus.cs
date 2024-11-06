@@ -17,6 +17,5 @@ public partial class Bus
     public DateTime? ModifiedAt { get; set; }
 
     public virtual Route? AssignedRoute { get; set; }
-
     public virtual Driver? Driver { get; set; }
 }
