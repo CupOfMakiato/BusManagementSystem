@@ -1,50 +1,96 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using SystemRepository.Implementation;
 using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.Guest
 {
     public class TicketOnlineFreeModel : PageModel
     {
-        private readonly IFreeTicketService _freeTicketService;
+        private readonly FreeTicketRepository _freeTicketRepository;
+
+        public TicketOnlineFreeModel()
+        {
+            _freeTicketRepository = new FreeTicketRepository();
+        }
 
         [BindProperty]
-        public FreeTicket FreeTicket { get; set; }
-
-        public TicketOnlineFreeModel(IFreeTicketService freeTicketService)
-        {
-            _freeTicketService = freeTicketService;
-        }
+        public FreeTicket FreeTicket { get; set; } = new FreeTicket();
 
         public void OnGet()
         {
-            // Initialize FreeTicket with default values if needed
-            FreeTicket = new FreeTicket();
+            // Được gọi khi trang được tải lần đầu
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-
-                return Page();
+                return Page(); // Return the page if the data is invalid
             }
 
-            try
+            // Handle file uploads
+            if (Request.Form.Files.Count > 0)
             {
-                _freeTicketService.AddFreeTicket(FreeTicket);
-                return RedirectToPage("/Index");
+                // Assume you want to store images in the "uploads" folder
+                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                foreach (var file in Request.Form.Files)
+                {
+                    if (file.Length > 0)
+                    {
+                        var filePath = Path.Combine(uploads, file.FileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        // Assign file paths to the appropriate properties
+                        if (file.FileName.Contains("CMTND")) // If filename contains "CMTND"
+                        {
+                            if (FreeTicket.IdfrontImage == null)
+                            {
+                                FreeTicket.IdfrontImage = file.FileName;
+                            }
+                            else
+                            {
+                                FreeTicket.IdbackImage = file.FileName;
+                            }
+                        }
+                        else if (file.FileName.Contains("portrait")) // If filename contains "portrait"
+                        {
+                            FreeTicket.Portrait3x4Image = file.FileName;
+                        }
+                        else if (file.FileName.Contains("proof")) // If filename contains "proof"
+                        {
+                            if (FreeTicket.ProofFrontImage == null)
+                            {
+                                FreeTicket.ProofFrontImage = file.FileName;
+                            }
+                            else
+                            {
+                                FreeTicket.ProofBackImage = file.FileName;
+                            }
+                        }
+                    }
+                }
+
+                // Assign additional information to FreeTicket
+                FreeTicket.IssueDate = DateOnly.FromDateTime(DateTime.Now);
+                FreeTicket.ValidUntil = FreeTicket.ValidUntil == null ? null : FreeTicket.ValidUntil;
+
+                // Add the free ticket to the database
+                _freeTicketRepository.AddFreeTicket(FreeTicket);
+
+                // Redirect to a success page
+                return RedirectToPage("./Success"); // Change "./Success" to your actual success page
             }
-            catch (Exception ex)
-            {
-                // Log the error and return to the form with an error message
-                ModelState.AddModelError(string.Empty, "An error occurred while processing your request. Please try again.");
-                Console.WriteLine($"Error: {ex.Message}");
-                return Page();
-            }
+
+            // If no files were uploaded, return the page with a validation message
+            ModelState.AddModelError(string.Empty, "Please upload the required files.");
+            return Page();
         }
+
     }
 }
