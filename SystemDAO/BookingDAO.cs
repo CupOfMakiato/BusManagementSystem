@@ -32,7 +32,6 @@ namespace SystemDAO
                 list = context.Bookings
                     .Include(b => b.Ticket)
                     .Include(b => b.User)
-                    .Include(b => b.Bus)
                     .Include(b => b.Payments)  // Include payments associated with the booking
                     .ToList();
             }
@@ -53,7 +52,6 @@ namespace SystemDAO
                 booking = context.Bookings
                     .Include(b => b.Ticket)
                     .Include(b => b.User)
-                    .Include(b => b.Bus)
                     .Include(b => b.Payments)
                     .FirstOrDefault(b => b.BookingId == bookingId);
             }
@@ -94,7 +92,6 @@ namespace SystemDAO
                     // Update properties
                     existingBooking.UserId = booking.UserId;
                     existingBooking.TicketId = booking.TicketId;
-                    existingBooking.BusId = booking.BusId;
                     existingBooking.BookingDate = booking.BookingDate;
                     existingBooking.Status = booking.Status;
                     existingBooking.ModifiedAt = DateTime.Now;  // Update ModifiedAt
@@ -149,7 +146,6 @@ namespace SystemDAO
                     .Where(b => b.UserId == userId)
                     .Include(b => b.Ticket)
                     .Include(b => b.User)
-                    .Include(b => b.Bus)
                     .Include(b => b.Payments)
                     .ToList();
             }
@@ -171,7 +167,6 @@ namespace SystemDAO
                     .Where(b => b.TicketId == ticketId)
                     .Include(b => b.Ticket)
                     .Include(b => b.User)
-                    .Include(b => b.Bus)
                     .Include(b => b.Payments)
                     .ToList();
             }

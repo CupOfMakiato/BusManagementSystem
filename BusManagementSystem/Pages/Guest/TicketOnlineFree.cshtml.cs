@@ -26,10 +26,10 @@ namespace BusManagementSystem.Pages.Guest
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page(); // Return the page if the data is invalid
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page(); // Return the page if the data is invalid
+            //}
 
             // Handle file uploads
             if (Request.Form.Files.Count > 0)
@@ -41,36 +41,38 @@ namespace BusManagementSystem.Pages.Guest
                     if (file.Length > 0)
                     {
                         var filePath = Path.Combine(uploads, file.FileName);
-                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        // Convert file to byte array and assign to the appropriate property
+                        using (var memoryStream = new MemoryStream())
                         {
-                            await file.CopyToAsync(stream);
-                        }
+                            await file.CopyToAsync(memoryStream);
+                            var fileBytes = memoryStream.ToArray();
 
-                        // Assign file paths to the appropriate properties
-                        if (file.FileName.Contains("CMTND")) // If filename contains "CMTND"
-                        {
-                            if (FreeTicket.IdfrontImage == null)
+                            // Assign byte arrays to the appropriate properties
+                            if (file.FileName.Contains("CMTND")) // If filename contains "CMTND"
                             {
-                                FreeTicket.IdfrontImage = file.FileName;
+                                if (FreeTicket.IdfrontImage == null)
+                                {
+                                    FreeTicket.IdfrontImage = fileBytes;
+                                }
+                                else
+                                {
+                                    FreeTicket.IdbackImage = fileBytes;
+                                }
                             }
-                            else
+                            else if (file.FileName.Contains("portrait")) // If filename contains "portrait"
                             {
-                                FreeTicket.IdbackImage = file.FileName;
+                                FreeTicket.Portrait3x4Image = fileBytes;
                             }
-                        }
-                        else if (file.FileName.Contains("portrait")) // If filename contains "portrait"
-                        {
-                            FreeTicket.Portrait3x4Image = file.FileName;
-                        }
-                        else if (file.FileName.Contains("proof")) // If filename contains "proof"
-                        {
-                            if (FreeTicket.ProofFrontImage == null)
+                            else if (file.FileName.Contains("proof")) // If filename contains "proof"
                             {
-                                FreeTicket.ProofFrontImage = file.FileName;
-                            }
-                            else
-                            {
-                                FreeTicket.ProofBackImage = file.FileName;
+                                if (FreeTicket.ProofFrontImage == null)
+                                {
+                                    FreeTicket.ProofFrontImage = fileBytes;
+                                }
+                                else
+                                {
+                                    FreeTicket.ProofBackImage = fileBytes;
+                                }
                             }
                         }
                     }
@@ -84,7 +86,7 @@ namespace BusManagementSystem.Pages.Guest
                 _freeTicketRepository.AddFreeTicket(FreeTicket);
 
                 // Redirect to a success page
-                return RedirectToPage("./Success"); // Change "./Success" to your actual success page
+                return RedirectToPage("/Guest/SuccessFreeTicket"); // Change "./Success" to your actual success page
             }
 
             // If no files were uploaded, return the page with a validation message
