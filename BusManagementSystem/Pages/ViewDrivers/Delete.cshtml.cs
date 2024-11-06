@@ -1,30 +1,36 @@
-﻿using BusinessObject.Entity;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using BusinessObject.Entity;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.ViewDrivers
 {
     public class DeleteModel : PageModel
     {
-        private readonly SystemDAO.BusManagementSystemContext _context;
+        private readonly IDriverService _driverService;
+        private readonly IRoleService _roleService;
+        private readonly IBusService _busService;
 
-        public DeleteModel(SystemDAO.BusManagementSystemContext context)
+        public DeleteModel(IDriverService driverService, IRoleService roleService, IBusService busService)
         {
-            _context = context;
+            _driverService = driverService;
+            _roleService = roleService;
+            _busService = busService;
         }
 
         [BindProperty]
         public Driver Driver { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Driver = await _context.Drivers.FirstOrDefaultAsync(m => m.DriverId == id);
+            Driver = _driverService.GetDriverById(id.Value);
 
             if (Driver == null)
             {
@@ -34,19 +40,17 @@ namespace BusManagementSystem.Pages.ViewDrivers
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPost(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var driver = await _context.Drivers.FindAsync(id);
+            var driver = _driverService.GetDriverById(id.Value);
             if (driver != null)
             {
-                Driver = driver;
-                _context.Drivers.Remove(Driver);
-                await _context.SaveChangesAsync();
+                _driverService.DeleteDriver(id.Value);
             }
 
             return RedirectToPage("./Index");

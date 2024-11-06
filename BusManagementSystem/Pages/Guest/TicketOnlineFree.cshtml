@@ -1,4 +1,199 @@
 ﻿@page
 @model BusManagementSystem.Pages.Guest.TicketOnlineFreeModel
 @{
+    ViewData["Title"] = "Đăng Ký Vé Miễn Phí";
 }
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        /* CSS nội tuyến */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #d9534f;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .form-control,
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="date"],
+        .form-group input[type="file"],
+        .form-group select {
+            width: 48%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Đảm bảo các trường nhập liệu ngắn như giới tính, email hiển thị cùng hàng */
+        .full-width {
+            width: 100%;
+        }
+
+        /* Đảm bảo các phần tử được căn chỉnh cho nút và thông báo lỗi */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #c9302c;
+        }
+
+        .text-danger {
+            font-size: 0.85em;
+            color: #d9534f;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>QUÝ KHÁCH VUI LÒNG ĐĂNG KÝ THÔNG TIN PHÁT HÀNH THẺ</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" asp-for="FreeTicket.RecipientName" class="form-control full-width" placeholder="HỌ TÊN TIẾNG VIỆT CÓ DẤU" required />
+                <span asp-validation-for="FreeTicket.RecipientName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Giới tính</label>
+                <div class="form-control">
+                    <input type="radio" asp-for="FreeTicket.Gender" value="Nam" id="genderMale" required /> Nam
+                    <input type="radio" asp-for="FreeTicket.Gender" value="Nữ" id="genderFemale" required /> Nữ
+                </div>
+                <span asp-validation-for="FreeTicket.Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Ngày sinh</label>
+                <input type="date" asp-for="FreeTicket.DateOfBirth" class="form-control" required />
+                <span asp-validation-for="FreeTicket.DateOfBirth" class="text-danger"></span>
+
+                <label>Số CMTND/CCCD</label>
+                <input type="text" asp-for="FreeTicket.Idnumber" class="form-control" placeholder="Số CMTND/CCCD" required />
+                <span asp-validation-for="FreeTicket.Idnumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Ảnh CMTND/CCCD</label>
+                <input type="file" asp-for="FreeTicket.IdfrontImage" class="form-control" required />
+                <input type="file" asp-for="FreeTicket.IdbackImage" class="form-control" required />
+                <span asp-validation-for="FreeTicket.IdfrontImage" class="text-danger"></span>
+                <span asp-validation-for="FreeTicket.IdbackImage" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Đối tượng</label>
+                <select asp-for="FreeTicket.RecipientType" class="form-control" required>
+                    <option value="">Chọn đối tượng...</option>
+                    <option value="Người cao tuổi">Người cao tuổi</option>
+                    <option value="Người khuyết tật">Người khuyết tật</option>
+                    <option value="Hộ nghèo">Hộ nghèo</option>
+                    <option value="Người có công">Người có công</option>
+                </select>
+                <span asp-validation-for="FreeTicket.RecipientType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Điện thoại liên hệ</label>
+                <input type="tel" asp-for="FreeTicket.Phone" class="form-control" required />
+                <span asp-validation-for="FreeTicket.Phone" class="text-danger"></span>
+
+                <label>Email liên hệ</label>
+                <input type="email" asp-for="FreeTicket.Email" class="form-control" />
+                <span asp-validation-for="FreeTicket.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Ảnh làm thẻ kích thước 3x4</label>
+                <input type="file" asp-for="FreeTicket.Portrait3x4Image" class="form-control full-width" required />
+                <span asp-validation-for="FreeTicket.Portrait3x4Image" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Giấy tờ chứng minh đối tượng được cấp thẻ</label>
+                <input type="file" asp-for="FreeTicket.ProofFrontImage" class="form-control" required />
+                <input type="file" asp-for="FreeTicket.ProofBackImage" class="form-control" required />
+                <span asp-validation-for="FreeTicket.ProofFrontImage" class="text-danger"></span>
+                <span asp-validation-for="FreeTicket.ProofBackImage" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Địa chỉ nhận thẻ</label>
+                <input type="text" asp-for="FreeTicket.TicketDeliveryAddress" class="form-control full-width" required />
+                <span asp-validation-for="FreeTicket.TicketDeliveryAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Quận/Huyện</label>
+                <input type="text" asp-for="FreeTicket.District" class="form-control" required />
+
+                <label>Xã/Phường</label>
+                <input type="text" asp-for="FreeTicket.Ward" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label>Ngày phát hành</label>
+                <input type="date" asp-for="FreeTicket.IssueDate" class="form-control" required />
+
+                <label>Ngày hết hạn</label>
+                <input type="date" asp-for="FreeTicket.ValidUntil" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn">Đăng Ký</button>
+        </form>
+    </div>
+</body>
+</html>
