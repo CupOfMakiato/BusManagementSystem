@@ -78,10 +78,9 @@ public partial class BusManagementSystemContext : DbContext
             entity.HasOne(d => d.AssignedRoute).WithMany(p => p.Buses)
                 .HasForeignKey(d => d.AssignedRouteId)
                 .HasConstraintName("FK__Bus__AssignedRou__66603565");
-
             entity.HasOne(d => d.Driver).WithMany(p => p.Buses)
-                .HasForeignKey(d => d.DriverId)
-                .HasConstraintName("FK__Bus__DriverId__6754599E");
+                            .HasForeignKey(d => d.DriverId)
+                            .HasConstraintName("FK__Bus__DriverId__6754599E");
         });
 
         modelBuilder.Entity<BusStop>(entity =>
@@ -156,8 +155,8 @@ public partial class BusManagementSystemContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.RecipientName)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+                            .HasMaxLength(100)
+                            .IsUnicode(false);
             entity.Property(e => e.RecipientType)
                 .HasMaxLength(50)
                 .IsUnicode(false);

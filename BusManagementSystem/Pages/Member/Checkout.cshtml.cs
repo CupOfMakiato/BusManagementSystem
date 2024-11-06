@@ -8,9 +8,9 @@ namespace BusManagementSystem.Pages.Member
 {
     public class CheckoutModel : PageModel
     {
-        private readonly BusManagementSystemContext _context;
+        private readonly SystemDAO.BusManagementSystemContext _context;
 
-        public CheckoutModel(BusManagementSystemContext context)
+        public CheckoutModel(SystemDAO.BusManagementSystemContext context)
         {
             _context = context;
         }
