@@ -35,8 +35,6 @@ public partial class Ticket
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<FreeTicket> FreeTickets { get; set; } = new List<FreeTicket>();
-
     public virtual Route? Route { get; set; }
 
     public virtual User? User { get; set; }

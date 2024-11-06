@@ -26,10 +26,10 @@ namespace BusManagementSystem.Pages.Guest
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page(); // Return the page if the data is invalid
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page(); // Return the page if the data is invalid
+            //}
 
             // Handle file uploads
             if (Request.Form.Files.Count > 0)
@@ -86,7 +86,7 @@ namespace BusManagementSystem.Pages.Guest
                 _freeTicketRepository.AddFreeTicket(FreeTicket);
 
                 // Redirect to a success page
-                return RedirectToPage("./Success"); // Change "./Success" to your actual success page
+                return RedirectToPage("/Guest/SuccessFreeTicket"); // Change "./Success" to your actual success page
             }
 
             // If no files were uploaded, return the page with a validation message

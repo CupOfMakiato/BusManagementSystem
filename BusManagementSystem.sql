@@ -89,7 +89,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[FreeTicket](
 	[FreeTicketId] [int] IDENTITY(1,1) NOT NULL,
-	[TicketId] [int] NOT NULL,
+	--[TicketId] [int] NOT NULL,
 	[RecipientName] [varchar](100) NOT NULL,
 	[Gender] [varchar](10) NOT NULL,
 	[DateOfBirth] [date] NOT NULL,
@@ -271,9 +271,9 @@ GO
 ALTER TABLE [dbo].[Driver]  WITH CHECK ADD FOREIGN KEY([RoleId])
 REFERENCES [dbo].[Role] ([RoleId])
 GO
-ALTER TABLE [dbo].[FreeTicket]  WITH CHECK ADD FOREIGN KEY([TicketId])
-REFERENCES [dbo].[Ticket] ([TicketId])
-GO
+--ALTER TABLE [dbo].[FreeTicket]  WITH CHECK ADD FOREIGN KEY([TicketId])
+--REFERENCES [dbo].[Ticket] ([TicketId])
+--GO
 ALTER TABLE [dbo].[FreeTicketVerification]  WITH CHECK ADD FOREIGN KEY([FreeTicketId])
 REFERENCES [dbo].[FreeTicket] ([FreeTicketId])
 GO

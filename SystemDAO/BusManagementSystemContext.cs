@@ -45,7 +45,7 @@ public partial class BusManagementSystemContext : DbContext
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951AED74B2B5FF");
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951AED8B58EA26");
 
             entity.ToTable("Booking");
 
@@ -63,7 +63,7 @@ public partial class BusManagementSystemContext : DbContext
 
         modelBuilder.Entity<Bus>(entity =>
         {
-            entity.HasKey(e => e.BusId).HasName("PK__Bus__6A0F60B5B8CA6DF8");
+            entity.HasKey(e => e.BusId).HasName("PK__Bus__6A0F60B5ABADEFF0");
 
             entity.ToTable("Bus");
 
@@ -80,7 +80,7 @@ public partial class BusManagementSystemContext : DbContext
 
         modelBuilder.Entity<BusStop>(entity =>
         {
-            entity.HasKey(e => e.StopId).HasName("PK__BusStop__EB6A38F47550C82A");
+            entity.HasKey(e => e.StopId).HasName("PK__BusStop__EB6A38F431F07EE7");
 
             entity.ToTable("BusStop");
 
@@ -94,7 +94,7 @@ public partial class BusManagementSystemContext : DbContext
 
         modelBuilder.Entity<Driver>(entity =>
         {
-            entity.HasKey(e => e.DriverId).HasName("PK__Driver__F1B1CD04E570DAF0");
+            entity.HasKey(e => e.DriverId).HasName("PK__Driver__F1B1CD04816D451E");
 
             entity.ToTable("Driver");
 
@@ -109,7 +109,7 @@ public partial class BusManagementSystemContext : DbContext
 
         modelBuilder.Entity<FreeTicket>(entity =>
         {
-            entity.HasKey(e => e.FreeTicketId).HasName("PK__FreeTick__432E9E7BE285D853");
+            entity.HasKey(e => e.FreeTicketId).HasName("PK__FreeTick__432E9E7B1CC8AC98");
 
             entity.ToTable("FreeTicket");
 
@@ -143,16 +143,11 @@ public partial class BusManagementSystemContext : DbContext
             entity.Property(e => e.Ward)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.Ticket).WithMany(p => p.FreeTickets)
-                .HasForeignKey(d => d.TicketId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FreeTicke__Ticke__6A30C649");
         });
 
         modelBuilder.Entity<FreeTicketVerification>(entity =>
         {
-            entity.HasKey(e => e.VerificationId).HasName("PK__FreeTick__306D490755C1357E");
+            entity.HasKey(e => e.VerificationId).HasName("PK__FreeTick__306D490701C8FC31");
 
             entity.ToTable("FreeTicketVerification");
 
@@ -161,16 +156,16 @@ public partial class BusManagementSystemContext : DbContext
 
             entity.HasOne(d => d.FreeTicket).WithMany(p => p.FreeTicketVerifications)
                 .HasForeignKey(d => d.FreeTicketId)
-                .HasConstraintName("FK__FreeTicke__FreeT__6B24EA82");
+                .HasConstraintName("FK__FreeTicke__FreeT__6A30C649");
 
             entity.HasOne(d => d.User).WithMany(p => p.FreeTicketVerifications)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__FreeTicke__UserI__6C190EBB");
+                .HasConstraintName("FK__FreeTicke__UserI__6B24EA82");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A3885E8C003");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A383E111E92");
 
             entity.ToTable("Payment");
 
@@ -179,16 +174,16 @@ public partial class BusManagementSystemContext : DbContext
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.BookingId)
-                .HasConstraintName("FK__Payment__Booking__6D0D32F4");
+                .HasConstraintName("FK__Payment__Booking__6C190EBB");
 
             entity.HasOne(d => d.User).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Payment__UserId__6E01572D");
+                .HasConstraintName("FK__Payment__UserId__6D0D32F4");
         });
 
         modelBuilder.Entity<PaymentDetail>(entity =>
         {
-            entity.HasKey(e => e.PaymentDetailId).HasName("PK__PaymentD__7F4E340F41AF5A15");
+            entity.HasKey(e => e.PaymentDetailId).HasName("PK__PaymentD__7F4E340FF398710B");
 
             entity.ToTable("PaymentDetail");
 
@@ -196,12 +191,12 @@ public partial class BusManagementSystemContext : DbContext
 
             entity.HasOne(d => d.Payment).WithMany(p => p.PaymentDetails)
                 .HasForeignKey(d => d.PaymentId)
-                .HasConstraintName("FK__PaymentDe__Payme__6EF57B66");
+                .HasConstraintName("FK__PaymentDe__Payme__6E01572D");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A77C91736");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A18AD3E3B");
 
             entity.ToTable("Role");
 
@@ -210,7 +205,7 @@ public partial class BusManagementSystemContext : DbContext
 
         modelBuilder.Entity<Route>(entity =>
         {
-            entity.HasKey(e => e.RouteId).HasName("PK__Route__80979B4D8A7C1230");
+            entity.HasKey(e => e.RouteId).HasName("PK__Route__80979B4D3777B391");
 
             entity.ToTable("Route");
 
@@ -222,7 +217,7 @@ public partial class BusManagementSystemContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.TicketId).HasName("PK__Ticket__712CC6070AE10793");
+            entity.HasKey(e => e.TicketId).HasName("PK__Ticket__712CC6074327C9F7");
 
             entity.ToTable("Ticket");
 
@@ -235,16 +230,16 @@ public partial class BusManagementSystemContext : DbContext
 
             entity.HasOne(d => d.Route).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.RouteId)
-                .HasConstraintName("FK__Ticket__RouteId__6FE99F9F");
+                .HasConstraintName("FK__Ticket__RouteId__6EF57B66");
 
             entity.HasOne(d => d.User).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Ticket__UserId__70DDC3D8");
+                .HasConstraintName("FK__Ticket__UserId__6FE99F9F");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4CCE8CCE7D");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4CB160B9FC");
 
             entity.ToTable("User");
 
@@ -255,7 +250,7 @@ public partial class BusManagementSystemContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK__User__RoleId__71D1E811");
+                .HasConstraintName("FK__User__RoleId__70DDC3D8");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -7,8 +7,6 @@ public partial class FreeTicket
 {
     public int FreeTicketId { get; set; }
 
-    public int TicketId { get; set; }
-
     public string RecipientName { get; set; } = null!;
 
     public string Gender { get; set; } = null!;
@@ -44,6 +42,4 @@ public partial class FreeTicket
     public DateOnly? ValidUntil { get; set; }
 
     public virtual ICollection<FreeTicketVerification> FreeTicketVerifications { get; set; } = new List<FreeTicketVerification>();
-
-    public virtual Ticket Ticket { get; set; } = null!;
 }
