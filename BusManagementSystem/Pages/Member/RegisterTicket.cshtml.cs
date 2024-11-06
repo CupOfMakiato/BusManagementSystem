@@ -130,7 +130,7 @@ namespace BusManagementSystem.Pages.Member
                     using (var ms = new MemoryStream())
                     {
                         IDCardFront.CopyToAsync(ms);
-                        ticket.IDCardFront = ms.ToArray();
+                        ticket.IdcardFront = ms.ToArray();
                     }
                 }
 
@@ -139,7 +139,7 @@ namespace BusManagementSystem.Pages.Member
                     using (var ms = new MemoryStream())
                     {
                         IDCardBack.CopyToAsync(ms);
-                        ticket.IDCardBack = ms.ToArray();
+                        ticket.IdcardBack = ms.ToArray();
                     }
                 }
             }

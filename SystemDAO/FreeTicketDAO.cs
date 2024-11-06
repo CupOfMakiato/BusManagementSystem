@@ -47,7 +47,7 @@ namespace SystemDAO
             catch (DbUpdateException ex)
             {
                 // Xử lý lỗi
-                throw new Exception("An error occurred while adding the driver.", ex);
+                throw new Exception("An error occurred while adding the ticket.", ex);
             }
         }
 

@@ -1,15 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BusinessObject.Entity;
 
 public partial class FreeTicketVerification
 {
-    [Key] // Primary key attribute added to resolve InvalidOperationException
     public int VerificationId { get; set; }
 
     public int? UserId { get; set; }
 
-    public int? FreeTicketId { get; set; } // Added FreeTicketId to match the updated script
+    public int? FreeTicketId { get; set; }
 
     public string? VerificationImage { get; set; }
 
@@ -17,7 +17,7 @@ public partial class FreeTicketVerification
 
     public int? Status { get; set; }
 
-    public virtual User? User { get; set; }
+    public virtual FreeTicket? FreeTicket { get; set; }
 
-    public virtual FreeTicket? FreeTicket { get; set; } // Added navigation property for FreeTicket
+    public virtual User? User { get; set; }
 }

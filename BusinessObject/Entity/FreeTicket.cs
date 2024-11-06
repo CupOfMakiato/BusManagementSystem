@@ -1,4 +1,7 @@
-﻿namespace BusinessObject.Entity;
+﻿using System;
+using System.Collections.Generic;
+
+namespace BusinessObject.Entity;
 
 public partial class FreeTicket
 {
@@ -14,9 +17,9 @@ public partial class FreeTicket
 
     public string Idnumber { get; set; } = null!;
 
-    public string? IdfrontImage { get; set; }
+    public byte[]? IdfrontImage { get; set; }
 
-    public string? IdbackImage { get; set; }
+    public byte[]? IdbackImage { get; set; }
 
     public string District { get; set; } = null!;
 
@@ -28,17 +31,19 @@ public partial class FreeTicket
 
     public string? Email { get; set; }
 
-    public string? Portrait3x4Image { get; set; }
+    public byte[]? Portrait3x4Image { get; set; }
 
-    public string ProofFrontImage { get; set; } = null!;
+    public byte[]? ProofFrontImage { get; set; }
 
-    public string ProofBackImage { get; set; } = null!;
+    public byte[]? ProofBackImage { get; set; }
 
     public string TicketDeliveryAddress { get; set; } = null!;
 
     public DateOnly IssueDate { get; set; }
 
     public DateOnly? ValidUntil { get; set; }
+
+    public virtual ICollection<FreeTicketVerification> FreeTicketVerifications { get; set; } = new List<FreeTicketVerification>();
 
     public virtual Ticket Ticket { get; set; } = null!;
 }
