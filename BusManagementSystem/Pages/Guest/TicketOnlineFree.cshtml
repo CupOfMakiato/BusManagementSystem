@@ -130,8 +130,10 @@
             <!-- Ảnh CMTND/CCCD -->
             <div class="form-group">
                 <label>Ảnh CMTND/CCCD</label>
-                <input type="file" name="FreeTicket.IdcardFront" class="form-control" required />
-                <input type="file" name="FreeTicket.IdcardBack" class="form-control" required />
+                <input type="file" asp-for="FreeTicket.IdfrontImage" accept="image/*" class="form-control" required />
+                <input type="file" asp-for="FreeTicket.IdbackImage" accept="image/*" class="form-control" required />
+                <span asp-validation-for="FreeTicket.IdfrontImage" class="text-danger"></span>
+                <span asp-validation-for="FreeTicket.IdbackImage" class="text-danger"></span>
             </div>
 
             <!-- Đối tượng -->
@@ -161,7 +163,8 @@
             <!-- Ảnh làm thẻ kích thước 3x4 -->
             <div class="form-group">
                 <label>Ảnh làm thẻ kích thước 3x4</label>
-                <input type="file" name="FreeTicket.Portrait3x4Image" class="form-control" required />
+                <input type="file" asp-for="FreeTicket.Portrait3x4Image" accept="image/*" class="form-control full-width" required />
+                <span asp-validation-for="FreeTicket.Portrait3x4Image" class="text-danger"></span>
             </div>
 
             <!-- Mặt Trước và Mặt Sau -->
@@ -170,8 +173,11 @@
                 <input type="file" name="FreeTicket.ProofFrontImage" accept="image/*" class="form-control" required />
             </div>
             <div class="form-group">
-                <label>Mặt Sau:</label>
-                <input type="file" name="FreeTicket.ProofBackImage" accept="image/*" class="form-control" required />
+                <label>Giấy tờ chứng minh đối tượng được cấp thẻ</label>
+                <input type="file" asp-for="FreeTicket.ProofFrontImage" accept="image/*" class="form-control" required />
+                <input type="file" asp-for="FreeTicket.ProofBackImage" accept="image/*" class="form-control" required />
+                <span asp-validation-for="FreeTicket.ProofFrontImage" class="text-danger"></span>
+                <span asp-validation-for="FreeTicket.ProofBackImage" class="text-danger"></span>
             </div>
 
             <!-- Địa chỉ nhận thẻ -->

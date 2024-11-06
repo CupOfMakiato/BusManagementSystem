@@ -1,4 +1,7 @@
-﻿namespace BusinessObject.Entity;
+﻿using System;
+using System.Collections.Generic;
+
+namespace BusinessObject.Entity;
 
 public partial class Driver
 {
@@ -15,6 +18,8 @@ public partial class Driver
     public string? Email { get; set; }
 
     public int? RoleId { get; set; }
+
+    public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
 
     public virtual Role? Role { get; set; }
 }

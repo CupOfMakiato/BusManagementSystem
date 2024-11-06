@@ -1,4 +1,7 @@
-﻿namespace BusinessObject.Entity;
+﻿using System;
+using System.Collections.Generic;
+
+namespace BusinessObject.Entity;
 
 public partial class Payment
 {

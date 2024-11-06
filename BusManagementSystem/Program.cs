@@ -24,6 +24,8 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 >>>>>>> master
 
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IFreeTicketService, FreeTicketService>();
+builder.Services.AddScoped<IFreeTicketVerificationService, FreeTicketVerificationService>();
 
 
 // register services
@@ -43,8 +45,8 @@ builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-
-
+builder.Services.AddScoped<IFreeTicketRepository, FreeTicketRepository>();
+builder.Services.AddScoped<IFreeTicketVerificationRepository, FreeTicketVerificationRepository>();
 
 
 // Add session services

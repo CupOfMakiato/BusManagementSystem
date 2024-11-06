@@ -1,12 +1,13 @@
-﻿namespace BusinessObject.Entity;
+﻿using System;
+using System.Collections.Generic;
+
+namespace BusinessObject.Entity;
 
 public partial class Booking
 {
     public int BookingId { get; set; }
 
     public int? UserId { get; set; }
-
-    public int? BusId { get; set; }
 
     public DateTime? BookingDate { get; set; }
 
