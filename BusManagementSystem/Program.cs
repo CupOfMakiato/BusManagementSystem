@@ -9,9 +9,6 @@ using SystemService.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register BusManagementSystemContext with a connection string
-
-
 // Register services as Scoped instead of Singleton
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBusService, BusService>();
@@ -19,16 +16,10 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRouteService, RouteService>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 
 // register services
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IBusService, BusService>();
-builder.Services.AddSingleton<IRoleService, RoleService>();
-builder.Services.AddSingleton<IRouteService, RouteService>();
-builder.Services.AddSingleton<IDriverService, DriverService>();
-builder.Services.AddSingleton<IFreeTicketService, FreeTicketService>();
-builder.Services.AddSingleton<IFreeTicketVerificationService, FreeTicketVerificationService>();
-
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBusRepository, BusRepository>();
@@ -38,18 +29,9 @@ builder.Services.AddScoped<IRouteRepository, RouteRepository>();
 
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<IBusRepository, BusRepository>();
-builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
-builder.Services.AddSingleton<IDriverRepository, DriverRepository>();
-builder.Services.AddSingleton<IRouteRepository, RouteRepository>();
-builder.Services.AddSingleton<IFreeTicketRepository, FreeTicketRepository>();
-builder.Services.AddSingleton<IFreeTicketVerificationRepository, FreeTicketVerificationRepository>();
 
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
-
-
-//builder.Services.AddScoped<UserDAO>();
 
 
 

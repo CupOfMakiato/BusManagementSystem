@@ -3,22 +3,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using SystemDAO;
+using SystemService;
+using SystemService.Interface;
+using System.Linq;
 
 namespace BusManagementSystem.Pages.Member
 {
     public class CheckoutModel : PageModel
     {
-        private readonly SystemDAO.BusManagementSystemContext _context;
+        private readonly IBookingService _bookingService;
+        private readonly ITicketService _ticketService;
+        private readonly IUserService _userService;
+        private readonly IRouteService _routeService;
 
-        public CheckoutModel(SystemDAO.BusManagementSystemContext context)
+        public CheckoutModel(IBookingService bookingService, IUserService userService, IRouteService routeService, ITicketService ticketService)
         {
-            _context = context;
+            _bookingService = bookingService;
+            _userService = userService;
+            _routeService = routeService;
+            _ticketService = ticketService;
         }
 
         public decimal Price { get; set; }
         public string RouteName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public IList<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public IList<BusinessObject.Entity.Route> Routes { get; set; } = new List<BusinessObject.Entity.Route>();
+        public IList<User> Users { get; set; } = new List<User>();
+        public IList<Booking> Bookings { get; set; } = new List<Booking>();
 
         public IActionResult OnGet()
         {
@@ -37,8 +50,8 @@ namespace BusManagementSystem.Pages.Member
                 return RedirectToPage("/Member/RegisterTicket");
             }
 
-            // Retrieve Route details from the database
-            var route = _context.Routes.Find(tempTicket.RouteId);
+            // Retrieve Route details from the database using LINQ to find the route by ID
+            var route = _routeService.GetAllRoutes().FirstOrDefault(r => r.RouteId == tempTicket.RouteId);
             RouteName = route?.RouteName ?? "Unknown Route";
             Price = tempTicket.Price ?? 0;
             StartDate = tempTicket.StartDate ?? DateTime.Now;
@@ -64,11 +77,30 @@ namespace BusManagementSystem.Pages.Member
                 Status = 1 // Pending status
             };
 
-            _context.Bookings.Add(booking);
-            _context.SaveChanges();
+            _bookingService.AddBooking(booking);
 
             // Redirect to Payment page after booking is saved
             return RedirectToPage("/Member/Payment");
+        }
+
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                try
+                {
+                    var account = JsonSerializer.Deserialize<User>(loginAccount);
+                    if (account != null && account.RoleId == 3) // Member role check
+                        return true;
+                }
+                catch (JsonException)
+                {
+                    // Handle potential deserialization issues
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }
