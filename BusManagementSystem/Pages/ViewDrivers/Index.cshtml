@@ -116,9 +116,7 @@
                                     <a class="btn btn-danger fw-bold deleteButton" data-id="@driver.DriverId">
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
-                                    <a class="btn btn-success fw-bold detailsButton" data-id="@driver.DriverId">
-                                        <i class="fas fa-info-circle"></i> Details
-                                    </a>
+                                    
                                 </div>
                             </td>
                         </tr>
@@ -164,11 +162,7 @@
                         window.location.href = '/ViewDrivers/Delete?id=' + id;
                     });
 
-                    $('body').on('click', '.detailsButton', function () {
-                        var id = $(this).data('id');
-                        $('#formModalLabel').text('Driver Details');
-                        openDetailsModal(id);
-                    });
+                  
                 });
 
                 function openDetailsModal(id) {

@@ -16,4 +16,5 @@ public partial class FreeTicketVerification
     public int? Status { get; set; }
 
     public virtual User? User { get; set; }
+    //public int? FreeticketId { get; set; }
 }

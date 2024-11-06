@@ -24,9 +24,9 @@ namespace SystemRepository.Implementation
             return _freeTicketDAO.GetFreeTicketById(id); // Gọi phương thức từ DAO
         }
 
-        public async Task AddFreeTicketAsync(FreeTicket freeTicket)
+        public void AddFreeTicket(FreeTicket freeTicket)
         {
-            await _freeTicketDAO.AddFreeTicketAsync(freeTicket);
+           _freeTicketDAO.AddFreeTicket(freeTicket);
         }
 
         public void UpdateFreeTicket(FreeTicket freeTicket) // Phương thức cập nhật FreeTicket

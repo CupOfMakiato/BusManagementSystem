@@ -11,7 +11,7 @@ namespace SystemRepository.Interface
     {
         List<FreeTicket> GetAllFreeTickets();
         FreeTicket GetFreeTicketById(int id);
-        Task AddFreeTicketAsync(FreeTicket freeTicket);
+        void AddFreeTicket(FreeTicket freeTicket);
         void UpdateFreeTicket(FreeTicket freeTicket);
         void DeleteFreeTicket(int id);
     }

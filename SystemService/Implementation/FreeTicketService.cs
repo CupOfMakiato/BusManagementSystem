@@ -24,9 +24,9 @@ namespace SystemService.Implementation
             return _freeTicketRepository.GetFreeTicketById(id); // Gọi phương thức từ Repository
         }
 
-        public async Task AddFreeTicketAsync(FreeTicket freeTicket)
+        public  void AddFreeTicket(FreeTicket freeTicket)
         {
-            await _freeTicketRepository.AddFreeTicketAsync(freeTicket);
+             _freeTicketRepository.AddFreeTicket(freeTicket);
         }
 
 

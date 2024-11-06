@@ -36,32 +36,18 @@ namespace SystemDAO
         }
 
         // Thêm FreeTicket mới
-        public async Task AddFreeTicketAsync(FreeTicket freeTicket)
+        public void AddFreeTicket(FreeTicket freeTicket)
         {
-            if (freeTicket == null)
-            {
-                throw new ArgumentNullException(nameof(freeTicket), "FreeTicket cannot be null.");
-            }
-
             try
             {
                 using var context = new BusManagementSystemContext();
-                await context.FreeTickets.AddAsync(freeTicket);
-                await context.SaveChangesAsync(); // Đảm bảo lưu thay đổi
+                context.FreeTickets.Add(freeTicket);
+                context.SaveChanges();
             }
             catch (DbUpdateException ex)
             {
-                Console.WriteLine($"An error occurred while updating the database: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-                }
-                throw new Exception("An error occurred while adding the free ticket.", ex);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                throw;
+                // Xử lý lỗi
+                throw new Exception("An error occurred while adding the driver.", ex);
             }
         }
 
