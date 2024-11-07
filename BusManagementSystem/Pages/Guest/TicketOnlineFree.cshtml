@@ -177,11 +177,26 @@
             </div>
 
             <div class="form-group">
-                <label>Quận/Huyện</label>
-                <input type="text" asp-for="FreeTicket.District" class="form-control" required />
+                <label>Tỉnh/Thành phố</label>
+                <select id="province" class="form-control" required>
+                    <option value="">Chọn tỉnh/thành phố...</option>
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label>Quận/Huyện</label>
+                <select id="district" asp-for="FreeTicket.District" class="form-control" required>
+                    <option value="">Chọn quận/huyện...</option>
+                </select>
+                <span asp-validation-for="FreeTicket.District" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label>Xã/Phường</label>
-                <input type="text" asp-for="FreeTicket.Ward" class="form-control" required />
+                <select id="ward" asp-for="FreeTicket.Ward" class="form-control" required>
+                    <option value="">Chọn xã/phường...</option>
+                </select>
+                <span asp-validation-for="FreeTicket.Ward" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -197,3 +212,84 @@
     </div>
 </body>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Load provinces on page load
+        fetchProvinces();
+
+        // When a province is selected, load its districts
+        document.getElementById("province").addEventListener("change", function () {
+            const provinceId = this.value;
+            if (provinceId) {
+                fetchDistricts(provinceId);
+            }
+            // Clear district and ward fields if no province selected
+            else {
+                clearDropdown("district");
+                clearDropdown("ward");
+            }
+        });
+
+        // When a district is selected, load its wards
+        document.getElementById("district").addEventListener("change", function () {
+            const districtId = this.value;
+            if (districtId) {
+                fetchWards(districtId);
+            } else {
+                clearDropdown("ward");
+            }
+        });
+    });
+
+    // Function to fetch provinces
+    async function fetchProvinces() {
+        try {
+            const response = await fetch("https://provinces.open-api.vn/api/p/");
+            const provinces = await response.json();
+            populateDropdown("province", provinces, "code", "name");
+        } catch (error) {
+            console.error("Error fetching provinces:", error);
+        }
+    }
+
+    // Function to fetch districts based on provinceId
+    async function fetchDistricts(provinceId) {
+        try {
+            const response = await fetch(`https://provinces.open-api.vn/api/p/${provinceId}?depth=2`);
+            const province = await response.json();
+            populateDropdown("district", province.districts, "code", "name");
+            clearDropdown("ward"); // Clear wards when a new district is selected
+        } catch (error) {
+            console.error("Error fetching districts:", error);
+        }
+    }
+
+    // Function to fetch wards based on districtId
+    async function fetchWards(districtId) {
+        try {
+            const response = await fetch(`https://provinces.open-api.vn/api/d/${districtId}?depth=2`);
+            const district = await response.json();
+            populateDropdown("ward", district.wards, "code", "name");
+        } catch (error) {
+            console.error("Error fetching wards:", error);
+        }
+    }
+
+    // Utility function to populate a dropdown
+    function populateDropdown(dropdownId, items, valueKey, textKey) {
+        const dropdown = document.getElementById(dropdownId);
+        dropdown.innerHTML = '<option value="">Select...</option>'; // Reset dropdown
+        items.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item[valueKey];
+            option.textContent = item[textKey];
+            dropdown.appendChild(option);
+        });
+    }
+
+    // Utility function to clear a dropdown
+    function clearDropdown(dropdownId) {
+        document.getElementById(dropdownId).innerHTML = '<option value="">Select...</option>';
+    }
+</script>

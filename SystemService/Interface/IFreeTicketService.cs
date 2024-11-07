@@ -1,5 +1,6 @@
 ﻿    using BusinessObject.Entity;
-    using System;
+using Microsoft.AspNetCore.Http;
+using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -14,5 +15,7 @@
             void AddFreeTicket(FreeTicket freeTicket);
             void UpdateFreeTicket(FreeTicket freeTicket);
             void DeleteFreeTicket(int id);
+            Task<string> SaveTicketImageAsync(IFormFile file);
+            Task<byte[]> GetTicketImageAsync(string fileName);
         }
     }

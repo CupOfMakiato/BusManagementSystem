@@ -1,7 +1,8 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using SystemRepository.Implementation;
 using SystemService.Interface;
 
@@ -9,90 +10,136 @@ namespace BusManagementSystem.Pages.Guest
 {
     public class TicketOnlineFreeModel : PageModel
     {
-        private readonly FreeTicketRepository _freeTicketRepository;
+        private readonly IFreeTicketService _freeTicketService;
 
-        public TicketOnlineFreeModel()
+        public TicketOnlineFreeModel(IFreeTicketService freeTicketService)
         {
-            _freeTicketRepository = new FreeTicketRepository();
+            _freeTicketService = freeTicketService;
         }
 
+        [Required(ErrorMessage = "Phone number is required.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+        public string Phone { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address format.")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email format.")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "ID number is required.")]
+        [RegularExpression(@"^\d{12}$", ErrorMessage = "ID number must be exactly 12 digits.")]
+        public string Idnumber { get; set; }
         [BindProperty]
         public FreeTicket FreeTicket { get; set; } = new FreeTicket();
+        [BindProperty]
+        public IFormFile? IdfrontImage { get; set; }
+        [BindProperty]
+        public IFormFile? IdbackImage { get; set; }
+        [BindProperty]
+        public IFormFile? Portrait3x4Image { get; set; }
+        [BindProperty]
+        public IFormFile? ProofFrontImage { get; set; }
+        [BindProperty]
+        public IFormFile? ProofBackImage { get; set; }
 
         public void OnGet()
         {
-            // Được gọi khi trang được tải lần đầu
+            // Set default IssueDate to today
+            FreeTicket.IssueDate = DateOnly.FromDateTime(DateTime.Today);
+
+            // Set ValidUntil to 30 days from IssueDate
+            FreeTicket.ValidUntil = FreeTicket.IssueDate.AddDays(30);
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page(); // Return the page if the data is invalid
-            //}
-
-            // Handle file uploads
-            if (Request.Form.Files.Count > 0)
+            // Validate DateOfBirth if RecipientType is "Người cao tuổi"
+            if (FreeTicket.RecipientType == "Người cao tuổi")
             {
-                // Assume you want to store images in the "uploads" folder
-                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-                foreach (var file in Request.Form.Files)
-                {
-                    if (file.Length > 0)
-                    {
-                        var filePath = Path.Combine(uploads, file.FileName);
-                        // Convert file to byte array and assign to the appropriate property
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await file.CopyToAsync(memoryStream);
-                            var fileBytes = memoryStream.ToArray();
+                int age = DateTime.Today.Year - FreeTicket.DateOfBirth.Year;
+                if (FreeTicket.DateOfBirth > DateOnly.FromDateTime(DateTime.Today).AddYears(-age)) age--;
 
-                            // Assign byte arrays to the appropriate properties
-                            if (file.FileName.Contains("CMTND")) // If filename contains "CMTND"
-                            {
-                                if (FreeTicket.IdfrontImage == null)
-                                {
-                                    FreeTicket.IdfrontImage = fileBytes;
-                                }
-                                else
-                                {
-                                    FreeTicket.IdbackImage = fileBytes;
-                                }
-                            }
-                            else if (file.FileName.Contains("portrait")) // If filename contains "portrait"
-                            {
-                                FreeTicket.Portrait3x4Image = fileBytes;
-                            }
-                            else if (file.FileName.Contains("proof")) // If filename contains "proof"
-                            {
-                                if (FreeTicket.ProofFrontImage == null)
-                                {
-                                    FreeTicket.ProofFrontImage = fileBytes;
-                                }
-                                else
-                                {
-                                    FreeTicket.ProofBackImage = fileBytes;
-                                }
-                            }
-                        }
+                if (age < 60)
+                {
+                    ModelState.AddModelError("FreeTicket.DateOfBirth", "Người cao tuổi phải từ 60 tuổi trở lên.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            var ticket = new FreeTicket
+            {
+                RecipientName = FreeTicket.RecipientName,
+                Gender = FreeTicket.Gender,
+                DateOfBirth = FreeTicket.DateOfBirth,
+                Idnumber = FreeTicket.Idnumber,
+                District = FreeTicket.District,
+                Ward = FreeTicket.Ward,
+                RecipientType = FreeTicket.RecipientType,
+                Phone = FreeTicket.Phone,
+                Email = FreeTicket.Email,
+                TicketDeliveryAddress = FreeTicket.TicketDeliveryAddress,
+                IssueDate = FreeTicket.IssueDate,
+                ValidUntil = FreeTicket.ValidUntil,
+            };
+
+            try
+            {
+                if (IdfrontImage != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await IdfrontImage.CopyToAsync(ms);
+                        ticket.IdfrontImage = ms.ToArray();
+                    }
+                }
+                if (IdbackImage != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await IdbackImage.CopyToAsync(ms);
+                        ticket.IdbackImage = ms.ToArray();
+                    }
+                }
+                if (Portrait3x4Image != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await Portrait3x4Image.CopyToAsync(ms);
+                        ticket.Portrait3x4Image = ms.ToArray();
+                    }
+                }
+                if (ProofBackImage != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await ProofBackImage.CopyToAsync(ms);
+                        ticket.ProofBackImage = ms.ToArray();
+                    }
+                }
+                if (ProofFrontImage != null)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await ProofFrontImage.CopyToAsync(ms);
+                        ticket.ProofFrontImage = ms.ToArray();
                     }
                 }
 
-                // Assign additional information to FreeTicket
-                FreeTicket.IssueDate = DateOnly.FromDateTime(DateTime.Now);
-                FreeTicket.ValidUntil = FreeTicket.ValidUntil == null ? null : FreeTicket.ValidUntil;
+                _freeTicketService.AddFreeTicket(ticket);
+                HttpContext.Session.SetString("TempFreeTicket", JsonSerializer.Serialize(ticket));
 
-                // Add the free ticket to the database
-                _freeTicketRepository.AddFreeTicket(FreeTicket);
-
-                // Redirect to a success page
-                return RedirectToPage("/Guest/SuccessFreeTicket"); // Change "./Success" to your actual success page
+                // Redirect to success page
+                return RedirectToPage("/Guest/SuccessFreeTicket");
             }
-
-            // If no files were uploaded, return the page with a validation message
-            ModelState.AddModelError(string.Empty, "Please upload the required files.");
-            return Page();
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return Page();
+            }
         }
-
     }
 }
