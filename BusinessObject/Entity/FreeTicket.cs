@@ -41,5 +41,5 @@ public partial class FreeTicket
 
     public DateOnly? ValidUntil { get; set; }
 
-    public virtual ICollection<FreeTicketVerification> FreeTicketVerifications { get; set; } = new List<FreeTicketVerification>();
+    public int? Status { get; set; }
 }
