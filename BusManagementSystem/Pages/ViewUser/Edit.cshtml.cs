@@ -34,9 +34,10 @@ namespace BusManagementSystem.Pages.ViewUser
                 return Page();
             }
 
-            var roles = _roleService.GetAllRoles();
-            ViewData["RoleId"] = new SelectList(roles, "RoleId", "RoleName", systemAccount.RoleId);
-
+            var roles = _roleService.GetAllRoles()
+                    .Where(role => role.RoleName == "Staff" || role.RoleName == "Driver" || role.RoleName == "Member")
+                    .ToList();
+            ViewData["RoleId"] = new SelectList(roles, "RoleId", "RoleName");
             User = systemAccount;
             return Page();
         }
@@ -47,7 +48,15 @@ namespace BusManagementSystem.Pages.ViewUser
                 return RedirectToPage("/Login");
 
             if (!ModelState.IsValid)
+            {
+                var roles = _roleService.GetAllRoles()
+                    .Where(role => role.RoleName == "Staff" || role.RoleName == "Driver" || role.RoleName == "Member")
+                    .ToList();
+                ViewData["RoleId"] = new SelectList(roles, "RoleId", "RoleName");
                 return Page();
+            }
+            // Fetch the roles to populate the dropdown
+            
 
             try
             {
@@ -70,13 +79,18 @@ namespace BusManagementSystem.Pages.ViewUser
                 existingUser.DateOfBirth = User.DateOfBirth;
                 existingUser.Email = User.Email;
                 existingUser.PhoneNumber = User.PhoneNumber;
-                if (!string.IsNullOrEmpty(User.Password))
+
+                // Manually check if the password is valid
+                if (!TryValidateModel(User, nameof(User.Password)))
                 {
-                    existingUser.Password = User.Password;
+                    return Page();
                 }
+                existingUser.Password = User.Password;
+
                 existingUser.RoleId = User.RoleId;
                 existingUser.Status = User.Status;
 
+                // Save the updated user to the database
                 _userService.UpdateUser(existingUser);
 
                 Message = "User updated successfully!";
@@ -84,10 +98,12 @@ namespace BusManagementSystem.Pages.ViewUser
             }
             catch (Exception ex)
             {
+                // Capture any exception and display it
                 Message = ex.Message;
                 return Page();
             }
         }
+
 
         private bool CheckSession()
         {

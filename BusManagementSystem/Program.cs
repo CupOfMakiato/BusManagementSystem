@@ -18,7 +18,8 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IFreeTicketService, FreeTicketService>();
-builder.Services.AddScoped<IFreeTicketVerificationService, FreeTicketVerificationService>();
+
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
 // register services
@@ -34,8 +35,8 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IFreeTicketRepository, FreeTicketRepository>();
-builder.Services.AddScoped<IFreeTicketVerificationRepository, FreeTicketVerificationRepository>();
 
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 // Add session services
 builder.Services.AddSession(options =>

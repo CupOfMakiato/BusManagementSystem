@@ -18,5 +18,6 @@ namespace SystemRepository.Interface
         bool UserIdExists(int userId);
         bool EmailExists(string email);
         void SoftDeleteUser(User u);
+        bool UserHasAssociations(int userId);
     }
 }

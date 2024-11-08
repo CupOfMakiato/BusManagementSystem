@@ -84,7 +84,7 @@ namespace BusManagementSystem.Pages.Member
         {
             if (!ModelState.IsValid)
             {
-                return Redirect("/Member/RegisterTicket");
+                return Page();
             }
             var userId = (int)HttpContext.Session.GetInt32("UserId");
             if (userId == null)
@@ -149,6 +149,17 @@ namespace BusManagementSystem.Pages.Member
             HttpContext.Session.SetString("TempTicket", JsonSerializer.Serialize(ticket));
 
             return RedirectToPage("/Member/Checkout");
+        }
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<User>(loginAccount);
+                if (account != null && account.RoleId == 3)
+                    return true;
+            }
+            return false;
         }
     }
 }

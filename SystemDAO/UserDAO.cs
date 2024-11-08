@@ -107,14 +107,21 @@ namespace SystemDAO
             try
             {
                 using var db = new BusManagementSystemContext();
-                db.Entry<User>(u).State = EntityState.Modified;
+                u.Status = 0; // Set the status to inactive (soft delete)
+                db.Entry(u).State = EntityState.Modified;
                 db.SaveChanges();
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("An error occurred while soft-deleting the user.", ex);
             }
         }
+        public bool UserHasAssociations(int userId)
+        {
+            using var db = new BusManagementSystemContext();
+            return db.Bookings.Any(b => b.UserId == userId);
+        }
+
 
         // New Method to Check if a UserId Exists
         public bool UserIdExists(int userId)

@@ -2,6 +2,7 @@ using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 using SystemService.Interface;
 
 namespace BusManagementSystem.Pages
@@ -79,9 +80,10 @@ namespace BusManagementSystem.Pages
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address format.")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email format.")]
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -93,7 +95,10 @@ namespace BusManagementSystem.Pages
         [Required]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
         [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$",
+        ErrorMessage = "Password must be at least 6 characters long, contain at least one uppercase letter, one number, and one special character.")]
         public string Password { get; set; } = string.Empty;
+
 
         [Required]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]

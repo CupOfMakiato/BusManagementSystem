@@ -59,6 +59,8 @@
         padding: 10px;
         text-align: right;
     }
+
+
 </style>
 
 <div class="row">
@@ -148,6 +150,7 @@
                                 1 => "Admin",
                                 2 => "Staff",
                                 3 => "Member",
+                                4 => "Driver",
                             };
                         }
                         @roleName
@@ -160,9 +163,6 @@
                             <a class="btn btn-danger fw-bold deleteButton" data-id="@item.UserId">
                                 <i class="fas fa-trash"></i> Delete
                             </a>
-                            @* <a class="btn btn-success fw-bold detailsButton" data-id="@item.UserId">
-                                <i class="fas fa-info-circle"></i> Details
-                            </a> *@
                         </div>
                     </td>
                 </tr>

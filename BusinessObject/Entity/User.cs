@@ -23,8 +23,6 @@ public partial class User
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<FreeTicketVerification> FreeTicketVerifications { get; set; } = new List<FreeTicketVerification>();
-
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Role? Role { get; set; }

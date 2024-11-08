@@ -39,5 +39,10 @@ namespace SystemService.Implementation
         {
             _userRepository.SoftDeleteUser(u);
         }
+
+        public bool UserHasAssociations(int userId)
+        {
+            return _userRepository.UserHasAssociations(userId);
+        }
     }
 }
