@@ -107,6 +107,7 @@ CREATE TABLE [dbo].[FreeTicket](
 	[TicketDeliveryAddress] [varchar](255) NOT NULL,
 	[IssueDate] [date] NOT NULL,
 	[ValidUntil] [date] NULL,
+	[Status] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[FreeTicketId] ASC
@@ -114,23 +115,23 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[FreeTicketVerification]    Script Date: 11/6/2024 3:48:01 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[FreeTicketVerification](
-	[VerificationId] [int] IDENTITY(1,1) NOT NULL,
-	[UserId] [int] NULL,
-	[FreeTicketId] [int] NULL,
-	[VerificationImage] [nvarchar](255) NULL,
-	[VerificationDate] [datetime2](7) NULL,
-	[Status] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[VerificationId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
+--SET ANSI_NULLS ON
+--GO
+--SET QUOTED_IDENTIFIER ON
+--GO
+--CREATE TABLE [dbo].[FreeTicketVerification](
+--	[VerificationId] [int] IDENTITY(1,1) NOT NULL,
+--	[UserId] [int] NULL,
+--	[FreeTicketId] [int] NULL,
+--	[VerificationImage] [nvarchar](255) NULL,
+--	[VerificationDate] [datetime2](7) NULL,
+--	[Status] [int] NULL,
+--PRIMARY KEY CLUSTERED 
+--(
+--	[VerificationId] ASC
+--)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+--) ON [PRIMARY]
+--GO
 /****** Object:  Table [dbo].[Payment]    Script Date: 11/6/2024 3:48:01 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -248,7 +249,7 @@ ALTER TABLE [dbo].[Booking] ADD  DEFAULT (getdate()) FOR [CreatedAt]
 GO
 ALTER TABLE [dbo].[Bus] ADD  DEFAULT (getdate()) FOR [CreatedAt]
 GO
-ALTER TABLE [dbo].[FreeTicketVerification] ADD  DEFAULT (getdate()) FOR [VerificationDate]
+--ALTER TABLE [dbo].[FreeTicketVerification] ADD  DEFAULT (getdate()) FOR [VerificationDate]
 GO
 ALTER TABLE [dbo].[Payment] ADD  DEFAULT (getdate()) FOR [PaymentDate]
 GO
@@ -274,11 +275,11 @@ GO
 --ALTER TABLE [dbo].[FreeTicket]  WITH CHECK ADD FOREIGN KEY([TicketId])
 --REFERENCES [dbo].[Ticket] ([TicketId])
 --GO
-ALTER TABLE [dbo].[FreeTicketVerification]  WITH CHECK ADD FOREIGN KEY([FreeTicketId])
-REFERENCES [dbo].[FreeTicket] ([FreeTicketId])
-GO
-ALTER TABLE [dbo].[FreeTicketVerification]  WITH CHECK ADD FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([UserId])
+--ALTER TABLE [dbo].[FreeTicketVerification]  WITH CHECK ADD FOREIGN KEY([FreeTicketId])
+--REFERENCES [dbo].[FreeTicket] ([FreeTicketId])
+--GO
+--ALTER TABLE [dbo].[FreeTicketVerification]  WITH CHECK ADD FOREIGN KEY([UserId])
+--REFERENCES [dbo].[User] ([UserId])
 GO
 ALTER TABLE [dbo].[Payment]  WITH CHECK ADD FOREIGN KEY([BookingId])
 REFERENCES [dbo].[Booking] ([BookingId])
@@ -305,21 +306,21 @@ INSERT INTO [BusManagementSystem].[dbo].[Role] (RoleName) VALUES ('Admin'), ('St
 -- Inserting sample accounts into User table
 -- Insert admin account
 INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
-VALUES ('SystemAdmin', '2024-01-01', 1, 'SystemAdmin@BusManagement.org', '1234567890', '@1', 1);
+VALUES ('SystemAdmin', '2024-01-01', 1, 'SystemAdmin@BusManagement.org', '1234567890', '@12345', 1);
 
 -- Insert staff accounts
 INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
 VALUES 
-    ('Isabella David', '2024-01-01', 2, 'staff1@BusManagement.org', '2345678901', '@1', 1),
-    ('Michael Charlotte', '2024-01-01', 2, 'staff2@BusManagement.org', '3456789012', '@1', 1),
-    ('Steve Paris', '2024-01-01', 2, 'staff3@BusManagement.org', '4567890123', '@1', 1);
+    ('Isabella David', '2024-01-01', 2, 'staff1@BusManagement.org', '2345678901', '@12345', 1),
+    ('Michael Charlotte', '2024-01-01', 2, 'staff2@BusManagement.org', '3456789012', '@12345', 1),
+    ('Steve Paris', '2024-01-01', 2, 'staff3@BusManagement.org', '4567890123', '@12345', 1);
 
 -- Insert random member accounts
 INSERT INTO [BusManagementSystem].[dbo].[User] (Name, DateOfBirth, RoleId, Email, PhoneNumber, Password, Status)
 VALUES 
-    ('NguyenLe', '2024-01-01', 3, 'nguyenbr23@gmail.com', '5678901234', '@1', 1),
-    ('Member User 2', '2024-01-01', 3, 'member2@gmail.com', '6789012345', '@1', 1),
-    ('Member User 3', '2024-01-01', 3, 'member3@gmail.com', '7890123456', '@1', 1);
+    ('NguyenLe', '2024-01-01', 3, 'nguyenbr23@gmail.com', '5678901234', '@12345', 1),
+    ('Member User 2', '2024-01-01', 3, 'member2@gmail.com', '6789012345', '@12345', 1),
+    ('Member User 3', '2024-01-01', 3, 'member3@gmail.com', '7890123456', '@12345', 1);
 
 -- Insert a new driver
 INSERT INTO [BusManagementSystem].[dbo].[Driver] (Name, PhoneNumber, Status, Shift, Email, RoleId)

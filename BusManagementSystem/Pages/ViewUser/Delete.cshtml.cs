@@ -27,7 +27,7 @@ namespace BusManagementSystem.Pages.ViewUser
             if (id == null)
                 return NotFound();
 
-            // Fetch the bus by ID
+            // Fetch the user by ID
             User = _userService.GetUserById(id.Value);
             if (User == null)
                 return NotFound();
@@ -43,14 +43,20 @@ namespace BusManagementSystem.Pages.ViewUser
             if (id == null)
                 return NotFound();
 
-            // Find and delete the bus by ID
             try
             {
                 var user = _userService.GetUserById(id.Value);
                 if (user == null)
                     return NotFound();
 
-                _userService.DeleteUser(user);
+                // Check if user has associations
+                bool hasAssociations = _userService.UserHasAssociations(user.UserId);
+
+                // Use soft delete if user has associations, otherwise hard delete
+                if (hasAssociations)
+                {
+                    _userService.SoftDeleteUser(user);
+                }
             }
             catch (Exception)
             {

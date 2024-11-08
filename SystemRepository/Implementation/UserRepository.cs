@@ -28,6 +28,11 @@ namespace SystemRepository.Implementation
 
         public void UpdateUser(User user) => UserDAO.GetInstance().UpdateUser(user);
 
+        public bool UserHasAssociations(int userId)
+        {
+            return UserDAO.GetInstance().UserHasAssociations(userId);
+        }
+
         public bool UserIdExists(int userId)
         {
             return UserDAO.GetInstance().UserIdExists(userId);

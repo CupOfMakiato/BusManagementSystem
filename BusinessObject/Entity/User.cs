@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject.Entity;
 
@@ -17,7 +18,12 @@ public partial class User
 
     public string? PhoneNumber { get; set; }
 
-    public string? Password { get; set; }
+    //[StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
+    //[DataType(DataType.Password)]
+    //[RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$",
+    //    ErrorMessage = "Password must be at least 6 characters long, contain at least one uppercase letter, one number, and one special character.")]
+    //public string Password { get; set; } = string.Empty;
+    public string Password { get; set; }
 
     public int? Status { get; set; }
 
