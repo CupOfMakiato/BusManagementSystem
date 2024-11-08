@@ -21,6 +21,8 @@ CREATE TABLE [dbo].[Booking](
 	[CreatedBy] [int] NULL,
 	[ModifiedBy] [int] NULL,
 	[TicketId] [int] NULL,
+	[Amount] [decimal](10, 2),
+
 PRIMARY KEY CLUSTERED 
 (
 	[BookingId] ASC
