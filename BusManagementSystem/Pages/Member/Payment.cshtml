@@ -1,4 +1,20 @@
 ﻿@page
 @model BusManagementSystem.Pages.Member.PaymentModel
-@{
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNPAY Payment Confirmation</title>
+</head>
+<body>
+    <h1>VNPAY Payment Confirmation</h1>
+    <p>Order Amount: @Model.Amount VND</p>
+
+    <form method="get">
+        <input type="hidden" name="Amount" value="@Model.Amount" />
+        <p>Click the button below to proceed to payment.</p>
+        <input type="submit" value="Proceed to Payment">
+    </form>
+</body>
+</html>

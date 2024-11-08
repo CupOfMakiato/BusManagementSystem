@@ -69,18 +69,43 @@ namespace BusManagementSystem.Pages.Member
                 return RedirectToPage("/Login"); // Redirect if user is not logged in
             }
 
-            // Create a new booking with the retrieved User ID
+            // Retrieve ticket data from session
+            var tempTicketJson = HttpContext.Session.GetString("TempTicket");
+            if (string.IsNullOrEmpty(tempTicketJson))
+            {
+                // Redirect to RegisterTicket if TempTicket data is missing
+                return RedirectToPage("/Member/RegisterTicket");
+            }
+
+            // Deserialize Ticket object from JSON
+            var tempTicket = JsonSerializer.Deserialize<Ticket>(tempTicketJson);
+            if (tempTicket == null)
+            {
+                return RedirectToPage("/Member/RegisterTicket");
+            }
+
+            // Ensure that the ticket has a valid price
+            decimal amount = tempTicket.Price ?? 0;
+            if (amount <= 0)
+            {
+                // Optionally handle the case where the price is invalid
+                return RedirectToPage("/Member/RegisterTicket");
+            }
+
+            // Create a new booking with the retrieved User ID, Ticket ID, and Amount
             var booking = new Booking
             {
                 UserId = userId.Value,
                 BookingDate = DateTime.Now,
-                Status = 1 // Pending status
+                Status = 1, // Pending status
+                TicketId = tempTicket.TicketId, // Assigning the TicketId
+                Amount = amount // Assigning the Amount (Price of the ticket)
             };
 
             _bookingService.AddBooking(booking);
 
             // Redirect to Payment page after booking is saved
-            return RedirectToPage("/Member/Payment");
+            return RedirectToPage("/Member/Payment", new { amount = booking.Amount });
         }
 
         public bool CheckSession()
