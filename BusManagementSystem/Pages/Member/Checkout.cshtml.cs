@@ -6,6 +6,7 @@ using SystemDAO;
 using SystemService;
 using SystemService.Interface;
 using System.Linq;
+using Net.payOS.Types;
 
 namespace BusManagementSystem.Pages.Member
 {
@@ -105,7 +106,7 @@ namespace BusManagementSystem.Pages.Member
             _bookingService.AddBooking(booking);
 
             // Redirect to Payment page after booking is saved
-            return RedirectToPage("/Member/Payment", new { amount = booking.Amount });
+            return RedirectToPage("/Member/Index");
         }
 
         public bool CheckSession()

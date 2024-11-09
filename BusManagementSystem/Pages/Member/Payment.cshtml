@@ -5,14 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNPAY Payment Confirmation</title>
+    <title>PayOS Payment Confirmation</title>
 </head>
 <body>
-    <h1>VNPAY Payment Confirmation</h1>
+    <h1>PayOS Payment Confirmation</h1>
+    <p>Order ID: @Model.ID</p>
     <p>Order Amount: @Model.Amount VND</p>
 
-    <form method="get">
+    <form method="post">
         <input type="hidden" name="Amount" value="@Model.Amount" />
+        <input type="hidden" name="ID" value="@Model.ID" />
         <p>Click the button below to proceed to payment.</p>
         <input type="submit" value="Proceed to Payment">
     </form>

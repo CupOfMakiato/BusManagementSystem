@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Net.payOS;
 using SystemDAO;
 using SystemRepository;
 using SystemRepository.Implementation;
@@ -6,6 +7,12 @@ using SystemRepository.Interface;
 using SystemService;
 using SystemService.Implementation;
 using SystemService.Interface;
+
+IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +27,9 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IFreeTicketService, FreeTicketService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton(payOS);
 
 
 // register services

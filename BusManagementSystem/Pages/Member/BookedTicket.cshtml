@@ -1,0 +1,83 @@
+﻿@page
+@model BusManagementSystem.Pages.Member.BookedTicketModel
+@{
+    Layout = "_MemberLayout"; // This layout now includes the header and navigation bar
+    ViewData["Title"] = "Booked Ticket List - Member";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+
+    <!-- Main Section -->
+    <main class="main-section" style="padding: 20px;">
+        <h2>WELCOME TO OUR SERVICE</h2>
+        <p>Welcome to our website for registering bus monthly tickets and free bus tickets. Our platform helps customers register quickly, conveniently, and saves time and travel costs.</p>
+
+        <div class="ticket-options" style="display: flex; gap: 20px;">
+            <div class="ticket-option" style="text-align: center;">
+                <img src="~/images/monthly bus ticket.png" alt="Monthly Ticket" style="width: 100px;">
+                <button onclick="location.href='/Member/RegisterTicket'" style="display: block; margin-top: 10px;">Register Monthly Ticket</button>
+            </div>
+            <div class="ticket-option" style="text-align: center;">
+                <img src="~/images/monthly free bus ticket.png" alt="Free Ticket" style="width: 100px;">
+                <button onclick="location.href='/Member/TicketOnlineFree'" style="display: block; margin-top: 10px;">Register Free Ticket</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Route List Section -->
+    <section class="route-list" style="padding: 20px;">
+        <h2>Booked Ticket List</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Booking Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Bookings != null && Model.Bookings.Any())
+                    {
+                        foreach (var book in Model.Bookings)
+                        {
+                            <tr>
+                                <td hidden>@book.BookingId</td>
+                                <td>@book.TicketId</td>
+                                <td>@book.BookingDate</td>
+                                <td>@book.Amount</td>
+                                <td>@book.Status</td>
+                                @if (book.Status == 1)
+                                {
+                                    <td><a href="/Member/Payment?bookingId=@book.BookingId&amount=@book.Amount">Thanh toán</td>
+                                }
+                                else{
+
+                                    <td></td>
+                                    }
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">No books found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </section>
+
+</body>
+</html>

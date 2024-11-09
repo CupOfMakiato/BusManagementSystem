@@ -1,19 +1,34 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Net.payOS;
+using Net.payOS.Types;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using SystemService.Interface;
 
 namespace BusManagementSystem.Pages.Member
 {
     public class PaymentModel : PageModel
     {
+        private readonly IBookingService _bookingService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly PayOS _payOS;
         [BindProperty(SupportsGet = true)]
         public decimal Amount { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int ID { get; set; }
 
-        public IActionResult OnGet(int bookingId) // Assuming you pass BookingId as a parameter
+        public PaymentModel(IBookingService bookingService, IHttpContextAccessor httpContextAccessor, PayOS payOS)
+        {
+            _bookingService = bookingService;
+            _httpContextAccessor = httpContextAccessor;
+            _payOS = payOS;
+        }
+
+        /*public IActionResult OnGet(int bookingId) // Assuming you pass BookingId as a parameter
         {
             // Ensure the amount is valid
             if (Amount <= 0)
@@ -81,6 +96,49 @@ namespace BusManagementSystem.Pages.Member
             using (var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(key)))
             {
                 return BitConverter.ToString(hmac.ComputeHash(Encoding.UTF8.GetBytes(data))).Replace("-", "").ToLower();
+            }
+        }*/
+
+        public void OnGet()
+        {
+
+            string bookID = HttpContext.Request.Query["bookingId"];
+            string amount = HttpContext.Request.Query["amount"];
+            ID = int.Parse(bookID);
+            Amount = decimal.Parse(amount);
+        }
+
+        public async Task<IActionResult> OnPost()
+        {
+            try
+            {
+                var booking = _bookingService.GetBookingById(ID);
+                if (booking == null)
+                {
+                    return NotFound("Booking not found!");
+                }
+
+                ItemData item = new ItemData("Vé xe bus tháng", 1, (int)Amount);
+                List<ItemData> items = new List<ItemData> { item};
+
+                var request = _httpContextAccessor.HttpContext.Request;
+                var baseUrl = $"{request.Scheme}://{request.Host}";
+
+                PaymentData paymentData = new PaymentData(
+                    booking.BookingId, 
+                    (int)booking.Amount,
+                    "Thanh toán đơn hàng", 
+                    items,
+                    $"{baseUrl}/Member/Cancel",
+                    $"{baseUrl}/Member/Success"
+                    );
+
+                CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
+                return Redirect(createPayment.checkoutUrl);
+
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
