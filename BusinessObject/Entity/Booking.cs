@@ -23,7 +23,7 @@ public partial class Booking
 
     public int? TicketId { get; set; }
 
-    public decimal? Amount { get; set; } // New Amount property added
+    public decimal? Amount { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
