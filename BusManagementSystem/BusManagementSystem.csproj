@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\ViewFreeTicket\" />
-    <Folder Include="Pages\ViewTicket\" />
   </ItemGroup>
 
 
