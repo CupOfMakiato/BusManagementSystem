@@ -53,6 +53,13 @@ namespace BusManagementSystem.Pages.Guest
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Check if the ID number already exists with status = 0 (expired)
+            if (_freeTicketService.IsIdNumberExisting(FreeTicket.Idnumber))
+            {
+                ModelState.AddModelError("FreeTicket.Idnumber", "This ID number has already been used! Please check your Ticket expiration date.");
+                return Page();
+            }
+
             // Validate DateOfBirth if RecipientType is "Người cao tuổi"
             if (FreeTicket.RecipientType == "Người cao tuổi")
             {
@@ -61,39 +68,48 @@ namespace BusManagementSystem.Pages.Guest
 
                 if (age < 60)
                 {
-                    ModelState.AddModelError("FreeTicket.DateOfBirth", "Người cao tuổi phải từ 60 tuổi trở lên.");
+                    ModelState.AddModelError("FreeTicket.DateOfBirth", "The Recipient must be 60+ years old!");
                 }
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            var ticket = new FreeTicket
-            {
-                RecipientName = FreeTicket.RecipientName,
-                Gender = FreeTicket.Gender,
-                DateOfBirth = FreeTicket.DateOfBirth,
-                Idnumber = FreeTicket.Idnumber,
-                District = FreeTicket.District,
-                Ward = FreeTicket.Ward,
-                RecipientType = FreeTicket.RecipientType,
-                Phone = FreeTicket.Phone,
-                Email = FreeTicket.Email,
-                TicketDeliveryAddress = FreeTicket.TicketDeliveryAddress,
-                IssueDate = FreeTicket.IssueDate,
-                ValidUntil = FreeTicket.ValidUntil,
-            };
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             try
             {
+                // Retrieve or create a Ticket record
+                var ticket = await _freeTicketService.GetOrCreateTicketAsync(FreeTicket.Idnumber);
+
+                // Assign the TicketId to the FreeTicket instance
+                FreeTicket.TicketId = ticket.TicketId;
+
+                var newFreeTicket = new FreeTicket
+                {
+                    RecipientName = FreeTicket.RecipientName,
+                    Gender = FreeTicket.Gender,
+                    DateOfBirth = FreeTicket.DateOfBirth,
+                    Idnumber = FreeTicket.Idnumber,
+                    District = FreeTicket.District,
+                    Ward = FreeTicket.Ward,
+                    RecipientType = FreeTicket.RecipientType,
+                    Phone = FreeTicket.Phone,
+                    Email = FreeTicket.Email,
+                    TicketDeliveryAddress = FreeTicket.TicketDeliveryAddress,
+                    IssueDate = FreeTicket.IssueDate,
+                    ValidUntil = FreeTicket.ValidUntil,
+                    Status = 1, // Set status to 1 (pending)
+                    TicketId = ticket.TicketId // Set the valid TicketId
+                };
+
+                // Copy image files to FreeTicket properties
                 if (IdfrontImage != null)
                 {
                     using (var ms = new MemoryStream())
                     {
                         await IdfrontImage.CopyToAsync(ms);
-                        ticket.IdfrontImage = ms.ToArray();
+                        newFreeTicket.IdfrontImage = ms.ToArray();
                     }
                 }
                 if (IdbackImage != null)
@@ -101,7 +117,7 @@ namespace BusManagementSystem.Pages.Guest
                     using (var ms = new MemoryStream())
                     {
                         await IdbackImage.CopyToAsync(ms);
-                        ticket.IdbackImage = ms.ToArray();
+                        newFreeTicket.IdbackImage = ms.ToArray();
                     }
                 }
                 if (Portrait3x4Image != null)
@@ -109,7 +125,7 @@ namespace BusManagementSystem.Pages.Guest
                     using (var ms = new MemoryStream())
                     {
                         await Portrait3x4Image.CopyToAsync(ms);
-                        ticket.Portrait3x4Image = ms.ToArray();
+                        newFreeTicket.Portrait3x4Image = ms.ToArray();
                     }
                 }
                 if (ProofBackImage != null)
@@ -117,7 +133,7 @@ namespace BusManagementSystem.Pages.Guest
                     using (var ms = new MemoryStream())
                     {
                         await ProofBackImage.CopyToAsync(ms);
-                        ticket.ProofBackImage = ms.ToArray();
+                        newFreeTicket.ProofBackImage = ms.ToArray();
                     }
                 }
                 if (ProofFrontImage != null)
@@ -125,12 +141,12 @@ namespace BusManagementSystem.Pages.Guest
                     using (var ms = new MemoryStream())
                     {
                         await ProofFrontImage.CopyToAsync(ms);
-                        ticket.ProofFrontImage = ms.ToArray();
+                        newFreeTicket.ProofFrontImage = ms.ToArray();
                     }
                 }
 
-                _freeTicketService.AddFreeTicket(ticket);
-                HttpContext.Session.SetString("TempFreeTicket", JsonSerializer.Serialize(ticket));
+                _freeTicketService.AddFreeTicket(newFreeTicket);
+                HttpContext.Session.SetString("TempFreeTicket", JsonSerializer.Serialize(newFreeTicket));
 
                 // Redirect to success page
                 return RedirectToPage("/Guest/SuccessFreeTicket");
@@ -142,4 +158,5 @@ namespace BusManagementSystem.Pages.Guest
             }
         }
     }
+    
 }

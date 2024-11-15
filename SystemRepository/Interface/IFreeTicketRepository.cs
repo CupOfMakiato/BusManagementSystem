@@ -14,5 +14,9 @@ namespace SystemRepository.Interface
         void AddFreeTicket(FreeTicket freeTicket);
         void UpdateFreeTicket(FreeTicket freeTicket);
         void DeleteFreeTicket(int id);
+        bool IsIdNumberExisting(string idNumber);
+        //bool IsIdNumberExistingWithStatus(string idNumber, int status);
+        void VerifyFreeTicket(FreeTicket freeTicket);
+        Task<Ticket> GetOrCreateTicketAsync(string idNumber);
     }
 }

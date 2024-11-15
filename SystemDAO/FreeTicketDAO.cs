@@ -73,5 +73,77 @@ namespace SystemDAO
                 context.SaveChanges();
             }
         }
+        //public bool IsIdNumberExistingWithStatus(string idNumber, int status)
+        //{
+        //    using var context = new BusManagementSystemContext();
+        //    // Check if there is an entry with the specified ID number and a status of 0 or 1
+        //    return context.FreeTickets.Any(ticket => ticket.Idnumber == idNumber && (ticket.Status == 0 || ticket.Status == 1));
+        //}
+
+        public async Task<Ticket> GetOrCreateTicketAsync(string idNumber)
+        {
+            using var context = new BusManagementSystemContext();
+            // Check if a free Ticket with the provided Idnumber exists
+            var existingTicket = await context.Tickets
+                .FirstOrDefaultAsync(t => t.IsFreeTicket == true && t.FreeTickets.Any(ft => ft.Idnumber == idNumber));
+
+            if (existingTicket != null)
+            {
+                // Return the existing Ticket if found
+                return existingTicket;
+            }
+
+            // If no Ticket found, create a new one
+            var newTicket = new Ticket
+            {
+                IsFreeTicket = true,
+                Status = 1, // Set initial status as needed (e.g., 1 = Pending)
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today.AddDays(30),
+                // Set other properties if needed, such as RouteId, TicketType, etc.
+            };
+
+            context.Tickets.Add(newTicket);
+            await context.SaveChangesAsync();
+
+            return newTicket;
+        }
+        public bool IsIdNumberExisting(string idNumber)
+        {
+            using var context = new BusManagementSystemContext();
+            // Check if there is an entry with the specified ID number
+            return context.FreeTickets.Any(ticket => ticket.Idnumber == idNumber);
+        }
+        public bool IsExpired(FreeTicket freeTicket)
+        {
+            if (freeTicket.ValidUntil <= DateOnly.FromDateTime(DateTime.Today))
+            {
+                freeTicket.Status = 0; // expired
+                using var context = new BusManagementSystemContext();
+                context.FreeTickets.Update(freeTicket);
+                context.SaveChanges();
+                return true; //expired
+            }
+            return false; //valid
+        }
+
+        public void VerifyFreeTicket(FreeTicket freeTicket)
+        {
+            using var context = new BusManagementSystemContext();
+
+            // set to verified
+            freeTicket.Status = 2;
+            context.FreeTickets.Update(freeTicket);
+
+            // Set status of associated Ticket to 2 (Verified)
+            var ticket = context.Tickets.Find(freeTicket.TicketId);
+            if (ticket != null)
+            {
+                ticket.Status = 2;
+                context.Tickets.Update(ticket);
+            }
+
+            context.SaveChanges();
+        }
     }
 }

@@ -1,11 +1,11 @@
 ﻿@page
-@model BusManagementSystem.Pages.ViewTicket.IndexModel
+@model BusManagementSystem.Pages.ViewFreeTicket.IndexModel
 @{
     Layout = "_StaffLayout";
 }
 
 @{
-    ViewData["Title"] = "Tickets";
+    ViewData["Title"] = "Free Tickets";
 }
 
 <!-- Custom Styles -->
@@ -51,81 +51,89 @@
             <a href="/ViewRoute/Index" class="list-group-item list-group-item-action">Route Management</a>
             <a href="/ViewBus/Index" class="list-group-item list-group-item-action">Bus Management</a>
             <a href="/ViewDrivers/Index" class="list-group-item list-group-item-action">Driver Management</a>
-            <a href="/ViewTicket/Index" class="list-group-item list-group-item-action active">Ticket Verification</a>
+            <a href="/ViewTicket/Index" class="list-group-item list-group-item-action active">Free Ticket Verification</a>
         </div>
     </div>
     <div class="col-md-10">
-        <h2 class="mb-4">Ticket Verification</h2>
+        <h2 class="mb-4">Free Ticket Verification</h2>
 
-        @if (Model.Tickets != null && Model.Tickets.Any())
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.Tickets[0].TicketId)</th>
-                        <th>@Html.DisplayNameFor(model => model.Tickets[0].User.Name)</th>
-                        <th>@Html.DisplayNameFor(model => model.Tickets[0].Route.RouteName)</th>
-                        <th>@Html.DisplayNameFor(model => model.Tickets[0].StartDate)</th>
-                        <th>@Html.DisplayNameFor(model => model.Tickets[0].EndDate)</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var ticket in Model.Tickets)
-                    {
-                        var statusClass = ticket.Status == 2 ? "status-verified" : (ticket.Status == 0 ? "status-expired" : "status-pending");
-                        <tr>
-                            <td>@ticket.TicketId</td>
-                            <td>@ticket.User?.Name</td>
-                            <td>@ticket.Route?.RouteName</td>
-                            <td>@ticket.StartDate?.ToString("yyyy-MM-dd")</td>
-                            <td>@ticket.EndDate?.ToString("yyyy-MM-dd")</td>
-                            <td><span class="status-badge @statusClass">@((ticket.Status == 2 ? "Verified" : ticket.Status == 0 ? "Expired" : "Pending"))</span></td>
-                            <td class="text-center">
-                                @if (ticket.Status == 1)
-                                {
-                                    <a class="btn btn-success fw-bold verifyButton" data-id="@ticket.TicketId">
-                                        <i class="fas fa-check"></i> Verify
-                                    </a>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-secondary fw-bold" disabled>Verified/Expired</button>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+        @if (Model.FreeTickets != null && Model.FreeTickets.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FreeTickets[0].FreeTicketId)</th>
+                <th>@Html.DisplayNameFor(model => model.FreeTickets[0].RecipientName)</th>
+                        <th>Email</th>
+                        <th>Id Number</th>
+                <th>@Html.DisplayNameFor(model => model.FreeTickets[0].RecipientType)</th>
+                <th>@Html.DisplayNameFor(model => model.FreeTickets[0].IssueDate)</th>
+                <th>@Html.DisplayNameFor(model => model.FreeTickets[0].ValidUntil)</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in Model.FreeTickets)
+            {
+                var statusClass = ticket.Status == 2 ? "status-verified" : (ticket.Status == 0 ? "status-expired" : "status-pending");
+                <tr>
+                    <td>@ticket.FreeTicketId</td>
+                    <td>@ticket.RecipientName</td>
+                    <td>@ticket.Email</td>
+                    <td>@ticket.Idnumber</td>
+                    <td>@ticket.RecipientType</td>
+                    <td>@ticket.IssueDate.ToString("yyyy-MM-dd")</td>
+                    <td>@ticket.ValidUntil?.ToString("yyyy-MM-dd")</td>
+                    <td><span class="status-badge @statusClass">@((ticket.Status == 2 ? "Verified" : ticket.Status == 0 ? "Expired" : "Pending"))</span></td>
+                    <td class="text-center">
+                        @if (ticket.Status == 1) // pending
+                        {
+                            <a class="btn btn-success fw-bold verifyButton" data-id="@ticket.FreeTicketId">
+                                <i class="fas fa-check"></i> Verify
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary fw-bold" disabled>Verified/Expired</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
         else
         {
-            <p>No tickets found.</p>
+            <p>No free tickets found.</p>
         }
 
         @section Scripts {
             <script>
                 $(document).ready(function () {
-                    $('body').on('click', '.verifyButton', function () {
-                        var ticketId = $(this).data('id');
-                        verifyTicket(ticketId);
+                    // Handle Verify buttons
+                    $('body').on('click', '.detailsButton', function () {
+                        var id = $(this).data('id');
+                        $('#formModalLabel').text('Verify');
+                        openDetailsModal(id);
                     });
                 });
 
-                function verifyTicket(ticketId) {
+                function openDetailsModal(id) {
                     $.ajax({
-                        url: '/ViewTicket/Verify',
-                        method: 'POST',
-                        data: { id: ticketId },
-                        success: function () {
-                            alert("Ticket verified successfully!");
-                            location.reload();
-                        },
-                        error: function () {
-                            alert("Failed to verify ticket.");
+                        url: '/ViewTicket/VerifyFreeTicket?id=' + id,
+                        method: 'GET',
+                        success: function (data) {
+                            $('.modal-body').html(data);
+                            $('#formModal').modal('show');
                         }
                     });
+                }
+
+                function closeModal() {
+                    $('#formModal').modal('hide');
+                    window.location.href = '/ViewTicket/Index';
                 }
             </script>
         }

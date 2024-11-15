@@ -11,19 +11,19 @@ namespace SystemRepository.Implementation
 {
     public class FreeTicketVerificationRepository : IFreeTicketVerificationRepository
     {
-        /*public List<FreeTicketVerification> GetAll()
-        {
-            return FreeTicketVerificationDAO.GetInstance().GetAllFreeTicketVerifications();
-        }
+        //public List<FreeTicketVerification> GetAll()
+        //{
+        //    return FreeTicketVerificationDAO.GetInstance().GetAllFreeTicketVerifications();
+        //}
 
-        public FreeTicketVerification GetById(int verificationId)
-        {
-            return FreeTicketVerificationDAO.GetInstance().GetFreeTicketVerificationById(verificationId);
-        }
+        //public FreeTicketVerification GetById(int verificationId)
+        //{
+        //    return FreeTicketVerificationDAO.GetInstance().GetFreeTicketVerificationById(verificationId);
+        //}
 
-        public void Add(FreeTicketVerification verification)
-        {
-            FreeTicketVerificationDAO.GetInstance().AddFreeTicketVerification(verification);
-        }*/
+        //public void Add(FreeTicketVerification verification)
+        //{
+        //    FreeTicketVerificationDAO.GetInstance().AddFreeTicketVerification(verification);
+        //}
     }
 }

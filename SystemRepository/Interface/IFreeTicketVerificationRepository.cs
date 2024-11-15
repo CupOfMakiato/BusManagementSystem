@@ -9,8 +9,8 @@ namespace SystemRepository.Interface
 {
     public interface IFreeTicketVerificationRepository
     {
-        /*List<FreeTicketVerification> GetAll();
-        FreeTicketVerification GetById(int verificationId);
-        void Add(FreeTicketVerification verification);*/
+        //List<FreeTicketVerification> GetAll();
+        //FreeTicketVerification GetById(int verificationId);
+        //void Add(FreeTicketVerification verification);
     }
 }

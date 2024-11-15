@@ -38,5 +38,25 @@ namespace SystemRepository.Implementation
         {
             _freeTicketDAO.DeleteFreeTicket(id); // Gọi phương thức từ DAO
         }
+
+        //public bool IsIdNumberExistingWithStatus(string idNumber, int status)
+        //{
+        //    return FreeTicketDAO.GetInstance().IsIdNumberExistingWithStatus(idNumber, status);
+        //}
+
+        public bool IsIdNumberExisting(string idNumber)
+        {
+            return FreeTicketDAO.GetInstance().IsIdNumberExisting(idNumber);
+        }
+
+        public void VerifyFreeTicket(FreeTicket freeTicket)
+        {
+            FreeTicketDAO.GetInstance().VerifyFreeTicket(freeTicket);
+        }
+
+        public async Task<Ticket> GetOrCreateTicketAsync(string idNumber)
+        {
+            return await FreeTicketDAO.GetInstance().GetOrCreateTicketAsync(idNumber);
+        }
     }
 }
