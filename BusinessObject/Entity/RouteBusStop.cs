@@ -10,4 +10,8 @@ public partial class RouteBusStop
     public int RouteId { get; set; }
 
     public int? StopOrder { get; set; }
+
+    public virtual Route Route { get; set; } = null!;
+
+    public virtual BusStop Stop { get; set; } = null!;
 }

@@ -58,7 +58,7 @@ CREATE TABLE [dbo].[BusStop](
 	[StopName] [nvarchar](100) NULL,
 	[Location] [nvarchar](100) NULL,
 	--[RouteId] [int] NULL,
-	[StopOrder] [int] NULL,
+	--[StopOrder] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[StopId] ASC
