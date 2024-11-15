@@ -11,5 +11,5 @@ public partial class BusStop
 
     public string? Location { get; set; }
 
-    public int? StopOrder { get; set; }
+    public virtual RouteBusStop? RouteBusStop { get; set; }
 }

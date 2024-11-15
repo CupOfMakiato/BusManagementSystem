@@ -26,7 +26,8 @@ namespace SystemDAO
             {
                 using var db = new BusManagementSystemContext();
                 list = db.Routes
-                    .Include(r => r.BusStops)
+                    .Include(r => r.RouteBusStops)
+                    .ThenInclude(r => r.Stop)
                     .ToList();
             }
             catch (Exception ex)
