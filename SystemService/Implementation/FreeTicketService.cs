@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using SystemRepository.Implementation;
 using SystemRepository.Interface;
 using SystemService.Interface;
 
@@ -96,6 +97,25 @@ namespace SystemService.Implementation
                 Console.WriteLine($"Error reading file: {ex.Message}");
                 return null;
             }
+        }
+
+        //public bool IsIdNumberExistingWithStatus(string idNumber, int status)
+        //{
+        //    return _freeTicketRepository.IsIdNumberExistingWithStatus(idNumber, status);
+        //}
+        public bool IsIdNumberExisting(string idNumber)
+        {
+            return _freeTicketRepository.IsIdNumberExisting(idNumber);
+        }
+
+        public void VerifyFreeTicket(FreeTicket freeTicket)
+        {
+            _freeTicketRepository.VerifyFreeTicket(freeTicket);
+        }
+
+        public async Task<Ticket> GetOrCreateTicketAsync(string idNumber)
+        {
+            return await _freeTicketRepository.GetOrCreateTicketAsync(idNumber);
         }
     }
 }

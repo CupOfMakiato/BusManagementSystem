@@ -17,5 +17,9 @@ using System;
             void DeleteFreeTicket(int id);
             Task<string> SaveTicketImageAsync(IFormFile file);
             Task<byte[]> GetTicketImageAsync(string fileName);
+            //bool IsIdNumberExistingWithStatus(string idNumber, int status);
+            bool IsIdNumberExisting(string idNumber);
+            void VerifyFreeTicket(FreeTicket freeTicket);
+            Task<Ticket> GetOrCreateTicketAsync(string idNumber);
         }
     }

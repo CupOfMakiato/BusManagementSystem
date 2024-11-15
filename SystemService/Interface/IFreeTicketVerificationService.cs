@@ -9,9 +9,9 @@ namespace SystemService.Interface
 {
     public interface IFreeTicketVerificationService
     {
-        /*List<FreeTicketVerification> GetAll();
-        FreeTicketVerification GetVerificationById(int verificationId); 
-        void AddFreeTicketVerification(FreeTicketVerification verification);*/
+        //List<FreeTicketVerification> GetAll();
+        //FreeTicketVerification GetVerificationById(int verificationId);
+        //void AddFreeTicketVerification(FreeTicketVerification verification);
 
     }
 }

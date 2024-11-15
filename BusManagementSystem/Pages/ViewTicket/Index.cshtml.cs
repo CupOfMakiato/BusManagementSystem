@@ -6,53 +6,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using SystemService;
+using SystemService.Interface;
 
-namespace BusManagementSystem.Pages.ViewTicket
+namespace BusManagementSystem.Pages.ViewFreeTicket
 {
     public class IndexModel : PageModel
     {
-        private readonly ITicketService _ticketService;
+        private readonly IFreeTicketService _freeTicketService;
 
-        public IndexModel(ITicketService ticketService)
+        public IndexModel(IFreeTicketService freeTicketService)
         {
-            _ticketService = ticketService;
+            _freeTicketService = freeTicketService;
         }
 
-        public IList<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public IList<FreeTicket> FreeTickets { get; set; } = new List<FreeTicket>();
 
-        public IActionResult OnGet(string? searchQuery)
+        public IActionResult OnGet()
         {
             // Session check for staff
             if (!CheckSession())
                 return RedirectToPage("/Login");
 
-            // Store the search query in the model for the Razor Page
-
-
-            // Fetch all tickets
-            var tickets = _ticketService.GetAllTickets();
-            Tickets = tickets;
+            // Fetch all free tickets
+            var freeTickets = _freeTicketService.GetAllFreeTickets();
+            FreeTickets = freeTickets;
 
             return Page();
-        }
-
-        public IActionResult OnPostVerify(int id)
-        {
-            // Get the ticket to be verified
-            var ticket = _ticketService.GetTicketById(id);
-            if (ticket == null || ticket.Status != 1) // Ensure ticket is in "Pending" status
-            {
-                return NotFound();
-            }
-
-            // Update ticket to verified
-            ticket.Status = 2; // Verified
-            ticket.StartDate = DateTime.Now;
-            ticket.EndDate = DateTime.Now.AddDays(30);
-
-            _ticketService.UpdateTicket(ticket);
-
-            return new JsonResult(new { success = true });
         }
 
         private bool CheckSession()

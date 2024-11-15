@@ -11,26 +11,26 @@ namespace SystemService.Implementation
 {
     public class FreeTicketVerificationService : IFreeTicketVerificationService 
     {
-        /*private readonly IFreeTicketVerificationRepository _repository;
+        //private readonly IFreeTicketVerificationRepository _repository;
 
-        public FreeTicketVerificationService(IFreeTicketVerificationRepository repository)
-        {
-            _repository = repository;
-        }
+        //public FreeTicketVerificationService(IFreeTicketVerificationRepository repository)
+        //{
+        //    _repository = repository;
+        //}
 
-        public List<FreeTicketVerification> GetAll()
-        {
-            return _repository.GetAll();
-        }
+        //public List<FreeTicketVerification> GetAll()
+        //{
+        //    return _repository.GetAll();
+        //}
 
-        public FreeTicketVerification GetVerificationById(int verificationId)
-        {
-            return _repository.GetById(verificationId); 
-        }
+        //public FreeTicketVerification GetVerificationById(int verificationId)
+        //{
+        //    return _repository.GetById(verificationId);
+        //}
 
-        public void AddFreeTicketVerification(FreeTicketVerification verification)
-        {
-            _repository.Add(verification); 
-        }*/
+        //public void AddFreeTicketVerification(FreeTicketVerification verification)
+        //{
+        //    _repository.Add(verification);
+        //}
     }
 }

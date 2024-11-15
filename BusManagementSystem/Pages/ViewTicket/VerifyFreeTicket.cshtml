@@ -1,0 +1,28 @@
+﻿@page
+@model BusManagementSystem.Pages.ViewTicket.VerifyFreeTicketModel
+@{
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const errorMessage = document.getElementById("error-message");
+            if (errorMessage) {
+                const message = errorMessage.textContent.trim();
+                if (message !== "") {
+                    setTimeout(function () {
+                        errorMessage.style.display = "none";
+                        window.location.href = '/ViewTicket/Index';
+                    }, 1000);
+                } else {
+                    setTimeout(function () {
+                        errorMessage.style.display = "none";
+                    }, 1000);
+                }
+            }
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

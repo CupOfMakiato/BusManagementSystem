@@ -95,8 +95,8 @@ namespace BusManagementSystem.Pages
         [Required]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
         [DataType(DataType.Password)]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$",
-        ErrorMessage = "Password must be at least 6 characters long, contain at least one uppercase letter, one number, and one special character.")]
+        [RegularExpression(@"^[A-Za-z0-9@#$%^&+=]{4,}[0-9@#$%^&+=]$",
+        ErrorMessage = "Password must be at least 6 characters long, contains at least one number, and one special character.")]
         public string Password { get; set; } = string.Empty;
 
 

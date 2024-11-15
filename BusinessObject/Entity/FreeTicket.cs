@@ -7,6 +7,8 @@ public partial class FreeTicket
 {
     public int FreeTicketId { get; set; }
 
+    public int TicketId { get; set; }
+
     public string RecipientName { get; set; } = null!;
 
     public string Gender { get; set; } = null!;
@@ -42,4 +44,6 @@ public partial class FreeTicket
     public DateOnly? ValidUntil { get; set; }
 
     public int? Status { get; set; }
+
+    public virtual Ticket Ticket { get; set; } = null!;
 }

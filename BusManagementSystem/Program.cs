@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Net.payOS;
+using System.Net;
+using System.Net.Mail;
 using SystemDAO;
 using SystemRepository;
 using SystemRepository.Implementation;
@@ -14,6 +16,9 @@ PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw ne
                     configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
                     configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
 
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services as Scoped instead of Singleton
@@ -27,6 +32,7 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IFreeTicketService, FreeTicketService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton(payOS);
@@ -47,6 +53,15 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IFreeTicketRepository, FreeTicketRepository>();
 
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+
+// Email
+builder.Services.AddSingleton(new SmtpClient("smtp.gmail.com")
+{
+    Port = 587,
+    Credentials = new NetworkCredential("passswp@gmail.com", "nguyen0908"),
+    EnableSsl = true
+});
 
 // Add session services
 builder.Services.AddSession(options =>
