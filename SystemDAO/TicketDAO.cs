@@ -53,6 +53,19 @@ namespace SystemDAO
             }
         }
 
+        public List<Ticket> GetTicketByUserId(int userId)
+        {
+            try
+            {
+                using var context = new BusManagementSystemContext();
+                return context.Tickets.Where(t => t.UserId == userId).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving ticket by ID: " + ex.Message);
+            }
+        }
+
         public void AddTicket(Ticket ticket)
         {
             try

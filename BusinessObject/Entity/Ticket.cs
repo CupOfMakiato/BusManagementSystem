@@ -29,9 +29,9 @@ public partial class Ticket
 
     public byte[]? Photo3x4 { get; set; }
 
-    public byte[]? IdcardFront { get; set; }
+    public byte[]? IDCardFront { get; set; }
 
-    public byte[]? IdcardBack { get; set; }
+    public byte[]? IDCardBack { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

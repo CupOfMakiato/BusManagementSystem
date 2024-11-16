@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Stripe.Billing;
 using System.Text.Json;
 using SystemService;
 using SystemService.Interface;
@@ -11,12 +12,14 @@ namespace BusManagementSystem.Pages.Member
     public class RegisterTicketModel : PageModel
     {
         private readonly ITicketService _ticketService;
+        private readonly IBookingService _bookingService;
         private readonly IUserService _userService;
 
-        public RegisterTicketModel(ITicketService ticketService, IUserService userService)
+        public RegisterTicketModel(ITicketService ticketService, IUserService userService, IBookingService bookingService)
         {
             _ticketService = ticketService;
             _userService = userService;
+            _bookingService = bookingService;
         }
 
         public User User { get; set; } = new User();
@@ -34,10 +37,10 @@ namespace BusManagementSystem.Pages.Member
         public decimal CalculatedPrice { get; set; }
 
         [BindProperty]
-        public DateTime StartDate { get; set; }
+        public DateTime TicketStartDate { get; set; }
 
         [BindProperty]
-        public DateTime EndDate { get; set; }
+        public DateTime TicketEndDate { get; set; }
 
         [BindProperty]
         public int? SelectedRouteId { get; set; }
@@ -52,6 +55,8 @@ namespace BusManagementSystem.Pages.Member
         public IFormFile? IDCardBack { get; set; }
 
         public List<EntityRoute> Routes { get; set; } = new List<EntityRoute>();
+
+        public bool showAlert { get; set; } = false;
 
         public IActionResult OnGetAsync()
         {
@@ -74,8 +79,8 @@ namespace BusManagementSystem.Pages.Member
 
             Routes = _ticketService.GetAllRoutes();
 
-            StartDate = DateTime.Today;
-            EndDate = StartDate.AddDays(30);
+            TicketStartDate = DateTime.Today;
+            TicketEndDate = TicketStartDate.AddDays(30);
 
             return Page();
         }
@@ -93,6 +98,16 @@ namespace BusManagementSystem.Pages.Member
                 return RedirectToPage("/Login", new { returnUrl = "/Member/RegisterTicket" });
             }
 
+            var ticketList = _ticketService.GetTicketByUserId(userId);
+            foreach (var ticketN in ticketList)
+            {
+                if (ticketN.Status == 2)
+                {
+                    showAlert = true;
+                    return Page();
+                }
+            }
+
             User = _userService.GetUserById(userId);
 
             if (User == null)
@@ -101,13 +116,16 @@ namespace BusManagementSystem.Pages.Member
                 return RedirectToPage("/Login", new { returnUrl = "/Member/RegisterTicket" });
             }
 
+            DateTime start = DateTime.Today;
+            DateTime end = start.AddDays(30);
+
             var ticket = new Ticket
             {
                 UserId = userId,
                 TicketType = TicketType,
                 IsPriority = IsPriority,
-                StartDate = StartDate,
-                EndDate = EndDate,
+                StartDate = start,
+                EndDate = end,
                 RouteId = SelectedRouteId,
                 Status = 1, // Pending
                 IsFreeTicket = false,
@@ -130,7 +148,7 @@ namespace BusManagementSystem.Pages.Member
                     using (var ms = new MemoryStream())
                     {
                         IDCardFront.CopyToAsync(ms);
-                        ticket.IdcardFront = ms.ToArray();
+                        ticket.IDCardFront = ms.ToArray();
                     }
                 }
 
@@ -139,7 +157,7 @@ namespace BusManagementSystem.Pages.Member
                     using (var ms = new MemoryStream())
                     {
                         IDCardBack.CopyToAsync(ms);
-                        ticket.IdcardBack = ms.ToArray();
+                        ticket.IDCardBack = ms.ToArray();
                     }
                 }
             }

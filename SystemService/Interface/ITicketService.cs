@@ -7,6 +7,7 @@ namespace SystemService
         List<Ticket> GetAllTickets();
 
         Ticket GetTicketById(int ticketId);
+        List<Ticket> GetTicketByUserId(int userId);
 
         void AddTicket(Ticket ticket);
 

@@ -21,5 +21,7 @@ namespace SystemRepository
         public void UpdateTicket(Ticket ticket) => _ticketDAO.UpdateTicket(ticket);
 
         public void DeleteTicket(int ticketId) => _ticketDAO.DeleteTicket(ticketId);
+
+        public List<Ticket> GetTicketByUserId(int userId) => _ticketDAO.GetTicketByUserId(userId);
     }
 }

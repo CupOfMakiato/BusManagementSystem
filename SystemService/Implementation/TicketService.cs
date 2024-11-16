@@ -44,5 +44,7 @@ namespace SystemService
         }
 
         public List<Route> GetAllRoutes() => _routeRepository.GetAllRoutes();
+
+        public List<Ticket> GetTicketByUserId(int userId) => _ticketRepository.GetTicketByUserId(userId);
     }
 }

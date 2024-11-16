@@ -231,8 +231,8 @@ public partial class BusManagementSystemContext : DbContext
 
             entity.ToTable("Ticket");
 
-            entity.Property(e => e.IdcardBack).HasColumnName("IDCardBack");
-            entity.Property(e => e.IdcardFront).HasColumnName("IDCardFront");
+            entity.Property(e => e.IDCardBack).HasColumnName("IDCardBack");
+            entity.Property(e => e.IDCardFront).HasColumnName("IDCardFront");
             entity.Property(e => e.IsFreeTicket).HasDefaultValue(false);
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.PriorityType).HasMaxLength(50);

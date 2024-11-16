@@ -116,16 +116,16 @@
                 <div class="form-group">
                     <label>Ngày Bắt Đầu:</label>
                     <input type="text" class="form-control"
-                           value="@(Model.StartDate != null ? Model.StartDate.ToString("dd-MM-yyyy") : "Chưa xác định")"
-                           name="StartDate"
+                           value="@(Model.TicketStartDate != null ? Model.TicketStartDate.ToString("dd-MM-yyyy") : "Chưa xác định")"
+                           name="TicketStartDate"
                            readonly />
                 </div>
 
                 <div class="form-group">
                     <label>Ngày Kết Thúc:</label>
                     <input type="text" class="form-control"
-                           value="@(Model.EndDate != null ? Model.EndDate.ToString("dd-MM-yyyy") : "Chưa xác định")"
-                           name="EndDate"
+                           value="@(Model.TicketEndDate != null ? Model.TicketEndDate.ToString("dd-MM-yyyy") : "Chưa xác định")"
+                           name="TicketEndDate"
                            readonly />
                 </div>
 
@@ -137,13 +137,20 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary" onclick="return validateForm()">Tiếp Tục Thanh Toán</button>
+            <button type="submit" class="btn btn-primary">Tiếp Tục Thanh Toán</button>
         </form>
     </div>
 </div>
 
+@if (Model.showAlert)
+{
+    <script>
+        alert('User already had a ticket in use!');
+    </script>
+}
+
 <script>
-     document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         try {
             const priorityCheckbox = document.getElementById("priority");
             const priorityTypeDiv = document.getElementById("priorityType");
@@ -200,10 +207,10 @@
     });
 
     window.addEventListener('load', function () {
-            // This will prevent navigating back to the checkout page
+        // This will prevent navigating back to the checkout page
+        window.history.replaceState(null, document.title, window.location.href);
+        window.addEventListener('popstate', function (event) {
             window.history.replaceState(null, document.title, window.location.href);
-            window.addEventListener('popstate', function (event) {
-                window.history.replaceState(null, document.title, window.location.href);
-            });
         });
+    });
 </script>

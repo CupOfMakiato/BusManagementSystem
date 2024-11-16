@@ -1,0 +1,267 @@
+﻿@page
+@model BusManagementSystem.Pages.ViewTicket.TicketModel
+@{
+}
+
+<!-- Custom Styles -->
+<style>
+    /* Styling for Status */
+    .status-badge {
+        padding: 0.5em 1em;
+        border-radius: 0.25rem;
+    }
+
+    .status-active {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-inactive {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .status-archived {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .table thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+    /* Button styling */
+    .btn-primary, .btn-warning, .btn-danger, .btn-success {
+        margin-bottom: 0.5em;
+    }
+
+        .btn-primary:hover, .btn-warning:hover, .btn-danger:hover, .btn-success:hover {
+            opacity: 0.85;
+        }
+
+    /* Modal styling */
+    .modal-header {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        padding: 10px;
+        text-align: right;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <h2>Menu</h2>
+        <div class="list-group">
+            <a href="/ViewRoute/Index" class="list-group-item list-group-item-action active">
+                Route Management
+            </a>
+            <a href="/ViewBus/Index" class="list-group-item list-group-item-action">
+                Bus Management
+            </a>
+            <a href="/ViewDrivers/Index" class="list-group-item list-group-item-action">
+                Driver Management
+            </a>
+            <a href="/ViewTicket/Ticket" class="list-group-item list-group-item-action">Ticket Verification</a>
+            <a href="/ViewTicket/Index" class="list-group-item list-group-item-action">Free Ticket Verification</a>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <h2 class="mb-4">Ticket Management</h2>
+        <div class="d-flex">
+            <a asp-page="Create" class="btn btn-primary fw-bold btn-sm">
+                <i class="fas fa-plus"></i> Create New Ticket
+            </a>
+
+        </div>
+        <form method="get" class="mb-4 justify-content-center align-items-center">
+            <div class="input-group input-group-sm" style="max-width: 300px;">
+                <input type="text" class="form-control" name="searchQuery" value="@Model.SearchQuery" placeholder="Search for Ticket..." aria-label="Search Tickets">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="bi bi-search"></i>
+                    <span class="d-none d-sm-inline ms-1 fw-bold">Search</span>
+                </button>
+            </div>
+        </form>
+
+        @if (Model.Tickets != null && Model.Tickets.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].TicketId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].UserId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].Price)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].StartDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].EndDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].Status)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].RouteId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].TicketType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].PriorityType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].IsPriority)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Tickets[0].IsFreeTicket)
+                        </th>
+                        @* <th>
+                    @Html.DisplayNameFor(model => model.Tickets[0].Photo3x4)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.Tickets[0].IDCardFront)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.Tickets[0].IDCardBack)
+                    </th> *@
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Ticket in Model.Tickets)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.TicketId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.EndDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.RouteId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.TicketType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.PriorityType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.IsPriority)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Ticket.IsFreeTicket)
+                            </td>@* <td>
+                    @Html.DisplayFor(modelItem => Ticket.Photo3x4)
+                    </td><td>
+                    @Html.DisplayFor(modelItem => Ticket.IDCardFront)
+                    </td><td>
+                    @Html.DisplayFor(modelItem => Ticket.IDCardBack)
+                    </td> *@
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <form method="post">
+                                        <a class="btn btn-warning fw-bold updateButton">
+                                            <button type="submit" value="@Ticket.TicketId" name="ticketID">Update</button>
+                                        </a>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Tickets found.</p>
+        }
+
+        <!-- Modal for Details -->
+        <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel">Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Content loaded via AJAX -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    // Handle Create, Update, Delete, Details buttons
+                    $('body').on('click', '.updateButton', function () {
+                        var id = $(this).data('id');
+                        window.location.href = '/ViewTicket/Edit?id=' + id;
+                    });
+
+                    $('body').on('click', '.deleteButton', function () {
+                        var id = $(this).data('id');
+                        window.location.href = '/ViewTicket/Delete?id=' + id;
+                    });
+
+                    $('body').on('click', '.detailsButton', function () {
+                        var id = $(this).data('id');
+                        $('#formModalLabel').text('Ticket Details');
+                        openDetailsModal(id);
+                    });
+                });
+
+                function openDetailsModal(id) {
+                    $.ajax({
+                        url: '/ViewTicket/Details?id=' + id,
+                        method: 'GET',
+                        success: function (data) {
+                            $('.modal-body').html(data);
+                            $('#formModal').modal('show');
+                        }
+                    });
+                }
+
+                function closeModal() {
+                    $('#formModal').modal('hide');
+                    window.location.href = '/ViewTicket/Ticket';
+                }
+            </script>
+        }
+    </div>
+</div>
