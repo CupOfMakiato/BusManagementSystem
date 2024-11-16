@@ -66,6 +66,7 @@
                 <th>@Html.DisplayNameFor(model => model.FreeTickets[0].RecipientName)</th>
                         <th>Email</th>
                         <th>Id Number</th>
+                        <th>Shipping Address</th>
                 <th>@Html.DisplayNameFor(model => model.FreeTickets[0].RecipientType)</th>
                 <th>@Html.DisplayNameFor(model => model.FreeTickets[0].IssueDate)</th>
                 <th>@Html.DisplayNameFor(model => model.FreeTickets[0].ValidUntil)</th>
@@ -74,32 +75,39 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var ticket in Model.FreeTickets)
-            {
-                var statusClass = ticket.Status == 2 ? "status-verified" : (ticket.Status == 0 ? "status-expired" : "status-pending");
-                <tr>
-                    <td>@ticket.FreeTicketId</td>
-                    <td>@ticket.RecipientName</td>
-                    <td>@ticket.Email</td>
-                    <td>@ticket.Idnumber</td>
-                    <td>@ticket.RecipientType</td>
-                    <td>@ticket.IssueDate.ToString("yyyy-MM-dd")</td>
-                    <td>@ticket.ValidUntil?.ToString("yyyy-MM-dd")</td>
-                    <td><span class="status-badge @statusClass">@((ticket.Status == 2 ? "Verified" : ticket.Status == 0 ? "Expired" : "Pending"))</span></td>
-                    <td class="text-center">
-                        @if (ticket.Status == 1) // pending
-                        {
-                            <a class="btn btn-success fw-bold verifyButton" data-id="@ticket.FreeTicketId">
-                                <i class="fas fa-check"></i> Verify
-                            </a>
-                        }
-                        else
-                        {
-                            <button class="btn btn-secondary fw-bold" disabled>Verified/Expired</button>
-                        }
-                    </td>
-                </tr>
-            }
+                    @foreach (var ticket in Model.FreeTickets)
+                    {
+                        var statusClass = ticket.Status == 2 ? "status-verified" : (ticket.Status == 0 ? "status-expired" : "status-pending");
+                        <tr>
+                            <td>@ticket.FreeTicketId</td>
+                            <td>@ticket.RecipientName</td>
+                            <td>@ticket.Email</td>
+                            <td>@ticket.Idnumber</td>
+                            <td>@ticket.TicketDeliveryAddress</td>
+                            <td>@ticket.RecipientType</td>
+                            <td>@ticket.IssueDate.ToString("yyyy-MM-dd")</td>
+                            <td>@ticket.ValidUntil?.ToString("yyyy-MM-dd")</td>
+                            <td><span class="status-badge @statusClass">@((ticket.Status == 2 ? "Verified" : ticket.Status == 0 ? "Expired" : "Pending"))</span></td>
+
+                            <!-- Add form around each button -->
+                            <td class="text-center">
+                                @if (ticket.Status == 1) // pending
+                                {
+                                    <form method="post" asp-page-handler="Verify">
+                                        <input type="hidden" name="id" value="@ticket.FreeTicketId" />
+                                        <button type="submit" class="btn btn-success fw-bold">
+                                            <i class="fas fa-check"></i> Verify
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary fw-bold" disabled>Verified/Expired</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+
         </tbody>
     </table>
 }
@@ -109,33 +117,32 @@
             <p>No free tickets found.</p>
         }
 
-        @section Scripts {
+        @* @section Scripts {
             <script>
                 $(document).ready(function () {
-                    // Handle Verify buttons
-                    $('body').on('click', '.detailsButton', function () {
+                    // Handle Verify button click
+                    $('body').on('click', '.verifyButton', function () {
                         var id = $(this).data('id');
-                        $('#formModalLabel').text('Verify');
-                        openDetailsModal(id);
+                        verifyTicket(id);
                     });
                 });
 
-                function openDetailsModal(id) {
+                function verifyTicket(id) {
                     $.ajax({
-                        url: '/ViewTicket/VerifyFreeTicket?id=' + id,
-                        method: 'GET',
-                        success: function (data) {
-                            $('.modal-body').html(data);
-                            $('#formModal').modal('show');
+                        url: '/ViewTicket/VerifyFreeTicket',
+                        method: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            // On success, refresh the page to update the status
+                            window.location.reload();
+                        },
+                        error: function () {
+                            alert("Failed to verify the ticket. Please try again.");
                         }
                     });
                 }
-
-                function closeModal() {
-                    $('#formModal').modal('hide');
-                    window.location.href = '/ViewTicket/Index';
-                }
             </script>
-        }
+        } *@
+
     </div>
 </div>
