@@ -32,7 +32,8 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IFreeTicketService, FreeTicketService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddSingleton<IEmailService, EmailService>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton(payOS);
@@ -54,14 +55,6 @@ builder.Services.AddScoped<IFreeTicketRepository, FreeTicketRepository>();
 
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
-
-// Email
-builder.Services.AddSingleton(new SmtpClient("smtp.gmail.com")
-{
-    Port = 587,
-    Credentials = new NetworkCredential("passswp@gmail.com", "nguyen0908"),
-    EnableSsl = true
-});
 
 // Add session services
 builder.Services.AddSession(options =>

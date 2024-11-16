@@ -82,10 +82,10 @@ namespace BusManagementSystem.Pages.Member
 
         public IActionResult OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
             var userId = (int)HttpContext.Session.GetInt32("UserId");
             if (userId == null)
             {

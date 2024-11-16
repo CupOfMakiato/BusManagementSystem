@@ -3,6 +3,66 @@
 @{
 }
 
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FreeTicket.FreeTicketId" />
+
+            <div class="form-group">
+                <label asp-for="FreeTicket.RecipientName" class="control-label"></label>
+                <input asp-for="FreeTicket.RecipientName" class="form-control" />
+                <span asp-validation-for="FreeTicket.RecipientName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FreeTicket.Email" class="control-label"></label>
+                <input asp-for="FreeTicket.Email" class="form-control" />
+                <span asp-validation-for="FreeTicket.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FreeTicket.Idnumber" class="control-label"></label>
+                <input asp-for="FreeTicket.Idnumber" class="form-control" />
+                <span asp-validation-for="FreeTicket.Idnumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FreeTicket.TicketDeliveryAddress" class="control-label"></label>
+                <input asp-for="FreeTicket.TicketDeliveryAddress" class="form-control" />
+                <span asp-validation-for="FreeTicket.TicketDeliveryAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FreeTicket.RecipientType" class="control-label"></label>
+                <input asp-for="FreeTicket.RecipientType" class="form-control" />
+                <span asp-validation-for="FreeTicket.RecipientType" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="FreeTicket.IssueDate" class="control-label"></label>
+                <input asp-for="FreeTicket.IssueDate" class="form-control"
+                       type="date"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="FreeTicket.IssueDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FreeTicket.ValidUntil" class="control-label"></label>
+                <input asp-for="FreeTicket.ValidUntil" class="form-control"
+                       type="date"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="FreeTicket.ValidUntil" class="text-danger"></span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div style="color: red" id="error-message">@Model.Message</div>
+            }
+
+            <div class="form-group" style="margin-top: 2%">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-page="/ViewTicket/Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {

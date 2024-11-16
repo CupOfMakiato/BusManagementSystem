@@ -16,8 +16,10 @@ namespace BusManagementSystem.Pages.ViewTicket
             _freeTicketService = freeTicketService;
             _emailService = emailService;
         }
-        public IList<FreeTicket> FreeTickets { get; set; } = new List<FreeTicket>();
-        public IActionResult OnGet(int? id)
+        [BindProperty]
+        public FreeTicket FreeTicket { get; set; } = default!;
+        public string? Message { get; set; }
+        public IActionResult OnGet(short? id)
         {
             // Session check for staff
             if (!CheckSession())
